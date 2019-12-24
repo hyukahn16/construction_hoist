@@ -1,3 +1,9 @@
+import simpy
+
+def make(num_elevators, num_floors):
+    '''Generate new simpy.Environment.'''
+    pass
+
 class Environment():
 
     def __init__(self, simul_env, num_elevators, num_floors):
@@ -30,6 +36,27 @@ class Environment():
         pass
 
     def render(self):
-        '''Render visualization for the environment."""
+        '''Render visualization for the environment.'''
         pass
+
+    # Simulation Functions below
+    def generate_passengers(self):
+        '''Generate random passengers.
+           
+        This function will run as a simpy process:
+        Ex: self.simul_env.process(self.generate_passengers())
+
+
+        '''
+        
+        while True:
+            delay_time = None # FIXME: set delay time
+            yield self.simul_env.timeout(delay_time)
+
+            # Create new instance of Passenger
+            # Add Passenger to appropriate floor group (This may imply that
+            # the RL model's observation may include the # of people on each floor
+            # which is not tru in the real world. In real world, it is unknown to the agents
+            # about how many people may be on each floor (Ex: passengers took stairs.)
+
     
