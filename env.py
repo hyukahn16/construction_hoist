@@ -31,7 +31,8 @@ class Environment():
 
            - includes the simpy process for generate_passengers()
         '''
-        pass
+        print("Resetting!")
+        #pass
 
     def step(self):
         '''Receive an action from the agent
