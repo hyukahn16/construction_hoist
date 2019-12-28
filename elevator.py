@@ -5,5 +5,7 @@
 # will be requesting on each floor.
 
 class Elevator():
-    def init(self):
+    def init(self, curr_floor):
         """Initialize Elevator class."""
+        self.curr_floor = curr_floor
+        self.carrying_p = []

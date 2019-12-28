@@ -1,6 +1,7 @@
 # TODO: agent sees how many people on each floor have called for the button
 
 import simpy
+import random
 from passenger import Passenger
 
 def make(num_elevators, num_floors):
@@ -15,15 +16,15 @@ class Environment():
         self.simul_env = simul_env
         self.num_elevators = num_elevators
         self.num_floors = num_floors
-        self.floors = {} # key: floor number, value: [each passenger on the floor]
+        
+        # these variables underneath will be initialized in "self.reset()"
+        self.floors = {} # each floor has list of passengers waiting an elevator
+        self.epoch_events = {} # key: event name, value: simpy event
 
 
         self.action_space = None
         self.observation_space = None
 
-        # initialize each floor
-        for i in range(self.num_floors):
-            self.floors[i] = []
 
     def reset(self):
         '''Resets the environment to its initial state,
@@ -31,10 +32,35 @@ class Environment():
 
            - includes the simpy process for generate_passengers()
         '''
-        print("Resetting!")
-        #pass
+        # initialize each floor
+        for i in range(self.num_floors):
+            self.floors[i] = []
 
-    def step(self):
+        # Initialize epoch_events dictionary (which event should the simulation stop?)
+        # 1. When elevator arrives at a floor
+        # 2. when passenger requests elevator
+        # 3. when passenger arrives at destination
+        # FIXME: some epoch_events creation might not be in right for-loop
+        for i in range(self.num_elevators):
+            self.epoch_events["ElevatorArrival_{}".format(i)] = self.simul_env.event()
+            self.epoch_events["PassengerRequest_{}".format(i)] = self.simul_env.event()
+            self.epoch_events["PassengerArrival_{}".format(i)] = self.simul_env.event()
+        for i in range(self.num_floors):
+            pass
+
+        # Initialize observation space
+        """
+        Observation space (what the agent will see to make decisions):
+        - which floor the elevator request came from
+        - which direction (up or down) the request wants
+        """
+        self.req_floor_up = [] # req_floor_down[i] == 1 if ith floor requested elevator going up
+        self.req_floor_down = []
+
+        self.simul_env = simpy.Environment()
+        print("Resetting!")
+
+    def step(self, action):
         '''Receive an action from the agent
            and return the information about the outcome
            of the action:
@@ -46,7 +72,10 @@ class Environment():
            2. Get new observation from the action(s)
            3. Get reward for the action
         '''
-        pass
+        
+        while True: # run until a decision epoch is reached
+            finished_events = self.simul_env.run(until=self.epoch_events.values()).events
+
 
     def render(self):
         '''Render visualization for the environment.'''
@@ -60,17 +89,24 @@ class Environment():
         Ex: self.simul_env.process(self.generate_passengers())
         '''
         
+        print("Generating new passengers")
         while True:
-            delay_time = 50 # FIXME: set delay time
+            delay_time = 100 # FIXME: set delay time
             yield self.simul_env.timeout(delay_time)
 
-            # Create new instance of Passenger
-            p = Passenger(0, 1, self.simul_env.now)
-            # Add Passenger to appropriate floor group (This may imply that
-            # the RL model's observation may include the # of people on each floor
-            # which is not tru in the real world. In real world, it is unknown to the agents
-            # about how many people may be on each floor (Ex: passengers took stairs.)
-            self.floors[p.current_floor].append(p)
-            print("Created new Passenger!")
+            # Create new instance of Passenger at random floor
+            curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
+            print(curr_fl)
+            # get new destination floor for this passenger
+            dest_fl = curr_fl;
+            while dest_fl == curr_fl:
+                dest_fl = random.randrange(0, self.num_floors, 1)
+            print(dest_fl)
+            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            
+            # Add Passenger to appropriate floor group
+            print(self.floors)
+            self.floors[p.curr_floor].append(p)
+            print("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
 
     
