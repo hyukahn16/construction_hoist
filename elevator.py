@@ -8,4 +8,6 @@ class Elevator():
     def init(self, curr_floor):
         """Initialize Elevator class."""
         self.curr_floor = curr_floor
-        self.carrying_p = []
+        self.passengers = []
+        self.weight_capacity = 907.185 # Unit: Kilograms, 1 ton == 907.185 kg
+        self.velocity = 100 # Unit: meters/minute

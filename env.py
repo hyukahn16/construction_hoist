@@ -1,8 +1,9 @@
-# TODO: agent sees how many people on each floor have called for the button
-
 import simpy
 import random
+from enum import Enum
 from passenger import Passenger
+
+Request = Enum(EMPTY=0, UP=1, DOWN=2)
 
 def make(num_elevators, num_floors):
     '''Generate new simpy.Environment.'''
@@ -17,12 +18,14 @@ class Environment():
         self.num_elevators = num_elevators
         self.num_floors = num_floors
         
-        # these variables underneath will be initialized in "self.reset()"
-        self.floors = {} # each floor has list of passengers waiting an elevator
-        self.epoch_events = {} # key: event name, value: simpy event
+        # These variables underneath will be initialized in "self.reset()"
+        self.floors = {} # Key: floor number, value: list of Passenger objects
+        self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
+        self.elevators = [] # List of Elevator objects
+        self.call_requests = [] # List of call requests for each floor - holds Request Enum types
 
-
-        self.action_space = None
+        # FIXME These are used for the DQN I think?
+        self.action_space = None # 2 for up or down
         self.observation_space = None
 
 
@@ -36,11 +39,12 @@ class Environment():
         for i in range(self.num_floors):
             self.floors[i] = []
 
-        # Initialize epoch_events dictionary (which event should the simulation stop?)
+        # Initialize epoch_events dictionary
+        # (which event should the simulation stop to figure out the next decision?)
         # 1. When elevator arrives at a floor
         # 2. when passenger requests elevator
-        # 3. when passenger arrives at destination
-        # FIXME: some epoch_events creation might not be in right for-loop
+        # 3. when passenger arrives at destination (similar to #1)
+        # FIXME: some epoch_events creation might not be in the correct for-loop
         for i in range(self.num_elevators):
             self.epoch_events["ElevatorArrival_{}".format(i)] = self.simul_env.event()
             self.epoch_events["PassengerRequest_{}".format(i)] = self.simul_env.event()
@@ -51,11 +55,11 @@ class Environment():
         # Initialize observation space
         """
         Observation space (what the agent will see to make decisions):
-        - which floor the elevator request came from
-        - which direction (up or down) the request wants
+        - Call requests at each floor
+        - Hoists' current capacity
+        - Hoists' positions
         """
-        self.req_floor_up = [] # req_floor_down[i] == 1 if ith floor requested elevator going up
-        self.req_floor_down = []
+
 
         self.simul_env = simpy.Environment()
         print("Resetting!")
@@ -108,5 +112,22 @@ class Environment():
             print(self.floors)
             self.floors[p.curr_floor].append(p)
             print("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
+
+    def get_state(self):
+        '''Return the state in multi-dimensional array.
+
+        Returns:
+        - Hoist call requests (Up, down) (FIXME potentially the floor number as well)
+        - Hoists' positions (34F, 64F)
+        - Hoists' current weight WHEN they got a call request (1/1.5)
+        '''
+        pass
+
+    def get_reward(self):
+        '''Calculate and return the reward for the elevators
+        
+        Used in self.step()
+        '''
+        pass
 
     
