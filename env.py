@@ -2,8 +2,9 @@ import simpy
 import random
 from enum import Enum
 from passenger import Passenger
+from elevator import Elevator
 
-Request = Enum(EMPTY=0, UP=1, DOWN=2)
+#Request = Enum(EMPTY=0, UP=1, DOWN=2)
 
 def make(num_elevators, num_floors):
     '''Generate new simpy.Environment.'''
@@ -35,36 +36,36 @@ class Environment():
 
            - includes the simpy process for generate_passengers()
         '''
-        # initialize each floor
+        # initialize each floor that holds Passenger objects
         for i in range(self.num_floors):
             self.floors[i] = []
 
+        # Initialize Elevator objects
+        for _ in range(self.num_elevators):
+            self.elevators.append(Elevator(0))
+
         # Initialize epoch_events dictionary
         # (which event should the simulation stop to figure out the next decision?)
-        # 1. When elevator arrives at a floor
-        # 2. when passenger requests elevator
-        # 3. when passenger arrives at destination (similar to #1)
-        # FIXME: some epoch_events creation might not be in the correct for-loop
         for i in range(self.num_elevators):
+            # 1. When elevator arrives at a floor
             self.epoch_events["ElevatorArrival_{}".format(i)] = self.simul_env.event()
-            self.epoch_events["PassengerRequest_{}".format(i)] = self.simul_env.event()
-            self.epoch_events["PassengerArrival_{}".format(i)] = self.simul_env.event()
-        for i in range(self.num_floors):
-            pass
+            # 2. when passenger arrives at destination (similar to #1)
+            self.epoch_events["LoadingFinished_{}".format(i)] = self.simul_env.event()
+        # 3. when passenger requests elevator
+        self.epoch_events["PassengerRequest"] = self.simul_env.event()
 
-        # Initialize observation space
-        """
-        Observation space (what the agent will see to make decisions):
-        - Call requests at each floor
-        - Hoists' current capacity
-        - Hoists' positions
-        """
+        # TODO: Initialize observation space
+        # Observation space (what the agent will see to make decisions):
+        # - Call requests at each floor
+        # - Hoists' current capacity
+        # - Hoists' positions
 
-
+        # Create a process that will generate passengers on random floors
+        self.simul_env.process(self.generate_passengers())
         self.simul_env = simpy.Environment()
-        print("Resetting!")
+        print("Reset Complete!")
 
-    def step(self, action):
+    def step(self, actions):
         '''Receive an action from the agent
            and return the information about the outcome
            of the action:
@@ -72,20 +73,31 @@ class Environment():
            - local reward
            - end of episode flag (if ended)
 
-           1. Tell environment which action will be taken by agent(s)
+           1. Create processes for Elevators that have actions
+           2. Run until decision epoch is reached
+           3. if event type is ElevatorArrival or LoadingFinished, then 
            2. Get new observation from the action(s)
            3. Get reward for the action
         '''
-        
+
+        # Create processes for each elevators' actions
+        for action in actions:
+            self.simul_env.process(self.elevators.act(action))
+
         while True: # run until a decision epoch is reached
-            finished_events = self.simul_env.run(until=self.epoch_events.values()).events
+            finished_events = self.simul_env.run(until=AnyOf(self.simul_env, self.epoch_events.values())).events
+            
+            decision_reached = False
+            for event in finished_events:
+                if "ElevatorArrival" in event.value:
+                    decision_reached = True
+                    self._process_elevator_arrival(event.value)
+                elif "LoadingFinished" in event.value:
+                    decision_reached = True
+                    self._process_loading_finished(event.value)
+                elif "PassengerRequest" in event.value:
+                    self._process_passenger_request(event.value)
 
-
-    def render(self):
-        '''Render visualization for the environment.'''
-        pass
-
-    # Simulation Functions below
     def generate_passengers(self):
         '''Generate random passengers on a random floor.
            
@@ -100,18 +112,37 @@ class Environment():
 
             # Create new instance of Passenger at random floor
             curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
-            print(curr_fl)
             # get new destination floor for this passenger
             dest_fl = curr_fl;
             while dest_fl == curr_fl:
                 dest_fl = random.randrange(0, self.num_floors, 1)
-            print(dest_fl)
+
             p = Passenger(curr_fl, dest_fl, self.simul_env.now)
             
             # Add Passenger to appropriate floor group
-            print(self.floors)
             self.floors[p.curr_floor].append(p)
             print("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
+
+    def _process_elevator_arrival(self, event_type):
+        '''Process when an elevator stops at any floor.'''
+        return True
+
+    def _process_loading_finished(self, event_type):
+        '''Process when an elevator has finished loading or unloading.
+        
+        Returns True because 
+        LoadingFinished requires the next decision for the elevators.
+        '''
+        elevator_idx = int(event_type.split('_')[-1])
+        self.decision_elevators(elevator_idx)
+        return True
+
+    def _process_passenger_request(self, event_type):
+        '''Process when a passenger requests for an elevator.
+
+        - Updates the state to reflect this request
+        '''
+        return False # FIXME: shouldn't PassengerRequest ask for next action of the elevators?
 
     def get_state(self):
         '''Return the state in multi-dimensional array.
@@ -130,4 +161,7 @@ class Environment():
         '''
         pass
 
+    def render(self):
+        '''Render visualization for the environment.'''
+        pass
     

@@ -11,3 +11,12 @@ class Elevator():
         self.passengers = []
         self.weight_capacity = 907.185 # Unit: Kilograms, 1 ton == 907.185 kg
         self.velocity = 100 # Unit: meters/minute
+
+    def act(self, action):
+       '''Create process for elevator to take action.
+       
+       +1 for UP
+       -1 for DOWN
+       0 for IDLE? FIXME
+       '''
+       pass 

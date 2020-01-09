@@ -27,7 +27,7 @@ if __name__ == "__main__":
             # Gradient descent updates weights in the policy network to minimize loss
                 # After x time steps, weights in the target network are updated to the weights in the policy network
 
-    env = make(1, 3) # (num_elevators, num_floors)
+    env = make(2, 100) # (num_elevators, num_floors)
     env.reset()
     proc_pass_gen = env.simul_env.process(env.generate_passengers())
     
