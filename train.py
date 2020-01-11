@@ -1,9 +1,15 @@
 from env import Environment, make
+import logging
+# https://realpython.com/python-logging/
 import gym
-print("starting train.py")
+import sys
+
+logging.basicConfig(filename="log", filemode='w', level=logging.DEBUG)
+logging.debug("train.py: starting train.py")
+sys.stdout.flush()
 
 if __name__ == "__main__":
-    print("Simulation starting.")
+    logging.debug("train.py: Simulation starting.")
     
     # Initialize replay memory capacity
 
@@ -29,8 +35,8 @@ if __name__ == "__main__":
 
     env = make(2, 100) # (num_elevators, num_floors)
     env.reset()
-    proc_pass_gen = env.simul_env.process(env.generate_passengers())
+    while env.now() <= 360:
+        logging.debug("train.py: About to run env.step()")
+        env.step([1, 1]) # FIXME: keep moving elevators up
     
-    env.simul_env.run(until=10000)
-    
-    print("Simulation finished.")
+    logging.debug("train.py: Simulation finished.")

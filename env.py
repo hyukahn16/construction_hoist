@@ -1,5 +1,6 @@
 import simpy
 import random
+import logging
 from enum import Enum
 from passenger import Passenger
 from elevator import Elevator
@@ -24,6 +25,7 @@ class Environment():
         self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
         self.elevators = [] # List of Elevator objects
         self.call_requests = [] # List of call requests for each floor - holds Request Enum types
+        self.decision_elevators = []
 
         # FIXME These are used for the DQN I think?
         self.action_space = None # 2 for up or down
@@ -36,13 +38,18 @@ class Environment():
 
            - includes the simpy process for generate_passengers()
         '''
+        self.simul_env = simpy.Environment()
+
+        # Empty initialization of decision elevators
+        self.decision_elevators = []
+
         # initialize each floor that holds Passenger objects
         for i in range(self.num_floors):
             self.floors[i] = []
 
         # Initialize Elevator objects
-        for _ in range(self.num_elevators):
-            self.elevators.append(Elevator(0))
+        for i in range(self.num_elevators):
+            self.elevators.append(Elevator(self, i, 0))
 
         # Initialize epoch_events dictionary
         # (which event should the simulation stop to figure out the next decision?)
@@ -62,8 +69,8 @@ class Environment():
 
         # Create a process that will generate passengers on random floors
         self.simul_env.process(self.generate_passengers())
-        self.simul_env = simpy.Environment()
-        print("Reset Complete!")
+        logging.debug("env.py: Reset Complete!")
+        return self.step([-1])
 
     def step(self, actions):
         '''Receive an action from the agent
@@ -75,18 +82,23 @@ class Environment():
 
            1. Create processes for Elevators that have actions
            2. Run until decision epoch is reached
-           3. if event type is ElevatorArrival or LoadingFinished, then 
-           2. Get new observation from the action(s)
-           3. Get reward for the action
+           3. if event type is ElevatorArrival or LoadingFinished, then finish function 
+           4. 
         '''
-
+        logging.debug("env.py: step()")
         # Create processes for each elevators' actions
-        for action in actions:
-            self.simul_env.process(self.elevators.act(action))
+        for idx, action in enumerate(actions):
+            if action == -1:
+                continue
+            self.simul_env.process(self.elevators[idx].act(action))
 
         while True: # run until a decision epoch is reached
-            finished_events = self.simul_env.run(until=AnyOf(self.simul_env, self.epoch_events.values())).events
-            
+            self.decision_elevators = []
+            logging.debug("env.py: step() - Running simulation")
+            finished_events = self.simul_env.run( \
+                until=simpy.events.AnyOf(self.simul_env, self.epoch_events.values())).events
+            logging.debug("env.py: step() - Finished simulation")
+
             decision_reached = False
             for event in finished_events:
                 if "ElevatorArrival" in event.value:
@@ -97,6 +109,20 @@ class Environment():
                     self._process_loading_finished(event.value)
                 elif "PassengerRequest" in event.value:
                     self._process_passenger_request(event.value)
+                else:
+                    logging.debug("Unimplemented event type!")
+            
+            if decision_reached:
+                break
+
+        # return state, reward, and the decision agents
+        output = {
+            "state": self.get_state(),
+            "reward": self.get_reward(),
+            "decision_agents": self.decision_elevators
+        }
+        logging.debug("Finished step()")
+        return output
 
     def generate_passengers(self):
         '''Generate random passengers on a random floor.
@@ -104,10 +130,9 @@ class Environment():
         This function will run as a simpy process:
         Ex: self.simul_env.process(self.generate_passengers())
         '''
-        
-        print("Generating new passengers")
+
         while True:
-            delay_time = 100 # FIXME: set delay time
+            delay_time = 5 # FIXME: set delay time
             yield self.simul_env.timeout(delay_time)
 
             # Create new instance of Passenger at random floor
@@ -121,10 +146,20 @@ class Environment():
             
             # Add Passenger to appropriate floor group
             self.floors[p.curr_floor].append(p)
-            print("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
+            logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
+
+            # Trigger epoch event for PassengerRequest
+            self.trigger_epoch_event("PassengerRequest")
 
     def _process_elevator_arrival(self, event_type):
-        '''Process when an elevator stops at any floor.'''
+        '''Process when an elevator stops at any floor.
+
+        Append the elevator that just arrived to the decision elevators
+        since this elevator needs to decide on the next action.
+        '''
+        logging.debug("env.py: _process_elevator_arrival - {}".format(event_type))
+        elevator_idx = int(event_type.split('_')[-1])
+        self.decision_elevators.append(elevator_idx)
         return True
 
     def _process_loading_finished(self, event_type):
@@ -140,9 +175,39 @@ class Environment():
     def _process_passenger_request(self, event_type):
         '''Process when a passenger requests for an elevator.
 
+        - Wake up potentially idling elevators
         - Updates the state to reflect this request
         '''
+        for e in self.elevators:
+            # if elevator is idle, then wake it up
+            if e.state == e.IDLE:
+                logging.debug("env.py: _process_passenger_request() - Elevator{} woken up". format(e.id))
+                e.interrupt_idling()
+
         return False # FIXME: shouldn't PassengerRequest ask for next action of the elevators?
+
+    def trigger_epoch_event(self, event_type):
+        '''Used by other functions when the epoch events should be triggered.'''
+        logging.debug("env.py: trigger_epoch_event() - {}".format(event_type))
+        self.epoch_events[event_type].succeed(event_type)
+        self.epoch_events[event_type] = self.simul_env.event()
+
+    def load_passengers(self, elv_id):
+        '''Use by Elevator when idle and ready to load.'''
+        logging.debug("env.py: load_passengers()")
+        carrying = self.elevators[elv_id].passengers
+
+        # Unload passengers inside the Elevator if they're at the destination floor
+        for p in carrying:
+            # Determine if the passenger should get off on the current floor
+            if p.dest_floor == self.elevators[elv_id].curr_floor:
+                logging.debug("env.py: load_passengers() - passenger unloaded.")
+                carrying.remove(p)
+
+        # Load passengers waiting on the floor onto the Elevator
+        for p in self.floors[self.elevators[elv_id].curr_floor]:
+            # Determine if passenger should get on the elevator
+            pass
 
     def get_state(self):
         '''Return the state in multi-dimensional array.
@@ -152,14 +217,17 @@ class Environment():
         - Hoists' positions (34F, 64F)
         - Hoists' current weight WHEN they got a call request (1/1.5)
         '''
-        pass
+        return None
 
     def get_reward(self):
         '''Calculate and return the reward for the elevators
         
         Used in self.step()
         '''
-        pass
+        return None
+
+    def now(self):
+        return self.simul_env.now
 
     def render(self):
         '''Render visualization for the environment.'''
