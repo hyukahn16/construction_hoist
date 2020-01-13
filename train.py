@@ -37,6 +37,9 @@ if __name__ == "__main__":
     env.reset()
     while env.now() <= 360:
         logging.debug("train.py: About to run env.step()")
-        env.step([1, 1]) # FIXME: keep moving elevators up
-    
+        output = env.step([1, 1]) # FIXME: keep moving elevators up
+        logging.debug("train.py: Current rewards are {}".format(output['reward']))
+
+    env.update_end_reward()
+    logging.debug("train.py: Rewards - {}".format(env.get_reward())) 
     logging.debug("train.py: Simulation finished.")

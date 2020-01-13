@@ -25,7 +25,7 @@ class Environment():
         self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
         self.elevators = [] # List of Elevator objects
         self.call_requests = [] # List of call requests for each floor - holds Request Enum types
-        self.decision_elevators = []
+        self.decision_elevators = [] # FIXME: Currently not using this
 
         # FIXME These are used for the DQN I think?
         self.action_space = None # 2 for up or down
@@ -85,7 +85,7 @@ class Environment():
            3. if event type is ElevatorArrival or LoadingFinished, then finish function 
            4. 
         '''
-        logging.debug("env.py: step()")
+        logging.debug("env.py: step() - Starting")
         # Create processes for each elevators' actions
         for idx, action in enumerate(actions):
             if action == -1:
@@ -121,7 +121,7 @@ class Environment():
             "reward": self.get_reward(),
             "decision_agents": self.decision_elevators
         }
-        logging.debug("Finished step()")
+        logging.debug("env.py: step() - Finished")
         return output
 
     def generate_passengers(self):
@@ -208,25 +208,32 @@ class Environment():
         # Unload Passengers
         for p in to_delete:
             # Update reward for this elevator
-            self.elevators[elv_id].update_reward(self.simul_env.now - p.begin_wait_time)
+            self.elevators[elv_id].update_reward(p.begin_wait_time - self.simul_env.now)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
         
         # Load passengers
         for p in self.floors[curr_floor]:
-            logging.debug("env.py: load_passengers() - passenger loaded in Elevator_{} at floor {}.".format(elv_id, curr_floor))
+            logging.debug("env.py: load_passengers() \
+                - passenger loaded in Elevator_{} at floor {} \
+                    going to floor {}.".format(elv_id, curr_floor, p.dest_floor))
             carrying.add(p)
             self.floors[curr_floor].remove(p)
 
+    # FIXME: need to implement this function to get RL model going
     def get_state(self):
         '''Return the state in multi-dimensional array.
 
-        Returns:
+            Returns:
         - Hoist call requests (Up, down) (FIXME potentially the floor number as well)
         - Hoists' positions (34F, 64F)
         - Hoists' current weight WHEN they got a call request (1/1.5)
         '''
         return None
+
+    def get_reward(self):
+        '''Return rewards from all Elevators in a list.'''
+        return [e.reward for e in self.elevators]
 
     def update_all_reward(self):
         '''Calculate and update the reward for each elevator.
@@ -236,6 +243,18 @@ class Environment():
         '''
         for e in self.elevators:
             e.update_reward()
+
+    def update_end_reward(self):
+        '''Update Elevator rewards on Passengers never picked up by the Elevators
+        in the episode.
+        '''
+        reward = 0
+        for floor in self.floors:
+            for p in self.floors[floor]:
+                reward += (p.begin_wait_time - self.now())
+        
+        for e in self.elevators:
+            e.update_reward(reward)
 
     def now(self):
         return self.simul_env.now

@@ -69,6 +69,7 @@ class Elevator():
         self.env.load_passengers(self.id)
         self.state = self.IDLE
         yield self.env.simul_env.timeout(10)
+        self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_up(self):
         logging.debug("elevator.py: move_up() - Elevator_{}".format(self.id))
@@ -92,10 +93,12 @@ class Elevator():
         self.env.load_passengers(self.id)
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
+    # FIXME: may not need this function
     def legal_actions(self):
         '''Return set of legal actions in the current state.'''
         legal = set()
 
+    # FIXME: may not need thsi function
     def update_reward(self, reward):
         '''Update reward.
         Called from Environment.update_all_reward()
