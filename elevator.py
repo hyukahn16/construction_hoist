@@ -16,13 +16,13 @@ class Elevator():
     def __init__(self, env, id, curr_floor):
         """Initialize Elevator class."""
         self.curr_floor = curr_floor
-        self.passengers = []
+        self.passengers = set()
         self.weight_capacity = 907.185 # Unit: Kilograms, 1 ton == 907.185 kg
         self.velocity = 100 # Unit: meters/minute
         self.env = env
         self.id = id
         self.idling_event = None
-        self.state = 0 # 0 for idling - TODO: create enum class 
+        self.state = None # 0 for idling - TODO: create enum class 
 
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
@@ -40,7 +40,6 @@ class Elevator():
         1 UP
         2 DOWN
         '''
-       
         # Check if this is a legal action
 
         # If action is idle
@@ -65,37 +64,34 @@ class Elevator():
     def idle(self):
         '''Idle.'''
         logging.debug("elevator.py: idle(")
+        self.state = None
+        self.env.load_passengers(self.id)
         self.state = self.IDLE
         yield self.env.simul_env.timeout(10)
-        self.env.load_passengers(self.id)
 
     def move_up(self):
-        logging.debug("Elevator_{} moving UP".format(self.id))
+        logging.debug("elevator.py: move_up() - Elevator_{}".format(self.id))
         self.state = self.MOVING_UP
 
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor += self.MOVING_UP
         logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
-        self.idle()
+        self.env.load_passengers(self.id)
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_down(self):
-        logging.debug("elevator.py: move_down()")
+        logging.debug("elevator.py: move_down() - Elevator_{}".format(self.id))
         self.state = self.MOVING_DOWN
 
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor += self.MOVING_DOWN
         logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
-        self.idle()
+        self.env.load_passengers(self.id)
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def legal_actions(self):
         '''Return set of legal actions in the current state.'''
         legal = set()
-        # If elevator is currently idle
-        if self.state = self.IDLE:
-        # If elevator is currently moving UP or DOWN
-        else:
-            legal.update([0,1])
+        

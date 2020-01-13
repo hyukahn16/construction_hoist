@@ -196,18 +196,23 @@ class Environment():
         '''Use by Elevator when idle and ready to load.'''
         logging.debug("env.py: load_passengers()")
         carrying = self.elevators[elv_id].passengers
+        curr_floor = self.elevators[elv_id].curr_floor
 
-        # Unload passengers inside the Elevator if they're at the destination floor
+        # Unload passengers
+        to_delete = []
         for p in carrying:
             # Determine if the passenger should get off on the current floor
-            if p.dest_floor == self.elevators[elv_id].curr_floor:
+            if p.dest_floor == curr_floor:
                 logging.debug("env.py: load_passengers() - passenger unloaded.")
-                carrying.remove(p)
-
-        # Load passengers waiting on the floor onto the Elevator
-        for p in self.floors[self.elevators[elv_id].curr_floor]:
-            # Determine if passenger should get on the elevator
-            pass
+                to_delete.append(p)
+        for p in to_delete:
+            carrying.remove(p)        
+        
+        # Load passengers
+        for p in self.floors[curr_floor]:
+            logging.debug("env.py: load_passengers() - passenger loaded in Elevator_{} at floor {}.".format(elv_id, curr_floor))
+            carrying.add(p)
+            self.floors[curr_floor].remove(p)
 
     def get_state(self):
         '''Return the state in multi-dimensional array.
