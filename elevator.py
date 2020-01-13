@@ -22,7 +22,8 @@ class Elevator():
         self.env = env
         self.id = id
         self.idling_event = None
-        self.state = None # 0 for idling - TODO: create enum class 
+        self.state = None # 0 for idling - TODO: create enum class
+        self.reward = 0 
 
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
@@ -94,4 +95,10 @@ class Elevator():
     def legal_actions(self):
         '''Return set of legal actions in the current state.'''
         legal = set()
+
+    def update_reward(self, reward):
+        '''Update reward.
+        Called from Environment.update_all_reward()
+        '''
+        self.reward += reward
         

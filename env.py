@@ -193,19 +193,23 @@ class Environment():
         self.epoch_events[event_type] = self.simul_env.event()
 
     def load_passengers(self, elv_id):
-        '''Use by Elevator when idle and ready to load.'''
+        '''Use by Elevator when idle and ready to load/unload.'''
         logging.debug("env.py: load_passengers()")
         carrying = self.elevators[elv_id].passengers
         curr_floor = self.elevators[elv_id].curr_floor
 
-        # Unload passengers
+        # Save the Passengers that should get off on this floor
         to_delete = []
         for p in carrying:
             # Determine if the passenger should get off on the current floor
             if p.dest_floor == curr_floor:
                 logging.debug("env.py: load_passengers() - passenger unloaded.")
                 to_delete.append(p)
+        # Unload Passengers
         for p in to_delete:
+            # Update reward for this elevator
+            self.elevators[elv_id].update_reward(self.simul_env.now - p.begin_wait_time)
+            # Remove the passenger from the Elevator
             carrying.remove(p)        
         
         # Load passengers
@@ -224,12 +228,14 @@ class Environment():
         '''
         return None
 
-    def get_reward(self):
-        '''Calculate and return the reward for the elevators
+    def update_all_reward(self):
+        '''Calculate and update the reward for each elevator.
         
         Used in self.step()
+        FIXME: NOT IMPLEMENTED YET
         '''
-        return None
+        for e in self.elevators:
+            e.update_reward()
 
     def now(self):
         return self.simul_env.now
