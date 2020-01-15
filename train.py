@@ -33,9 +33,9 @@ if __name__ == "__main__":
             # Gradient descent updates weights in the policy network to minimize loss
                 # After x time steps, weights in the target network are updated to the weights in the policy network
 
-    env = make(2, 100) # (num_elevators, num_floors)
+    env = make(2, 100, 20) # (num_elevators, num_floors, Pas_gen_time)
     env.reset()
-    while env.now() <= 360:
+    while env.now() <= 10000000:
         logging.debug("train.py: About to run env.step()")
         output = env.step([1, 1]) # FIXME: keep moving elevators up
         logging.debug("train.py: Current rewards are {}".format(output['reward']))

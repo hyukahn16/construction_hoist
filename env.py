@@ -7,18 +7,19 @@ from elevator import Elevator
 
 #Request = Enum(EMPTY=0, UP=1, DOWN=2)
 
-def make(num_elevators, num_floors):
+def make(num_elevators, num_floors, pas_gen_time):
     '''Generate new simpy.Environment.'''
     simpy_env = simpy.Environment()
-    env = Environment(simpy_env, num_elevators, num_floors)
+    env = Environment(simpy_env, num_elevators, num_floors, pas_gen_time)
     return env
 
 class Environment():
 
-    def __init__(self, simul_env, num_elevators, num_floors):
+    def __init__(self, simul_env, num_elevators, num_floors, pas_gen_time):
         self.simul_env = simul_env
         self.num_elevators = num_elevators
         self.num_floors = num_floors
+        self.pas_gen_time = pas_gen_time
         
         # These variables underneath will be initialized in "self.reset()"
         self.floors = {} # Key: floor number, value: list of Passenger objects
@@ -132,8 +133,7 @@ class Environment():
         '''
 
         while True:
-            delay_time = 5 # FIXME: set delay time
-            yield self.simul_env.timeout(delay_time)
+            yield self.simul_env.timeout(self.pas_gen_time)
 
             # Create new instance of Passenger at random floor
             curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
@@ -214,9 +214,9 @@ class Environment():
         
         # Load passengers
         for p in self.floors[curr_floor]:
-            logging.debug("env.py: load_passengers() \
-                - passenger loaded in Elevator_{} at floor {} \
-                    going to floor {}.".format(elv_id, curr_floor, p.dest_floor))
+            logging.debug("env.py: load_passengers() "
+                "- passenger loaded in Elevator_{} at floor {} "
+                "going to floor {}.".format(elv_id, curr_floor, p.dest_floor))
             carrying.add(p)
             self.floors[curr_floor].remove(p)
 
