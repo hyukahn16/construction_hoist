@@ -66,8 +66,6 @@ class Elevator():
     def idle(self):
         '''Idle.'''
         logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
-        self.state = None
-        self.env.load_passengers(self.id)
         self.state = self.IDLE
         yield self.env.simul_env.timeout(10)
 
@@ -76,6 +74,7 @@ class Elevator():
     def move_up(self):
         logging.debug("elevator.py: move_up() - Elevator_{}".format(self.id))
         self.state = self.MOVING_UP
+        self.env.load_passengers(self.id)
 
         yield self.env.simul_env.timeout(15)
 
@@ -87,6 +86,7 @@ class Elevator():
     def move_down(self):
         logging.debug("elevator.py: move_down() - Elevator_{}".format(self.id))
         self.state = self.MOVING_DOWN
+        self.env.load_passengers(self.id)
 
         yield self.env.simul_env.timeout(15)
 
