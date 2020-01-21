@@ -42,13 +42,14 @@ class Elevator():
         2 DOWN
         '''
         # Check if this is a legal action
-        assert action in self.legal_actions()
+        if action not in self.legal_actions():
+            # idle if not a legal action
+            action = 0
 
         # If action is idle
         if action == 0:
             self.idling_event = self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
             try:
-                logging.debug("elevator.py: act() - about to idle")
                 yield self.idling_event
             except:
                 # if idling is interrupted (by the env), then trigger event to 
@@ -66,17 +67,21 @@ class Elevator():
     def idle(self):
         '''Idle.'''
         logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
+
         self.state = self.IDLE
         yield self.env.simul_env.timeout(10)
+        self.state = None
 
+        logging.debug("elevator.py: idle() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_up(self):
-        logging.debug("elevator.py: move_up() - Elevator_{}".format(self.id))
-        self.state = self.MOVING_UP
+        logging.debug("elevator.py: move_up() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
 
+        self.state = self.MOVING_UP
         yield self.env.simul_env.timeout(15)
+        self.state = None
 
         self.curr_floor += self.MOVING_UP
         logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
@@ -85,10 +90,11 @@ class Elevator():
 
     def move_down(self):
         logging.debug("elevator.py: move_down() - Elevator_{}".format(self.id))
-        self.state = self.MOVING_DOWN
         self.env.load_passengers(self.id)
 
+        self.state = self.MOVING_DOWN
         yield self.env.simul_env.timeout(15)
+        self.state = None
 
         self.curr_floor += self.MOVING_DOWN
         logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
@@ -97,10 +103,15 @@ class Elevator():
 
     # FIXME: may not need this function
     def legal_actions(self):
-        '''Return list of actions that are legal in the current Elevator state.'''
+        '''Return list of actions that are legal in the current Elevator state.
+        
+            0 IDLE
+            1 MOVE UP
+            2 MOVE DOWN
+        '''
         legal_actions = set([0, 1, 2])
         
-        if self.curr_floor >= self.env.num_floors:
+        if self.curr_floor >= self.env.num_floors-1:
             legal_actions.remove(1)
         if self.curr_floor <= 0:
             legal_actions.remove(2)

@@ -2,8 +2,8 @@ import simpy
 import random
 import logging
 from enum import Enum
-from passenger import Passenger
-from elevator import Elevator
+from .passenger import Passenger
+from .elevator import Elevator
 
 #Request = Enum(EMPTY=0, UP=1, DOWN=2)
 
@@ -176,7 +176,6 @@ class Environment():
         for e in self.elevators:
             # if elevator is idle, then wake it up
             if e.state == e.IDLE:
-                logging.debug("env.py: _process_passenger_request() - Elevator{} woken up". format(e.id))
                 e.interrupt_idling()
 
         return False # FIXME: shouldn't PassengerRequest ask for next action of the elevators?
@@ -191,7 +190,7 @@ class Environment():
 
     def load_passengers(self, elv_id):
         '''Use by Elevator when idle and ready to load/unload.'''
-        logging.debug("env.py: load_passengers()")
+        logging.debug("env.py: load_passengers() - Elevator_{}".format(elv_id))
         carrying = self.elevators[elv_id].passengers
         curr_floor = self.elevators[elv_id].curr_floor
 
@@ -223,14 +222,14 @@ class Environment():
     def get_state(self):
         '''Return the state as a (total_floors x 4 x 1) image'''
         
-       img = []
-       for i in range(self.num_floors):
-           img.append([]) # img[i]
-           for j in range(4):
-               img[i].append([self.call_requests[i][0]])
-               img[i].append([self.call_requests[i][1]])
-               img[i].append([self.elevators[0].curr_floor])
-               img[i].append([self.elevators[1].curr_floor])
+        img = []
+        for i in range(self.num_floors):
+            img.append([]) # img[i]
+            for j in range(4):
+                img[i].append([self.call_requests[i][0]])
+                img[i].append([self.call_requests[i][1]])
+                img[i].append([self.elevators[0].curr_floor])
+                img[i].append([self.elevators[1].curr_floor])
 
         return img
 
