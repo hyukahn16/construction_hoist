@@ -12,7 +12,6 @@ class Elevator():
     MOVING_UP = 1
     MOVING_DOWN = -1
 
-
     def __init__(self, env, id, curr_floor):
         """Initialize Elevator class."""
         self.curr_floor = curr_floor
@@ -24,6 +23,7 @@ class Elevator():
         self.idling_event = None
         self.state = None # 0 for idling - TODO: create enum class
         self.reward = 0 
+        self.last_reward = 0
 
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
@@ -42,6 +42,7 @@ class Elevator():
         2 DOWN
         '''
         # Check if this is a legal action
+        assert action in self.legal_actions()
 
         # If action is idle
         if action == 0:
@@ -96,8 +97,15 @@ class Elevator():
 
     # FIXME: may not need this function
     def legal_actions(self):
-        '''Return set of legal actions in the current state.'''
-        legal = set()
+        '''Return list of actions that are legal in the current Elevator state.'''
+        legal_actions = set([0, 1, 2])
+        
+        if self.curr_floor >= self.env.num_floors:
+            legal_actions.remove(1)
+        if self.curr_floor <= 0:
+            legal_actions.remove(2)
+        
+        return legal_actions
 
     # FIXME: may not need thsi function
     def update_reward(self, reward):

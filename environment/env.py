@@ -29,6 +29,7 @@ class Environment():
         self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
         self.elevators = [] # List of Elevator objects
         self.call_requests = [] # List of call requests for each floor | Ex: self.call_requests[0][0] == 1 or 0
+        self.decision_elevators = [] # Contains the indicies of elevators that need next action
 
         self.action_space = 3 # idle, up, down
         self.observation_space = None
@@ -117,8 +118,8 @@ class Environment():
         # return state, reward, and the decision agents
         output = {
             "state": self.get_state(),
-            "reward": self.get_reward(),
-            "decision_agents": self.decision_elevators
+            "reward": self.get_reward(), # List of rewards achieved by the previous action
+            "decision_agents": self.decision_elevators # List of elevators that need next action
         }
         logging.debug("env.py: step() - Finished")
         return output
@@ -152,23 +153,19 @@ class Environment():
     def _process_elevator_arrival(self, event_type):
         '''Process when an elevator stops at any floor.
 
-        Append the elevator that just arrived to the decision elevators
-        since this elevator needs to decide on the next action.
+        Elevator needs to decide on the next action.
         '''
         logging.debug("env.py: _process_elevator_arrival - {}".format(event_type))
         elevator_idx = int(event_type.split('_')[-1])
         self.decision_elevators.append(elevator_idx)
-        return True
 
     def _process_loading_finished(self, event_type):
         '''Process when an elevator has finished loading or unloading.
         
-        Returns True because 
         LoadingFinished requires the next decision for the elevators.
         '''
         elevator_idx = int(event_type.split('_')[-1])
         self.decision_elevators(elevator_idx)
-        return True
 
     def _process_passenger_request(self, event_type):
         '''Process when a passenger requests for an elevator.
@@ -206,11 +203,14 @@ class Environment():
                 logging.debug("env.py: load_passengers() - passenger unloaded.")
                 to_delete.append(p)
         # Unload Passengers
+        reward = 0
         for p in to_delete:
             # Update reward for this elevator
             self.elevators[elv_id].update_reward(p.begin_wait_time - self.simul_env.now)
+            reward += (p.begin_wait_time - self.simul_env.now)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
+        self.elevators[elv_id].last_reward = reward
         
         # Load passengers
         for p in self.floors[curr_floor]:
@@ -220,7 +220,6 @@ class Environment():
             carrying.add(p)
             self.floors[curr_floor].remove(p)
 
-    # FIXME: need to implement this function to get RL model going
     def get_state(self):
         '''Return the state as a (total_floors x 4 x 1) image'''
         
@@ -235,11 +234,9 @@ class Environment():
 
         return img
 
-
-
     def get_reward(self):
         '''Return rewards from all Elevators in a list.'''
-        return [e.reward for e in self.elevators]
+        return [e.last_reward for e in self.elevators]
 
     def update_all_reward(self):
         '''Calculate and update the reward for each elevator.
