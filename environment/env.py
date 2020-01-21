@@ -7,31 +7,31 @@ from elevator import Elevator
 
 #Request = Enum(EMPTY=0, UP=1, DOWN=2)
 
-def make(num_elevators, num_floors, pas_gen_time):
+def make(num_elevators, curr_floors, total_floors, pas_gen_time):
     '''Generate new simpy.Environment.'''
+    assert curr_floors <= total_floors
+
     simpy_env = simpy.Environment()
-    env = Environment(simpy_env, num_elevators, num_floors, pas_gen_time)
+    env = Environment(simpy_env, num_elevators, curr_floors, total_floors, pas_gen_time)
     return env
 
 class Environment():
 
-    def __init__(self, simul_env, num_elevators, num_floors, pas_gen_time):
+    def __init__(self, simul_env, num_elevators, curr_floors, total_floors, pas_gen_time):
         self.simul_env = simul_env
         self.num_elevators = num_elevators
-        self.num_floors = num_floors
+        self.num_floors = curr_floors
+        self.total_floors = total_floors
         self.pas_gen_time = pas_gen_time
         
         # These variables underneath will be initialized in "self.reset()"
         self.floors = {} # Key: floor number, value: list of Passenger objects
         self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
         self.elevators = [] # List of Elevator objects
-        self.call_requests = [] # List of call requests for each floor - holds Request Enum types
-        self.decision_elevators = [] # FIXME: Currently not using this
+        self.call_requests = [] # List of call requests for each floor | Ex: self.call_requests[0][0] == 1 or 0
 
-        # FIXME These are used for the DQN I think?
-        self.action_space = None # 2 for up or down
+        self.action_space = 3 # idle, up, down
         self.observation_space = None
-
 
     def reset(self):
         '''Resets the environment to its initial state,
@@ -41,12 +41,10 @@ class Environment():
         '''
         self.simul_env = simpy.Environment()
 
-        # Empty initialization of decision elevators
-        self.decision_elevators = []
-
         # initialize each floor that holds Passenger objects
         for i in range(self.num_floors):
             self.floors[i] = []
+            self.call_requests.append([0, 0]) # first value is UP call, second value is DOWN call
 
         # Initialize Elevator objects
         for i in range(self.num_elevators):
@@ -189,7 +187,9 @@ class Environment():
     def trigger_epoch_event(self, event_type):
         '''Used by other functions when the epoch events should be triggered.'''
         logging.debug("env.py: trigger_epoch_event() - {}".format(event_type))
+        # Trigger the event
         self.epoch_events[event_type].succeed(event_type)
+        # Reset the event to be triggered again in the future
         self.epoch_events[event_type] = self.simul_env.event()
 
     def load_passengers(self, elv_id):
@@ -222,14 +222,20 @@ class Environment():
 
     # FIXME: need to implement this function to get RL model going
     def get_state(self):
-        '''Return the state in multi-dimensional array.
+        '''Return the state as a (total_floors x 4 x 1) image'''
+        
+       img = []
+       for i in range(self.num_floors):
+           img.append([]) # img[i]
+           for j in range(4):
+               img[i].append([self.call_requests[i][0]])
+               img[i].append([self.call_requests[i][1]])
+               img[i].append([self.elevators[0].curr_floor])
+               img[i].append([self.elevators[1].curr_floor])
 
-            Returns:
-        - Hoist call requests (Up, down) (FIXME potentially the floor number as well)
-        - Hoists' positions (34F, 64F)
-        - Hoists' current weight WHEN they got a call request (1/1.5)
-        '''
-        return None
+        return img
+
+
 
     def get_reward(self):
         '''Return rewards from all Elevators in a list.'''

@@ -64,11 +64,12 @@ class Elevator():
 
     def idle(self):
         '''Idle.'''
-        logging.debug("elevator.py: idle(")
+        logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
         self.state = None
         self.env.load_passengers(self.id)
         self.state = self.IDLE
         yield self.env.simul_env.timeout(10)
+
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_up(self):

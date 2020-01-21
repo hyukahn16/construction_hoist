@@ -24,12 +24,12 @@ class DQNModel(torch.nn.Module):
     def __init__(self):
         super(DQNModel, self).__init__()
                 
-        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, stride=1)
-        self.conv2 = torch.nn.Conv2d()
-        self.conv3 = torch.nn.Conv2d()
+        self.conv1 = torch.nn.Conv2d(1, 32, kernel_size=3, stride=1)
+        self.conv2 = torch.nn.Conv2d(32, 64, kernel_size=3, stride=1)
+        self.conv3 = torch.nn.Conv2d(64, 64, kernel_size=3, stride=1)
 
         self.fc1 = torch.nn.Linear()
-        self.fc2 = torch.nn.Linear()
+        self.fc2 = torch.nn.Linear(, 3)
 
     def forward(self, input):
         '''Return Q-Values.'''
@@ -41,11 +41,14 @@ class DQNModel(torch.nn.Module):
         return self.fc5(output) # Returns Q-values
 
 class DQN():
-    def __init__(self):
+    def __init__(self, update_freq):
         self.model = DQNModel() # Fit/Train
         self.target_model = DQNModel() # Predict Q-Values
-        self.target_update_counter = 0
+
         self.optimizer = torch.optim.RMSprop(self.model.parameters())
+
+        self.target_update_counter = 0
+        self.target_update_freq = 4 # FIXME: replace with update_freq
 
         self.replay_memory = ReplayMemory(REPLAY_MEMORY_SIZE)
                                  
@@ -66,20 +69,41 @@ class DQN():
         transitions = self.replay_memory.sample(MINIBATCH_SIZE)
         batch = Transition(*zip(*transitions))
 
-        current_states = batch[0]
-        actions = batch[1]
-        new_states = batch[2]
+        current_states = torch.FloatTensor(batch[0]).to(self.device)
+        actions = torch.FloatTensor(batch[1]).to(self.device)
+        new_states = torch.FloatTensor(batch[2]).to(self.device)
+        rewards = torch.FloatTensor(batch[3]).to(self.device)
+        done = torch.FloatTensor(batch[4]).to(self.device)
+
         # get Q-Values from self.model        
-        current_q = self.model(current_states).gather(1, )
+        current_Q_values = self.model.forward(current_states).gather(1, actions.unsqueeze(1))
 
-        # Get future states from batch
-        new_states = np.array(memory[1] for memory in minibatch])
-        # get Q-Values from self.target_model
-        future_q = self.target_model.predict(new_states)
+        next_max_q = self.target_model.forward(new_states).detach().max(1)[0]
+        next_Q_values = done * next_max_q
 
+        target_Q_values = rewards + (gamma * next_Q_values)
 
-    def update_replay_memory(self, memory):
-        self.replay_memory.append(memory)
+        # Compute Bellman error
+        bellman_error =target_Q_values - current_Q_values
+
+        # Clip the Bellman error between [-1, 1]
+        bellman_error_clip = bellman_error.clamp(-1, 1)
+
+        d_error = bellman_error_clip * -1
+
+        # Clear previous gradients before backward pass
+        self.optimizer.zero_grad()
+
+        # Run backward pass
+        current_Q_values.backward(d_error.data.unsqueeze(1))
+
+        # Perform update
+        self.optimizer.step()
+        self.target_update_counter += 1
+
+        # Periodically, update the target model
+        if self.target_update_counter % self.target_update_freq == 0:
+            self.target_model.load_state_dict(Q.state_dict())
 
 
 # initialize NNet for each elevator (2 in current case)
