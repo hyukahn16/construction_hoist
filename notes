@@ -1,0 +1,60 @@
+Links:
+
+https://ai.stackexchange.com/questions/8323/how-to-handle-rectangle-images-in-neural-network
+
+Deep reinforcmenet learning on changing data sizes
+https://datascience.stackexchange.com/questions/61536/deep-reinforcement-learning-on-changing-data-sizes
+
+https://stackoverflow.com/questions/44193270/how-to-calculate-the-output-size-after-convolving-and-pooling-to-the-input-image
+
+-------------------
+
+Input state: current hoist position(s), hoist current weight capacity,
+and call request (up/down) and its index of floor
+
+- Current hoist position: (#_floors x #_elevators)
+- hoist current weight capacity: (#_elevators x 1) - might need to fill up to #_floors 
+- Call request for up: (#_floors x 1)
+- Call request for down: (#_floors x 1)
+
+- Total: (#_floors x #_elevators + 1 + 1 + 1)
+
+---------------------------------------
+
+TURN SIMULATION STATE INTO AN IMAGE (LIKE ATARI GAME)
+INPUT:
+    height = #_floors (Currently: 50, Future: 60 )
+    width = (DOWN calls = 1) + (UP calls = 1) + (#_elevators = 2 for now) = 4 
+    depth = 
+        - DOWN, UP calls = 0 or 1
+        - Each elevator's capacity normalized = [0, 1]
+    
+    Dimensions: 60 x 4 x 1
+---------------------
+|D |   | E |        |
+|O |   | L |        |
+|W |   | E |        | 
+|N |   |   |        |
+|  |   |   | E |    |
+|  | U |   | L |    |
+|  | P |   | E |    |
+---------------------
+
+CNN Architecture:
+    First conv layer: in_channel=1, out_channel=32, kernel=(3,3), stride=1
+    Output width: ((width - filter) / stride) + 1 = ((4 - 3) / 1) + 1 = 2
+    Output height: ((height - filter)/ stride) + 1 = ((60 - 3) / 1) + 1 = 58
+    Output depth: 32
+    Output dimension: 58 x 2 x 32
+
+    Second conv layer: in_channel=32, out_channel=64, kernel=(3,3), stride=1
+    Output width: (())
+    Output height:
+    Output depth: 
+
+    Third conv layer: in_channel=64, out_channel=64, kernel=(3,3), stride=11
+    First fc layer: in_features= , out_features=
+    Second fc layer (output layer): in_features= , out_features=3
+
+Cautions:
+- Will CNN work fine on a narrow image?
