@@ -19,14 +19,6 @@ REPLAY_MEMORY_SIZE = 50_000
 MIN_REPLAY_MEMORY_SIZE = 1_000
 MINIBATCH_SIZE = 64
 
-class Replay():
-    def __init__(self, current_state, action, reward, new_state, done):
-        self.current_state = None
-        self.action = None
-        self.reward = None
-        self.new_state = None
-        self.done = None
-
 class DQNModel(torch.nn.Module):
     # DQN Pytorch example code: https://github.com/transedward/pytorch-dqn
     def __init__(self):
@@ -56,6 +48,8 @@ class DQN():
         self.optimizer = torch.optim.RMSprop(self.model.parameters())
 
         self.replay_memory = ReplayMemory(REPLAY_MEMORY_SIZE)
+                                 
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def conv2d_size_out(self, size, kernel_size, stride):
         '''Helper function to calculate size after a layer.'''
@@ -69,15 +63,16 @@ class DQN():
             return
         
         # Get batch of samples from replay memory
-        transitions = replay_memory.sample(MINIBATCH_SIZE)
+        transitions = self.replay_memory.sample(MINIBATCH_SIZE)
         batch = Transition(*zip(*transitions))
 
-        # Get current states from minibatch
-        current_states = np.array([memory[0] for memory in minibatch])
+        current_states = batch[0]
+        actions = batch[1]
+        new_states = batch[2]
         # get Q-Values from self.model        
         current_q = self.model(current_states).gather(1, )
 
-        # Get future states from minibatch
+        # Get future states from batch
         new_states = np.array(memory[1] for memory in minibatch])
         # get Q-Values from self.target_model
         future_q = self.target_model.predict(new_states)
