@@ -1,3 +1,5 @@
 .vscode
 .ipynb_checkpoints/
-_pycache_/
+_pycache_
+environment/_pycache_
+model/_pycache_

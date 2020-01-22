@@ -1,6 +1,7 @@
 import simpy
 import random
 import logging
+import numpy as np
 from enum import Enum
 from .passenger import Passenger
 from .elevator import Elevator
@@ -117,9 +118,9 @@ class Environment():
 
         # return state, reward, and the decision agents
         output = {
-            "state": self.get_state(),
-            "reward": self.get_reward(), # List of rewards achieved by the previous action
-            "decision_agents": self.decision_elevators # List of elevators that need next action
+            "state": np.array(self.get_state()),
+            "reward": np.array(self.get_reward()), # List of rewards achieved by the previous action
+            "decision_agents": np.array(self.decision_elevators) # List of elevators that need next action
         }
         logging.debug("env.py: step() - Finished")
         return output
@@ -161,7 +162,7 @@ class Environment():
 
     def _process_loading_finished(self, event_type):
         '''Process when an elevator has finished loading or unloading.
-        
+        FIXME: this function is not used 
         LoadingFinished requires the next decision for the elevators.
         '''
         elevator_idx = int(event_type.split('_')[-1])
@@ -209,6 +210,7 @@ class Environment():
             reward += (p.begin_wait_time - self.simul_env.now)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
+
         self.elevators[elv_id].last_reward = reward
         
         # Load passengers
@@ -216,25 +218,40 @@ class Environment():
             logging.debug("env.py: load_passengers() "
                 "- passenger loaded in Elevator_{} at floor {} "
                 "going to floor {}.".format(elv_id, curr_floor, p.dest_floor))
-            carrying.add(p)
-            self.floors[curr_floor].remove(p)
+
+            # take passenger only if Elevator is not full
+            if (len(self.elevators[elv_id].passengers) + 1) * 62 < \
+                self.elevators[elv_id].weight_capacity:
+
+                carrying.add(p)
+                self.floors[curr_floor].remove(p)
+            else:
+                break
 
     def get_state(self):
         '''Return the state as a (total_floors x 4 x 1) image'''
         
         img = []
-        for i in range(self.num_floors):
+        '''
+        for fl in range(self.num_floors):
             img.append([]) # img[i]
             for j in range(4):
-                img[i].append([self.call_requests[i][0]])
-                img[i].append([self.call_requests[i][1]])
-                img[i].append([self.elevators[0].curr_floor])
-                img[i].append([self.elevators[1].curr_floor])
-
+                img[fl].append([self.call_requests[fl][0]])
+                img[fl].append([self.call_requests[fl][1]])
+                img[fl].append([self.elevators[0].curr_floor])
+                img[fl].append([self.elevators[1].curr_floor])
+        '''
+        img.append([])
+        for fl in range(self.num_floors):
+            img[0].append([])
+            img[0][fl].append(self.call_requests[fl][0])
+            img[0][fl].append(self.call_requests[fl][1])
+            img[0][fl].append(self.elevators[0].curr_floor)
+            img[0][fl].append(self.elevators[1].curr_floor)
         return img
 
     def get_reward(self):
-        '''Return rewards from all Elevators in a list.'''
+        '''Return the last reward from all Elevators in a list.'''
         return [e.last_reward for e in self.elevators]
 
     def update_all_reward(self):

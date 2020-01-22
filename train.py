@@ -1,7 +1,10 @@
-from environment import Environment, make
 import logging
 # https://realpython.com/python-logging/
 import random
+import numpy as np
+from environment import Environment, make
+from model import DQN
+from model import ReplayMemory
 
 logging.basicConfig(filename="log", filemode='w', level=logging.DEBUG)
 logging.debug("train.py: starting train.py")
@@ -30,18 +33,60 @@ if __name__ == "__main__":
                 # output Q comes from policy network and target Q comes from target network
             # Gradient descent updates weights in the policy network to minimize loss
                 # After x time steps, weights in the target network are updated to the weights in the policy network
+    
+    # variables needed for Environment
     num_elevators = 2
-    env = make(num_elevators, 50, 60, 20) # (num_elevators, curr_floors, total_floors, Pas_gen_time)
+    curr_floors = 50
+    total_floors = 60
+    passenger_generation_time = 20
+
+    # variables needed for DQN
+    update_freq = 4
+    action_space = [0,1,2]
+    lr = 0.005
+    epsilon = 1.0
+    min_epsilon = 0.1
+    eps_dec_rate = 0.95
+    gamma = 0.99
+
+    REPLAY_MEMORY_SIZE = 500
+    MIN_REPLAY_MEMORY_SIZE = 100
+    MINIBATCH_SIZE = 100
+
+    replays = [ReplayMemory(REPLAY_MEMORY_SIZE, MIN_REPLAY_MEMORY_SIZE) \
+                for _ in range(num_elevators)]
+    agents = [DQN(update_freq, action_space, lr, epsilon, min_epsilon, eps_dec_rate, gamma) \
+                for _ in range(num_elevators)] # Deep Q Network agents
+    env = make(num_elevators, curr_floors, total_floors, passenger_generation_time)
+
     output = env.reset()
+    logging.debug(np.array(output["state"]).shape)
+    neg_action = [-1 for _ in range(num_elevators)]
+    zero_actions = [0 for _ in range(3)] # FIXME: set action_space variable
 
-    while env.now() <= 1000:
+    while env.now() <= 10000:
         logging.debug("train.py: About to run env.step()")
-        actions = [-1 for _ in range(num_elevators)]
-        for idx in output["decision_agents"]:
-            actions[idx] = random.randint(0, 2)
 
-        output = env.step(actions) # FIXME: keep moving elevators up
-        logging.debug("train.py: Current rewards are {}".format(output['reward']))
+        # Reset all actions and choose an action for Elevators
+        actions = neg_action
+        for idx in output["decision_agents"]:
+            actions[idx] = agents[idx].get_action(output["state"])
+
+        # Run simulation with the chosen actions
+        new_output = env.step(actions)
+
+        # Store replay memory for the Elevator that needs next action
+        # And train the Elevator's DQN agent
+        for idx in new_output["decision_agents"]:
+            replay_action = zero_actions
+            replay_action[actions[idx]] = 1
+            replays[idx].push(output["state"], actions[idx], new_output["state"], new_output["reward"][idx], 0.0)
+            agents[idx].train(replays[idx])
+
+        # Overwrite old output with new output
+        output = new_output
+
+        logging.debug("train.py: last rewards are {}".format(new_output['reward']))
 
     env.update_end_reward()
     logging.debug("train.py: Rewards - {}".format(env.get_reward())) 

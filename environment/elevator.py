@@ -21,7 +21,7 @@ class Elevator():
         self.env = env
         self.id = id
         self.idling_event = None
-        self.state = None # 0 for idling - TODO: create enum class
+        self.state = None
         self.reward = 0 
         self.last_reward = 0
 
@@ -101,7 +101,6 @@ class Elevator():
         self.env.load_passengers(self.id)
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
-    # FIXME: may not need this function
     def legal_actions(self):
         '''Return list of actions that are legal in the current Elevator state.
         
@@ -118,7 +117,6 @@ class Elevator():
         
         return legal_actions
 
-    # FIXME: may not need thsi function
     def update_reward(self, reward):
         '''Update reward.
         Called from Environment.update_all_reward()

@@ -1,5 +1,17 @@
 DEBUG:root:train.py: starting train.py
 DEBUG:root:train.py: Simulation starting.
+DEBUG:root:47
+DEBUG:root:1
+DEBUG:root:dimensions
+DEBUG:root:47
+DEBUG:root:1
+DEBUG:root:dimensions
+DEBUG:root:47
+DEBUG:root:1
+DEBUG:root:dimensions
+DEBUG:root:47
+DEBUG:root:1
+DEBUG:root:dimensions
 DEBUG:root:env.py: Reset Complete!
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
@@ -10,1801 +22,667 @@ DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:elevator.py: idle() - Elevator_1 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 27, going to 34!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 38, going to 2!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:(1, 50, 4)
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 1
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 19, going to 33!
+DEBUG:root:Created new Passenger at 45, going to 42!
 DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_down() - Elevator_0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:Created new Passenger at 12, going to 19!
+DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 2
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:Created new Passenger at 4, going to 47!
+DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 1
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:Created new Passenger at 38, going to 22!
+DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 2
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 26, going to 38!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 3
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:Created new Passenger at 23, going to 48!
+DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 4
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 4 going to floor 47.
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:elevator.py: idle() - Elevator_0 at floor 1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_down() - Elevator_0
 DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 3
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 3
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 12, going to 46!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 4
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 4
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 32, going to 35!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 5
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 2
-DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 38, going to 34!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 4
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 5
+DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 2
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 2
+DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 37, going to 16!
+DEBUG:root:Created new Passenger at 38, going to 40!
 DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 4
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
 DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_down() - Elevator_0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_down() - Elevator_0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:Created new Passenger at 48, going to 45!
+DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
 DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 3
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
 DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 4
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 3
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 8, going to 1!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 4
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 4
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
+DEBUG:root:elevator.py: move_down() - Elevator_0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 1
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 3
-DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 5
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 4
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 14, going to 24!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 6
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 4
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
 DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 19, going to 31!
+DEBUG:root:Created new Passenger at 7, going to 22!
 DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 4
+DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
+DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 6
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 4
+DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 4
-DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 4
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 3
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 3
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
 DEBUG:root:elevator.py: move_down() - Elevator_1
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 49, going to 42!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 5, going to 37!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_0 at floor 5 going to floor 37.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 7
+DEBUG:root:elevator.py: move_down() - Elevator_1
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 5
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 4
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:Created new Passenger at 23, going to 40!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 8 going to floor 1.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 9
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 36, going to 0!
+DEBUG:root:Created new Passenger at 2, going to 1!
 DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 6
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 3
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 2 going to floor 1.
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 2
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:Created new Passenger at 39, going to 4!
+DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 6
+DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_1
 DEBUG:root:elevator.py: idling is interrupted.
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 7
+DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 8
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 3
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 36, going to 16!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 9
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 9
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 35, going to 12!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 10
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 10
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 7
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 4, going to 27!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 12
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 12 going to floor 46.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:elevator.py: move_down() - Elevator_1
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 3, going to 14!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 9
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 3
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 3
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 19, going to 49!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 10
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
 DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 8
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 10
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 10
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 15, going to 12!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 7
+DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 16, going to 32!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 12
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 12
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 20, going to 46!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 7
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 26, going to 23!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 8
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 12
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 15, going to 34!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 11
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 12
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 8, going to 10!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 12
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 13
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 47, going to 10!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 5
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 13
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 14 going to floor 24.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 48, going to 25!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 7
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 15 going to floor 12.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 3, going to 6!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 15
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 15 going to floor 34.
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 6
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 16
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 16 going to floor 32.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 6
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 44, going to 8!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 5
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 31, going to 23!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 4
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_0 at floor 4 going to floor 27.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 15, going to 12!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 3
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_0 at floor 3 going to floor 14.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 3
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_0 at floor 3 going to floor 6.
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 15 going to floor 12.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 4
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:Created new Passenger at 14, going to 36!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 15
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 3
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 16
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 13, going to 37!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 2
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 12, going to 19!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 16
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 16
-DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 2
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:Created new Passenger at 16, going to 18!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 17
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 17
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 36, going to 48!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 2
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 17
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: idle() - Elevator_0 at floor 2
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_down() - Elevator_0
 DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:Created new Passenger at 40, going to 16!
+DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:Created new Passenger at 2, going to 38!
 DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 16
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 2
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 16 going to floor 18.
+DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 2 going to floor 38.
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:elevator.py: idle() - Elevator_0 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
+DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished simulation
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
+DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
+DEBUG:root:env.py: step() - Finished
+DEBUG:root:train.py: last rewards are [0 0]
+DEBUG:root:train.py: About to run env.step()
+DEBUG:root:env.py: step() - Starting
+DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: move_down() - Elevator_0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:elevator.py: idle() - Elevator_1 at floor 2
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
+DEBUG:root:elevator.py: move_down() - Elevator_0
+DEBUG:root:env.py: load_passengers() - Elevator_0
+DEBUG:root:elevator.py: move_down() - Elevator_1
+DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 1
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 16
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 40, going to 16!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 2
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_down() - Elevator_0
 DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 32, going to 6!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 14 going to floor 36.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 14
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_0
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 18, going to 27!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 15
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 1
 DEBUG:root:env.py: load_passengers() - Elevator_1
+DEBUG:root:env.py: load_passengers() - passenger unloaded.
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 15
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [  0 -55]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
+DEBUG:root:elevator.py: idle() - Elevator_0
 DEBUG:root:elevator.py: move_down() - Elevator_1
 DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 29, going to 10!
+DEBUG:root:Created new Passenger at 25, going to 38!
 DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
+DEBUG:root:elevator.py: move_down() - Elevator_0 at floor -1
 DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 14
+DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 0
 DEBUG:root:env.py: load_passengers() - Elevator_1
 DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished simulation
 DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
 DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 21, going to 9!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 14
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 13
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: load_passengers() - passenger loaded in Elevator_1 at floor 13 going to floor 37.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 13
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 17, going to 36!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_1
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 43, going to 6!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_0 from floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: move_down() - Elevator_1 at floor 13
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: move_up() - Elevator_0 at floor 1
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 13
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
+DEBUG:root:train.py: last rewards are [0 0]
 DEBUG:root:train.py: About to run env.step()
 DEBUG:root:env.py: step() - Starting
 DEBUG:root:env.py: step() - Running simulation
 DEBUG:root:elevator.py: idle() - Elevator_0
 DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 25, going to 16!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_down() - Elevator_0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 13
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: move_down() - Elevator_0 at floor 0
-DEBUG:root:env.py: load_passengers() - Elevator_0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:Created new Passenger at 2, going to 13!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 13
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:elevator.py: idling is interrupted.
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 13
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: idle() - Elevator_1
-DEBUG:root:Created new Passenger at 29, going to 21!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:elevator.py: idle() - Elevator_1 at floor 13
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 13
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 14
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 6, going to 24!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 from floor 15
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:Created new Passenger at 10, going to 27!
-DEBUG:root:env.py: trigger_epoch_event() - PassengerRequest
-DEBUG:root:elevator.py: idle() - Elevator_0 at floor 0
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_0
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: About to run env.step()
-DEBUG:root:env.py: step() - Starting
-DEBUG:root:env.py: step() - Running simulation
-DEBUG:root:elevator.py: idle() - Elevator_0
-DEBUG:root:elevator.py: move_up() - Elevator_1 at floor 16
-DEBUG:root:env.py: load_passengers() - Elevator_1
-DEBUG:root:env.py: trigger_epoch_event() - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished simulation
-DEBUG:root:env.py: _process_elevator_arrival - ElevatorArrival_1
-DEBUG:root:env.py: step() - Finished
-DEBUG:root:train.py: Current rewards are [0, 0]
-DEBUG:root:train.py: Rewards - [0, 0]
-DEBUG:root:train.py: Simulation finished.
