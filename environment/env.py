@@ -2,6 +2,7 @@ import simpy
 import random
 import logging
 import numpy as np
+import torch
 from enum import Enum
 from .passenger import Passenger
 from .elevator import Elevator
@@ -91,6 +92,7 @@ class Environment():
         for idx, action in enumerate(actions):
             if action == -1:
                 continue
+            logging.debug("Creating proces for Elevator_{} with action {}".format(idx, action))
             self.simul_env.process(self.elevators[idx].act(action))
 
         while True: # run until a decision epoch is reached
@@ -135,17 +137,27 @@ class Environment():
         while True:
             yield self.simul_env.timeout(self.pas_gen_time)
 
-            # Create new instance of Passenger at random floor
             curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
             # get new destination floor for this passenger
+            # make sure that the destination floor is NOT the same as 
+            # current floor
             dest_fl = curr_fl;
             while dest_fl == curr_fl:
                 dest_fl = random.randrange(0, self.num_floors, 1)
 
+            # Create new instance of Passenger at random floor
             p = Passenger(curr_fl, dest_fl, self.simul_env.now)
             
             # Add Passenger to appropriate floor group
             self.floors[p.curr_floor].append(p)
+            
+            if curr_fl > dest_fl:
+                # Passenger needs to go DOWN
+                self.call_requests[p.curr_floor][1] = 1
+            else:
+                # Passenger needs to go UP
+                self.call_requests[p.curr_floor][0] = 1
+
             logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
 
             # Trigger epoch event for PassengerRequest
@@ -166,7 +178,7 @@ class Environment():
         LoadingFinished requires the next decision for the elevators.
         '''
         elevator_idx = int(event_type.split('_')[-1])
-        self.decision_elevators(elevator_idx)
+        self.decision_elevators.append(elevator_idx)
 
     def _process_passenger_request(self, event_type):
         '''Process when a passenger requests for an elevator.
@@ -202,6 +214,7 @@ class Environment():
             if p.dest_floor == curr_floor:
                 logging.debug("env.py: load_passengers() - passenger unloaded.")
                 to_delete.append(p)
+
         # Unload Passengers
         reward = 0
         for p in to_delete:
@@ -218,15 +231,26 @@ class Environment():
             logging.debug("env.py: load_passengers() "
                 "- passenger loaded in Elevator_{} at floor {} "
                 "going to floor {}.".format(elv_id, curr_floor, p.dest_floor))
-
-            # take passenger only if Elevator is not full
+            # FIXME: need to consider which passengers will be getting on the elevator
+            # take passenger only if Elevator is NOT full
             if (len(self.elevators[elv_id].passengers) + 1) * 62 < \
                 self.elevators[elv_id].weight_capacity:
-
                 carrying.add(p)
                 self.floors[curr_floor].remove(p)
+                self.elevators[elv_id].requests[p.dest_floor] = 1
             else:
                 break
+        
+        # Handle request calls from Environment and Elevator
+        # 1. Handle Environment's call requests
+        self.call_requests[curr_floor] = [0, 0] # reset call request for this floor
+        for p in self.floors[curr_floor]:
+            if p.dest_floor > curr_floor:
+                self.call_requests[curr_floor][0] = 1
+            elif p.dest_floor < curr_floor:
+                self.call_requests[curr_floor][1] = 1
+        # 2. Handle Elevator's call requests for this floor
+        self.elevators[elv_id].requests[curr_floor] = 0
 
     def get_state(self):
         '''Return the state as a (total_floors x 4 x 1) image'''
@@ -245,14 +269,25 @@ class Environment():
         for fl in range(self.num_floors):
             img[0].append([])
             img[0][fl].append(self.call_requests[fl][0])
-            img[0][fl].append(self.call_requests[fl][1])
-            img[0][fl].append(self.elevators[0].curr_floor)
-            img[0][fl].append(self.elevators[1].curr_floor)
+            img[0][fl].append(self.call_requests[fl][1]) 
+
+            img[0][fl].append(1 if self.elevators[0].curr_floor == fl else 0) # Elevator floor location
+            img[0][fl].append((len(self.elevators[0].passengers) * 62.0 / \
+                self.elevators[0].weight_capacity) if self.elevators[0].curr_floor == fl else 0) 
+            img[0][fl].append(self.elevators[0].requests[fl]) # floor requests from inside the Elevator
+
+            img[0][fl].append(1 if self.elevators[1].curr_floor == fl else 0) # Elevator floor location
+            img[0][fl].append((len(self.elevators[1].passengers) * 62.0 / \
+                self.elevators[1].weight_capacity) if self.elevators[1].curr_floor == fl else 0)
+            img[0][fl].append(self.elevators[1].requests[fl]) # floor requests from inside the Elevator
         return img
 
     def get_reward(self):
         '''Return the last reward from all Elevators in a list.'''
         return [e.last_reward for e in self.elevators]
+
+    def get_total_reward(self):
+        return [e.reward for e in self.elevators]
 
     def update_all_reward(self):
         '''Calculate and update the reward for each elevator.
@@ -274,6 +309,8 @@ class Environment():
         
         for e in self.elevators:
             e.update_reward(reward)
+
+        return reward
 
     def now(self):
         return self.simul_env.now

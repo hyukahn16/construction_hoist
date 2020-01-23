@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 
 # Potential observation for the agent:
 # - Requsted floor and the direction(going up or down)
@@ -16,6 +17,7 @@ class Elevator():
         """Initialize Elevator class."""
         self.curr_floor = curr_floor
         self.passengers = set()
+        self.requests = np.zeros(env.num_floors) # floor requests from Passengers inside the Elevator # FIXME implement
         self.weight_capacity = 907.185 # Unit: Kilograms, 1 ton == 907.185 kg
         self.velocity = 100 # Unit: meters/minute
         self.env = env
@@ -41,6 +43,11 @@ class Elevator():
         1 UP
         2 DOWN
         '''
+
+        if action == -1:
+            # do nothing
+            return
+
         # Check if this is a legal action
         if action not in self.legal_actions():
             # idle if not a legal action
@@ -81,24 +88,24 @@ class Elevator():
 
         self.state = self.MOVING_UP
         yield self.env.simul_env.timeout(15)
-        self.state = None
 
         self.curr_floor += self.MOVING_UP
         logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
+        self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_down(self):
-        logging.debug("elevator.py: move_down() - Elevator_{}".format(self.id))
+        logging.debug("elevator.py: move_down() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
 
         self.state = self.MOVING_DOWN
         yield self.env.simul_env.timeout(15)
-        self.state = None
 
         self.curr_floor += self.MOVING_DOWN
         logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
+        self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def legal_actions(self):
