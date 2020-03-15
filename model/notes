@@ -1,5 +1,7 @@
 Links:
 
+https://github.com/suragnair/lift-sim/blob/master/Enivronment.py
+
 https://ai.stackexchange.com/questions/8323/how-to-handle-rectangle-images-in-neural-network
 
 Deep reinforcmenet learning on changing data sizes
@@ -29,9 +31,9 @@ INPUT:
         - DOWN, UP calls = 0 or 1
         - Each elevator's capacity normalized = [0, 1]
     
-    Dimensions: 60 x 4 x 1
+    Dimensions: 60 x 8 x 1
 ---------------------
-|D |   | E |        |
+|D |   | E |          |
 |O |   | L |        |
 |W |   | E |        | 
 |N |   |   |        |

@@ -13,19 +13,19 @@ class Elevator():
     MOVING_UP = 1
     MOVING_DOWN = -1
 
-    def __init__(self, env, id, curr_floor):
+    def __init__(self, env, id):
         """Initialize Elevator class."""
-        self.curr_floor = curr_floor
+        self.curr_floor = 0
         self.passengers = set()
         self.requests = np.zeros(env.num_floors) # floor requests from Passengers inside the Elevator # FIXME implement
         self.weight_capacity = 907.185 # Unit: Kilograms, 1 ton == 907.185 kg
-        self.velocity = 100 # Unit: meters/minute
         self.env = env
         self.id = id
         self.idling_event = None
         self.state = None
-        self.reward = 0 
-        self.last_reward = 0
+        self.reward = 0 # Cumulative reward
+        self.last_reward = 0 # Reward from last action that reached decision epoch
+        self.num_served = 0
 
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
@@ -38,15 +38,12 @@ class Elevator():
 
     def act(self, action):
         '''Create process for elevator to take action.
-       
         0 IDLE
         1 UP
         2 DOWN
         '''
-
         if action == -1:
-            # do nothing
-            return
+            return # do nothing
 
         # Check if this is a legal action
         if action not in self.legal_actions():
@@ -55,20 +52,24 @@ class Elevator():
 
         # If action is idle
         if action == 0:
-            self.idling_event = self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
+            self.idling_event = 
+                self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
             try:
                 yield self.idling_event
             except:
                 # if idling is interrupted (by the env), then trigger event to 
                 # force a decision from the elevator
                 logging.debug("elevator.py: idling is interrupted.")
+                self.state = None
                 self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
+                self.idling_event = None
 
         # If action is not idle
         else:
             yield self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
 
     def interrupt_idling(self):
+        assert(self.state == self.IDLE)
         self.idling_event.interrupt()
 
     def idle(self):
@@ -76,33 +77,36 @@ class Elevator():
         logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
 
         self.state = self.IDLE
-        yield self.env.simul_env.timeout(10)
+        yield self.env.simul_env.timeout(15)
         self.state = None
 
         logging.debug("elevator.py: idle() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
+        self.env.load_passengers(self.id)
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_up(self):
+        assert(self.curr_floor < self.env.num_floors - 1)
         logging.debug("elevator.py: move_up() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
 
         self.state = self.MOVING_UP
         yield self.env.simul_env.timeout(15)
 
-        self.curr_floor += self.MOVING_UP
+        self.curr_floor += 1
         logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_down(self):
+        assert(self.curr_floor > 0)
         logging.debug("elevator.py: move_down() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
 
         self.state = self.MOVING_DOWN
         yield self.env.simul_env.timeout(15)
 
-        self.curr_floor += self.MOVING_DOWN
+        self.curr_floor -= 1
         logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
         self.state = None
@@ -115,14 +119,14 @@ class Elevator():
             1 MOVE UP
             2 MOVE DOWN
         '''
-        legal_actions = set([0, 1, 2])
+        legal = set([0, 1, 2])
         
-        if self.curr_floor >= self.env.num_floors-1:
-            legal_actions.remove(1)
-        if self.curr_floor <= 0:
-            legal_actions.remove(2)
+        if self.curr_floor == self.env.num_floors-1:
+            legal.remove(1)
+        if self.curr_floor == 0:
+            legal.remove(2)
         
-        return legal_actions
+        return legal
 
     def update_reward(self, reward):
         '''Update reward.

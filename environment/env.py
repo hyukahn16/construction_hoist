@@ -7,8 +7,6 @@ from enum import Enum
 from .passenger import Passenger
 from .elevator import Elevator
 
-#Request = Enum(EMPTY=0, UP=1, DOWN=2)
-
 def make(num_elevators, curr_floors, total_floors, pas_gen_time):
     '''Generate new simpy.Environment.'''
     assert curr_floors <= total_floors
@@ -32,9 +30,10 @@ class Environment():
         self.elevators = [] # List of Elevator objects
         self.call_requests = [] # List of call requests for each floor | Ex: self.call_requests[0][0] == 1 or 0
         self.decision_elevators = [] # Contains the indicies of elevators that need next action
+        self.generated_passengers = 0
 
-        self.action_space = 3 # idle, up, down
-        self.observation_space = None
+        self.action_space_size = 3 # idle, up, down
+        self.observation_space_size = total_floors
 
     def reset(self):
         '''Resets the environment to its initial state,
@@ -43,6 +42,7 @@ class Environment():
            - includes the simpy process for generate_passengers()
         '''
         self.simul_env = simpy.Environment()
+        self.generated_passengers = 0
 
         # initialize each floor that holds Passenger objects
         for i in range(self.num_floors):
@@ -51,7 +51,7 @@ class Environment():
 
         # Initialize Elevator objects
         for i in range(self.num_elevators):
-            self.elevators.append(Elevator(self, i, 0))
+            self.elevators.append(Elevator(self, i))
 
         # Initialize epoch_events dictionary
         # (which event should the simulation stop to figure out the next decision?)
@@ -120,8 +120,8 @@ class Environment():
 
         # return state, reward, and the decision agents
         output = {
-            "state": np.array(self.get_state()),
-            "reward": np.array(self.get_reward()), # List of rewards achieved by the previous action
+            "states": np.array(self.get_state()),
+            "rewards": np.array(self.get_reward()), # List of rewards achieved by the previous action
             "decision_agents": np.array(self.decision_elevators) # List of elevators that need next action
         }
         logging.debug("env.py: step() - Finished")
@@ -159,7 +159,7 @@ class Environment():
                 self.call_requests[p.curr_floor][0] = 1
 
             logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
-
+            self.generated_passengers += 1
             # Trigger epoch event for PassengerRequest
             self.trigger_epoch_event("PassengerRequest")
 
@@ -191,8 +191,6 @@ class Environment():
             if e.state == e.IDLE:
                 e.interrupt_idling()
 
-        return False # FIXME: shouldn't PassengerRequest ask for next action of the elevators?
-
     def trigger_epoch_event(self, event_type):
         '''Used by other functions when the epoch events should be triggered.'''
         logging.debug("env.py: trigger_epoch_event() - {}".format(event_type))
@@ -215,18 +213,21 @@ class Environment():
                 logging.debug("env.py: load_passengers() - passenger unloaded.")
                 to_delete.append(p)
 
-        # Unload Passengers
+        # Unload Passengers and Update reward for this elevator
         reward = 0
+        num_served = 0
         for p in to_delete:
-            # Update reward for this elevator
-            self.elevators[elv_id].update_reward(p.begin_wait_time - self.simul_env.now)
-            reward += (p.begin_wait_time - self.simul_env.now)
+            # Give reward proportional to the time Passenger waited to arrvie
+            reward += 100000 / (self.simul_env.now - p.begin_wait_time)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
 
-        self.elevators[elv_id].last_reward = reward
+        #self.elevators[elv_id].update_reward(reward) # Update total reward
+        self.elevators[elv_id].last_reward = reward # Update this action's reward
+        self.elevators[elv_id].num_served += num_served
         
         # Load passengers
+        #print("Elevator_{} at floor: {}".format(elv_id, curr_floor))
         for p in self.floors[curr_floor]:
             logging.debug("env.py: load_passengers() "
                 "- passenger loaded in Elevator_{} at floor {} "

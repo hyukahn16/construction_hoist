@@ -1,28 +1,41 @@
 import random
 import logging
 import numpy as np
+from .dqn_fc import DQN_FC
 
 class ReplayMemory():
     def __init__(self, capacity, min_replay_memory_size, batch_size):
         self.capacity = capacity
         self.min_replay_memory_size = min_replay_memory_size
         self.batch_size = batch_size
+
+        # Core memory portion (this is what the agent learns from)
         self.state_memory = np.array([])
         self.new_state_memory = np.array([])
         self.reward_memory = np.array([])
         self.action_memory = np.array([])
         self.done_memory = np.array([])
+
         self.position = 0
 
     def push(self, state, new_state, action, reward, done):
         '''Save a Transition.'''
-        
+        state = DQN_FC.cnn_to_fc(state)        
+        new_state = DQN_FC.cnn_to_fc(new_state)
+
+        if len(self.state_memory) == 0:
+            self.state_memory = [state]
+            self.new_state_memory = [new_state]
+            self.action_memory = [action]
+            self.reward_memory = [reward]
+            self.done_memory = [done]
+
         if len(self.state_memory) < self.capacity:
-            np.append(self.state_memory, state)
-            np.append(self.new_state_memory, new_state)
-            np.append(self.action_memory, action)
-            np.append(self.reward_memory, reward)
-            np.append(self.done_memory, done)
+            self.state_memory = np.append(self.state_memory, [state], axis=0)
+            self.new_state_memory = np.append(self.new_state_memory, [new_state], axis=0)
+            self.action_memory = np.append(self.action_memory, [action], axis=0)
+            self.reward_memory = np.append(self.reward_memory, [reward], axis=0)
+            self.done_memory = np.append(self.done_memory, [done], axis=0)
         else:
             self.state_memory[self.position] = state
             self.new_state_memory[self.position] = new_state

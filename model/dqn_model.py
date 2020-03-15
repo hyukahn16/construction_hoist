@@ -4,50 +4,29 @@ import torch
 from torch.nn.functional import relu
 import random
 import logging
-
-class DQNModel(torch.nn.Module):
-    # DQN Pytorch example code: https://github.com/transedward/pytorch-dqn
-    def __init__(self):
-        super(DQNModel, self).__init__()
-        
-        self.conv1 = torch.nn.Conv2d(1, 32, kernel_size=3, stride=1)
-        self.conv2 = torch.nn.Conv2d(32, 64, kernel_size=2, stride=1)
-        #self.conv3 = torch.nn.Conv2d(64, 64, kernel_size=3, stride=1)
-
-        height = self.conv2d_size_out(self.conv2d_size_out(50, 3, 1), 2, 1)
-        width = self.conv2d_size_out(self.conv2d_size_out(8, 3, 1), 2, 1)
-
-        #logging.debug(height)
-        #logging.debug(width)
-        #logging.debug("dimensions")
-
-        self.fc1 = torch.nn.Linear(height * width * 64 , 512)
-        self.fc2 = torch.nn.Linear(512, 3)
-
-    def conv2d_size_out(self, size, kernel_size, stride):
-        '''Helper function to calculate size after a layer.'''
-        return (size - (kernel_size - 1) -1) // stride + 1
-
-    def forward(self, state):
-        '''Return Q-Values.'''
-
-        output = relu(self.conv1(state))
-        output = relu(self.conv2(output))
-        #output = F.relu(self.conv3(output))
-        output = relu(self.fc1(output.view(output.size(0), -1)))
-        return self.fc2(output) # Returns Q-values
+from .dqn_cnn import DQN_CNN
+from .dqn_fc import DQN_FC
 
 class DQN():
-    def __init__(self, update_freq, action_space, lr, epsilon, min_epsilon, eps_dec_rate, gamma):
-        self.model = DQNModel() # Fit/Train
-        self.target_model = DQNModel() # Predict Q-Values
+    def __init__(self, update_freq, action_space, learning_rate, 
+                epsilon, min_epsilon, eps_dec_rate, 
+                gamma, current_floors, total_floors, model_type="cnn"):
+        self.model_type = model_type
 
-        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr = lr)
-        self.loss = torch.nn.MSELoss() # FIXME: Not used      
+        # CNN or FC
+        self.model = DQN_FC(total_floors, 8, action_space) # Fit/Train
+        self.target_model = DQN_FC(total_floors, 8, action_space) # Predict Q-Values
+        if self.model_type == "cnn":
+            self.model = DQN_CNN()
+            self.target_model = DQN_CNN()
 
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr = learning_rate)
+        self.criterion = torch.nn.MSELoss()
+
+        self.current_floors = current_floors
+        self.total_floors = total_floors
         self.target_update_counter = 0
         self.target_update_freq = update_freq
-        self.action_space = action_space
         self.epsilon = epsilon
         self.min_epsilon = min_epsilon
         self.eps_dec_rate = eps_dec_rate
@@ -55,16 +34,27 @@ class DQN():
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def get_action(self, state):
+    def get_action(self, state, legal_actions):
+        if self.model_type == "fc":
+            state = DQN_FC.cnn_to_fc(state)
+
         rand = np.random.random()
+        action = -1
         if rand < self.epsilon:
-            # take random action
-            action = np.random.choice(self.action_space)
+            action = np.random.choice(list(legal_actions))
         else:
             # pick highest Q-value action
-            actions = self.model.forward(state)
-            action = torch.argmax(actions).items()
-        
+            stateTensor = torch.tensor(state, dtype=torch.float, device=self.device)
+            actions = self.model.forward(stateTensor.unsqueeze(0)) # unsqueeze will create [ stateTensor ]
+            #action = (torch.argmax(actions[0])).item() # get the highest Q-value action
+            highest_Q = float('-inf')
+            highest_Q_action = -1
+            for a in legal_actions:
+                if actions[0][a] > highest_Q:
+                    highest_Q_action = a
+            action = highest_Q_action
+            
+        assert(action != -1)
         return action
 
     def train(self, replay_memory):
@@ -76,47 +66,31 @@ class DQN():
 
         # Get batch of samples from replay memory
         batch_idx = replay_memory.sample()
-
-        current_states = torch.LongTensor(replay_memory.state_memory[batch_idx]).to(self.device)
+        
+        #current_states = torch.tensor(replay_memory.state_memory[batch_idx], dtype=torch.float, device=self.device)
+        current_states = torch.FloatTensor(replay_memory.state_memory[batch_idx]).to(self.device)
         actions = torch.LongTensor(replay_memory.action_memory[batch_idx]).to(self.device)
         new_states = torch.FloatTensor(replay_memory.new_state_memory[batch_idx]).to(self.device)
-        rewards = torch.LongTensor(replay_memory.reward_memory[batch_idx]).to(self.device)
+        rewards = torch.FloatTensor(replay_memory.reward_memory[batch_idx]).to(self.device)
         done = torch.FloatTensor(replay_memory.done_memory[batch_idx]).to(self.device)
 
-        # Get the target model's Q-Values   
-        
-        current_Q_values = self.model.forward(current_states).gather(1, actions)
-        next_max_q = self.target_model.forward(new_states).detach().max(1)[0]
-        next_Q_values = done * next_max_q
-        target_Q_values = rewards + (self.gamma * next_Q_values)
-
-        # Decrease epsilon by the given rate (self.eps_dec_rate must be less than 1)
         self.epsilon = self.epsilon * self.eps_dec_rate \
                         if self.epsilon > self.min_epsilon \
                         else self.min_epsilon
-        
-        # Compute Bellman error
-        new_target_Q = []
-        for q in target_Q_values:
-            new_target_Q.append([q])
-        new_target_Q = torch.Tensor(new_target_Q)
 
-        bellman_error = new_target_Q - current_Q_values
-        # Clip the Bellman error between [-1, 1]
-        bellman_error_clip = bellman_error.clamp(-1, 1)
-        d_error = bellman_error_clip * -1
-        
-        # Clear previous gradients before backward pass
         self.optimizer.zero_grad()
+        current_Q_values = self.model.forward(current_states)
+        current_Q_values = current_Q_values.gather(1, actions)
 
-        # Run backward pass
-        # current_Q_values.backward(d_error.data.unsqueeze(1))
-        current_Q_values.backward(d_error.data)
-
-        # Perform update
+        new_Q_Values = self.target_model.forward(new_states)
+        new_Q_max = new_Q_Values.detach().max(1)[0]
+        new_Q = rewards + (self.gamma * new_Q_max)
+        loss = self.criterion(current_Q_values, new_Q.unsqueeze(1))
+        loss.backward()
+        
         self.optimizer.step()
         self.target_update_counter += 1
 
         # Periodically, update the target model
         if self.target_update_counter % self.target_update_freq == 0:
-            self.target_model.load_state_dict(Q.state_dict())
+            self.target_model.load_state_dict(self.model.state_dict())
