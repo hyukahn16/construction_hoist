@@ -3,7 +3,6 @@ import random
 import logging
 import numpy as np
 import torch
-from enum import Enum
 from .passenger import Passenger
 from .elevator import Elevator
 
@@ -24,14 +23,6 @@ class Environment():
         self.total_floors = total_floors
         self.pas_gen_time = pas_gen_time
         
-        # These variables underneath will be initialized in "self.reset()"
-        self.floors = {} # Key: floor number, value: list of Passenger objects
-        self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
-        self.elevators = [] # List of Elevator objects
-        self.call_requests = [] # List of call requests for each floor | Ex: self.call_requests[0][0] == 1 or 0
-        self.decision_elevators = [] # Contains the indicies of elevators that need next action
-        self.generated_passengers = 0
-
         self.action_space_size = 3 # idle, up, down
         self.observation_space_size = total_floors
 
@@ -42,6 +33,11 @@ class Environment():
            - includes the simpy process for generate_passengers()
         '''
         self.simul_env = simpy.Environment()
+        self.floors = {} # Key: floor number, value: list of Passenger objects
+        self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
+        self.elevators = [] # List of Elevator objects
+        self.call_requests = [] # List of call requests for each floor | Ex: self.call_requests[0][0] == 1 or 0
+        self.decision_elevators = [] # Contains the indicies of elevators that need next action
         self.generated_passengers = 0
 
         # initialize each floor that holds Passenger objects
@@ -58,9 +54,7 @@ class Environment():
         for i in range(self.num_elevators):
             # 1. When elevator arrives at a floor
             self.epoch_events["ElevatorArrival_{}".format(i)] = self.simul_env.event()
-            # 2. when passenger arrives at destination (similar to #1)
-            self.epoch_events["LoadingFinished_{}".format(i)] = self.simul_env.event()
-        # 3. when passenger requests elevator
+        # 2. when passenger requests elevator
         self.epoch_events["PassengerRequest"] = self.simul_env.event()
 
         # TODO: Initialize observation space
@@ -107,9 +101,6 @@ class Environment():
                 if "ElevatorArrival" in event.value:
                     decision_reached = True
                     self._process_elevator_arrival(event.value)
-                elif "LoadingFinished" in event.value:
-                    decision_reached = True
-                    self._process_loading_finished(event.value)
                 elif "PassengerRequest" in event.value:
                     self._process_passenger_request(event.value)
                 else:
@@ -121,8 +112,9 @@ class Environment():
         # return state, reward, and the decision agents
         output = {
             "states": np.array(self.get_state()),
-            "rewards": np.array(self.get_reward()), # List of rewards achieved by the previous action
-            "decision_agents": np.array(self.decision_elevators) # List of elevators that need next action
+            # Only contains rewards for decision agents
+            "rewards": np.array(self.get_reward()),
+            "decision_agents": np.array(self.decision_elevators)
         }
         logging.debug("env.py: step() - Finished")
         return output
@@ -172,14 +164,6 @@ class Environment():
         elevator_idx = int(event_type.split('_')[-1])
         self.decision_elevators.append(elevator_idx)
 
-    def _process_loading_finished(self, event_type):
-        '''Process when an elevator has finished loading or unloading.
-        FIXME: this function is not used 
-        LoadingFinished requires the next decision for the elevators.
-        '''
-        elevator_idx = int(event_type.split('_')[-1])
-        self.decision_elevators.append(elevator_idx)
-
     def _process_passenger_request(self, event_type):
         '''Process when a passenger requests for an elevator.
 
@@ -218,16 +202,16 @@ class Environment():
         num_served = 0
         for p in to_delete:
             # Give reward proportional to the time Passenger waited to arrvie
-            reward += 100000 / (self.simul_env.now - p.begin_wait_time)
+            #reward += 100000 / (self.simul_env.now - p.begin_wait_time)
+            reward += 1
+            num_served += 1
             # Remove the passenger from the Elevator
             carrying.remove(p)        
-
-        #self.elevators[elv_id].update_reward(reward) # Update total reward
-        self.elevators[elv_id].last_reward = reward # Update this action's reward
+            
+        self.elevators[elv_id].update_reward(reward)
         self.elevators[elv_id].num_served += num_served
         
         # Load passengers
-        #print("Elevator_{} at floor: {}".format(elv_id, curr_floor))
         for p in self.floors[curr_floor]:
             logging.debug("env.py: load_passengers() "
                 "- passenger loaded in Elevator_{} at floor {} "
@@ -284,21 +268,15 @@ class Environment():
         return img
 
     def get_reward(self):
-        '''Return the last reward from all Elevators in a list.'''
-        return [e.last_reward for e in self.elevators]
+        '''Return the rewad from decision Elevators'''
+        rewards = []
+        for e_id in self.decision_elevators:
+            rewards.append(self.elevators[e_id].reward)
+            self.elevators[e_id].reward = 0
 
-    def get_total_reward(self):
-        return [e.reward for e in self.elevators]
+        return rewards
 
-    def update_all_reward(self):
-        '''Calculate and update the reward for each elevator.
-        
-        Used in self.step()
-        FIXME: NOT IMPLEMENTED YET
-        '''
-        for e in self.elevators:
-            e.update_reward()
-
+    # FIXME: not used
     def update_end_reward(self):
         '''Update Elevator rewards on Passengers never picked up by the Elevators
         in the episode.
@@ -317,6 +295,28 @@ class Environment():
         return self.simul_env.now
 
     def render(self):
-        '''Render visualization for the environment.'''
-        pass
-    
+        '''
+        Prints some stone age visualization in stdout...
+        '''
+        DIR_MAP = {self.elevators[0].IDLE: '-', None: '-',
+                self.elevators[0].MOVING_UP: '^', self.elevators[0].MOVING_DOWN:'v'}
+        for floor in range(self.total_floors):
+            num_psngr_going_up = len([p for p in self.floors[floor] if p.dest_floor > floor])
+            num_psngr_going_down = len([p for p in self.floors[floor] if p.dest_floor < floor])
+
+            string = ""
+            if floor < 10:
+                string += "0" + str(floor)
+            else:
+                string += str(floor)
+
+            for elevator in self.elevators:
+                if elevator.curr_floor == floor:
+                    string+="|{}{:>2}|".format(DIR_MAP[elevator.state], len(elevator.passengers))
+                elif 0 > floor or self.total_floors < floor:
+                    string+="     "
+                else:
+                    string+="|   |"
+            string+="^"*num_psngr_going_up
+            string+="v"*num_psngr_going_down
+            print(string)

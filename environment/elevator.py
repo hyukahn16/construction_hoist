@@ -24,8 +24,10 @@ class Elevator():
         self.idling_event = None
         self.state = None
         self.reward = 0 # Cumulative reward
-        self.last_reward = 0 # Reward from last action that reached decision epoch
         self.num_served = 0
+        # Testing variables
+        self.min_visited = 39
+        self.max_visited = 0
 
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
@@ -52,7 +54,7 @@ class Elevator():
 
         # If action is idle
         if action == 0:
-            self.idling_event = 
+            self.idling_event = \
                 self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
             try:
                 yield self.idling_event
@@ -93,6 +95,10 @@ class Elevator():
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor += 1
+
+        if self.curr_floor > self.max_visited:
+            self.max_visited = self.curr_floor
+
         logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
         self.state = None
@@ -107,6 +113,10 @@ class Elevator():
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor -= 1
+
+        if self.curr_floor < self.min_visited:
+            self.min_visited = self.curr_floor
+
         logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
         self.state = None
