@@ -20,15 +20,13 @@ class ReplayMemory():
 
     def push(self, state, new_state, action, reward, done):
         '''Save a Transition.'''
-        state = DQN_FC.cnn_to_fc(state)        
-        new_state = DQN_FC.cnn_to_fc(new_state)
 
         if len(self.state_memory) == 0:
-            self.state_memory = [state]
-            self.new_state_memory = [new_state]
-            self.action_memory = [action]
-            self.reward_memory = [reward]
-            self.done_memory = [done]
+            self.state_memory = np.array([state])
+            self.new_state_memory = np.array([new_state])
+            self.action_memory = np.array([action])
+            self.reward_memory = np.array([reward])
+            self.done_memory = np.array([done])
 
         if len(self.state_memory) < self.capacity:
             self.state_memory = np.append(self.state_memory, [state], axis=0)

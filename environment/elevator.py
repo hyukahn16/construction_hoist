@@ -92,7 +92,7 @@ class Elevator():
         logging.debug("elevator.py: move_up() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
 
         self.state = self.LOADING
-        self.env.load_passengers(self.id)
+        self.env.load_passengers(self.id, self.MOVING_UP)
         self.state = self.MOVING_UP
         yield self.env.simul_env.timeout(2)
 
@@ -112,7 +112,7 @@ class Elevator():
         logging.debug("elevator.py: move_down() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
 
         self.state = self.LOADING
-        self.env.load_passengers(self.id)
+        self.env.load_passengers(self.id, self.MOVING_DOWN)
         self.state = self.MOVING_DOWN
         yield self.env.simul_env.timeout(2)
 

@@ -246,12 +246,13 @@ class Environment():
 
         # Reward for moving in the right direction
         if move != 0:
-            f = curr_floor
+            f = curr_floor + move
             while f > 0 and f < self.total_floors:
-                f += move
                 if len(self.floors[f]) > 0:
                     self.elevators[e_id].update_reward(1)
                     return
+
+                f += move
 
 
 
