@@ -110,12 +110,12 @@ class Environment():
                 break
 
         # return state, reward, and the decision agents
-        output = {
-            "states": np.array(self.get_state()),
-            # Only contains rewards for decision agents
-            "rewards": np.array(self.get_reward()),
-            "decision_agents": np.array(self.decision_elevators)
-        }
+        output = {}
+        for e_id in self.decision_elevators:
+            output[e_id] = {"state": np.array(self.get_elevator_state(e_id)),
+                            "reward": self.get_elevator_reward(e_id),
+                            }
+        self.decision_elevators = []
         logging.debug("env.py: step() - Finished")
         return output
 
@@ -143,16 +143,13 @@ class Environment():
             # Add Passenger to appropriate floor group
             self.floors[p.curr_floor].append(p)
             
-            if curr_fl > dest_fl:
-                # Passenger needs to go DOWN
+            if curr_fl > dest_fl: # DOWN call
                 self.call_requests[p.curr_floor][1] = 1
-            else:
-                # Passenger needs to go UP
+            else: # UP call
                 self.call_requests[p.curr_floor][0] = 1
 
             logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
             self.generated_passengers += 1
-            # Trigger epoch event for PassengerRequest
             self.trigger_epoch_event("PassengerRequest")
 
     def _process_elevator_arrival(self, event_type):
@@ -176,18 +173,25 @@ class Environment():
                 e.interrupt_idling()
 
     def trigger_epoch_event(self, event_type):
+        # Check spurious wakeup
+        if "ElevatorArrival" in event_type:
+            e_id = int(event_type.split('_')[-1])
+            if self.elevators[e_id].state != None:
+                return
+
         '''Used by other functions when the epoch events should be triggered.'''
         logging.debug("env.py: trigger_epoch_event() - {}".format(event_type))
+
         # Trigger the event
         self.epoch_events[event_type].succeed(event_type)
         # Reset the event to be triggered again in the future
         self.epoch_events[event_type] = self.simul_env.event()
 
-    def load_passengers(self, elv_id):
+    def load_passengers(self, e_id, move=0):
         '''Use by Elevator when idle and ready to load/unload.'''
-        logging.debug("env.py: load_passengers() - Elevator_{}".format(elv_id))
-        carrying = self.elevators[elv_id].passengers
-        curr_floor = self.elevators[elv_id].curr_floor
+        logging.debug("env.py: load_passengers() - Elevator_{}".format(e_id))
+        carrying = self.elevators[e_id].passengers
+        curr_floor = self.elevators[e_id].curr_floor
 
         # Save the Passengers that should get off on this floor
         to_delete = []
@@ -198,31 +202,29 @@ class Environment():
                 to_delete.append(p)
 
         # Unload Passengers and Update reward for this elevator
-        reward = 0
         num_served = 0
         for p in to_delete:
             # Give reward proportional to the time Passenger waited to arrvie
-            #reward += 100000 / (self.simul_env.now - p.begin_wait_time)
-            reward += 1
+            self.elevators[e_id].update_reward(200 / (self.simul_env.now - p.begin_wait_time))
             num_served += 1
             # Remove the passenger from the Elevator
             carrying.remove(p)        
             
-        self.elevators[elv_id].update_reward(reward)
-        self.elevators[elv_id].num_served += num_served
+        self.elevators[e_id].num_served += num_served
         
         # Load passengers
         for p in self.floors[curr_floor]:
             logging.debug("env.py: load_passengers() "
                 "- passenger loaded in Elevator_{} at floor {} "
-                "going to floor {}.".format(elv_id, curr_floor, p.dest_floor))
+                "going to floor {}.".format(e_id, curr_floor, p.dest_floor))
             # FIXME: need to consider which passengers will be getting on the elevator
             # take passenger only if Elevator is NOT full
-            if (len(self.elevators[elv_id].passengers) + 1) * 62 < \
-                self.elevators[elv_id].weight_capacity:
+            if (len(self.elevators[e_id].passengers) + 1) * 62 < \
+                self.elevators[e_id].weight_capacity:
                 carrying.add(p)
                 self.floors[curr_floor].remove(p)
-                self.elevators[elv_id].requests[p.dest_floor] = 1
+                self.elevators[e_id].update_reward(30)
+                self.elevators[e_id].requests[p.dest_floor] = 1
             else:
                 break
         
@@ -230,12 +232,28 @@ class Environment():
         # 1. Handle Environment's call requests
         self.call_requests[curr_floor] = [0, 0] # reset call request for this floor
         for p in self.floors[curr_floor]:
-            if p.dest_floor > curr_floor:
+            # Prune
+            if self.call_requests[curr_floor][0] == 1 and \
+                self.call_requests[curr_floor][1] == 1:
+                break
+
+            if p.dest_floor > curr_floor: # UP call
                 self.call_requests[curr_floor][0] = 1
-            elif p.dest_floor < curr_floor:
+            elif p.dest_floor < curr_floor: # DOWN call
                 self.call_requests[curr_floor][1] = 1
         # 2. Handle Elevator's call requests for this floor
-        self.elevators[elv_id].requests[curr_floor] = 0
+        self.elevators[e_id].requests[curr_floor] = 0
+
+        # Reward for moving in the right direction
+        if move != 0:
+            f = curr_floor
+            while f > 0 and f < self.total_floors:
+                f += move
+                if len(self.floors[f]) > 0:
+                    self.elevators[e_id].update_reward(1)
+                    return
+
+
 
     def get_state(self):
         state = []
@@ -260,14 +278,11 @@ class Environment():
 
         return e_state
 
-    def get_reward(self):
+    def get_elevator_reward(self, e_id):
         '''Return the rewad from decision Elevators'''
-        rewards = []
-        for e_id in self.decision_elevators:
-            rewards.append(self.elevators[e_id].reward)
-            self.elevators[e_id].reward = 0
-
-        return rewards
+        output = self.elevators[e_id].reward
+        self.elevators[e_id].reward = 0
+        return output
 
     # FIXME: not used
     def update_end_reward(self):

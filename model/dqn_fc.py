@@ -7,10 +7,10 @@ from torch.nn.functional import relu
 class DQN_FC(torch.nn.Module):
     # https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/
 
-    def __init__(self, img_height, img_width, action_space):
+    def __init__(self, total_floor, action_space):
         super(DQN_FC, self).__init__()
 
-        self.fc1 = torch.nn.Linear(img_height * img_width, 512)
+        self.fc1 = torch.nn.Linear(total_floor * 3, 512)
         self.fc2 = torch.nn.Linear(512, 256)
         self.fc3 = torch.nn.Linear(256, 128)
         self.fc4 = torch.nn.Linear(128, action_space) 

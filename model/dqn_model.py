@@ -14,8 +14,8 @@ class DQN():
         self.model_type = model_type
 
         # CNN or FC
-        self.model = DQN_FC(total_floors, 8, action_space) # Fit/Train
-        self.target_model = DQN_FC(total_floors, 8, action_space) # Predict Q-Values
+        self.model = DQN_FC(total_floors, action_space) # Fit/Train
+        self.target_model = DQN_FC(total_floors, action_space) # Predict Q-Values
         if self.model_type == "cnn":
             self.model = DQN_CNN()
             self.target_model = DQN_CNN()
@@ -35,9 +35,6 @@ class DQN():
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def get_action(self, state, legal_actions):
-        if self.model_type == "fc":
-            state = DQN_FC.cnn_to_fc(state)
-
         rand = np.random.random()
         action = -1
         if rand < self.epsilon:

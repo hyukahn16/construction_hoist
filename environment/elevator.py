@@ -12,6 +12,7 @@ class Elevator():
     IDLE = 0
     MOVING_UP = 1
     MOVING_DOWN = -1
+    LOADING = 2
 
     def __init__(self, env, id):
         """Initialize Elevator class."""
@@ -77,22 +78,23 @@ class Elevator():
     def idle(self):
         '''Idle.'''
         logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
-
         self.state = self.IDLE
-        yield self.env.simul_env.timeout(15)
-        self.state = None
+        yield self.env.simul_env.timeout(2)
+        self.state = self.LOADING
 
         logging.debug("elevator.py: idle() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.env.load_passengers(self.id)
+        self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_up(self):
         assert(self.curr_floor < self.env.num_floors - 1)
         logging.debug("elevator.py: move_up() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
-        self.env.load_passengers(self.id)
 
+        self.state = self.LOADING
+        self.env.load_passengers(self.id)
         self.state = self.MOVING_UP
-        yield self.env.simul_env.timeout(15)
+        yield self.env.simul_env.timeout(2)
 
         self.curr_floor += 1
 
@@ -100,6 +102,7 @@ class Elevator():
             self.max_visited = self.curr_floor
 
         logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
+        self.state = self.LOADING
         self.env.load_passengers(self.id)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
@@ -107,10 +110,11 @@ class Elevator():
     def move_down(self):
         assert(self.curr_floor > 0)
         logging.debug("elevator.py: move_down() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
-        self.env.load_passengers(self.id)
 
+        self.state = self.LOADING
+        self.env.load_passengers(self.id)
         self.state = self.MOVING_DOWN
-        yield self.env.simul_env.timeout(15)
+        yield self.env.simul_env.timeout(2)
 
         self.curr_floor -= 1
 
@@ -118,6 +122,7 @@ class Elevator():
             self.min_visited = self.curr_floor
 
         logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
+        self.state = self.LOADING
         self.env.load_passengers(self.id)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
