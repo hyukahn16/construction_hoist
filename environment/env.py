@@ -238,34 +238,27 @@ class Environment():
         self.elevators[elv_id].requests[curr_floor] = 0
 
     def get_state(self):
-        '''Return the state as a (total_floors x 4 x 1) image'''
+        state = []
+        for e_id in self.decision_elevators:
+            state.append(self.get_elevator_state(e_id))
+
+        return state
+
+    def get_elevator_state(self, e_id):
+        e_state = []
+        # Up calls from the building
+        for call in self.call_requests:
+            e_state.append(call[0])
         
-        img = []
-        '''
-        for fl in range(self.num_floors):
-            img.append([]) # img[i]
-            for j in range(4):
-                img[fl].append([self.call_requests[fl][0]])
-                img[fl].append([self.call_requests[fl][1]])
-                img[fl].append([self.elevators[0].curr_floor])
-                img[fl].append([self.elevators[1].curr_floor])
-        '''
-        img.append([])
-        for fl in range(self.num_floors):
-            img[0].append([])
-            img[0][fl].append(self.call_requests[fl][0])
-            img[0][fl].append(self.call_requests[fl][1]) 
+        # Down calls from the building
+        for call in self.call_requests:
+            e_state.append(call[1])
 
-            img[0][fl].append(1 if self.elevators[0].curr_floor == fl else 0) # Elevator floor location
-            img[0][fl].append((len(self.elevators[0].passengers) * 62.0 / \
-                self.elevators[0].weight_capacity) if self.elevators[0].curr_floor == fl else 0) 
-            img[0][fl].append(self.elevators[0].requests[fl]) # floor requests from inside the Elevator
+        # Calls from within the Elevator
+        for request in self.elevators[e_id].requests:
+            e_state.append(request)
 
-            img[0][fl].append(1 if self.elevators[1].curr_floor == fl else 0) # Elevator floor location
-            img[0][fl].append((len(self.elevators[1].passengers) * 62.0 / \
-                self.elevators[1].weight_capacity) if self.elevators[1].curr_floor == fl else 0)
-            img[0][fl].append(self.elevators[1].requests[fl]) # floor requests from inside the Elevator
-        return img
+        return e_state
 
     def get_reward(self):
         '''Return the rewad from decision Elevators'''
@@ -320,3 +313,25 @@ class Environment():
             string+="^"*num_psngr_going_up
             string+="v"*num_psngr_going_down
             print(string)
+
+    # CNN state version
+    def get_cnn_state(self):
+        '''Return the state as a (total_floors x 4 x 1) image'''
+        
+        img = []
+        img.append([])
+        for fl in range(self.num_floors):
+            img[0].append([])
+            img[0][fl].append(self.call_requests[fl][0])
+            img[0][fl].append(self.call_requests[fl][1]) 
+
+            img[0][fl].append(1 if self.elevators[0].curr_floor == fl else 0) # Elevator floor location
+            img[0][fl].append((len(self.elevators[0].passengers) * 62.0 / \
+                self.elevators[0].weight_capacity) if self.elevators[0].curr_floor == fl else 0) 
+            img[0][fl].append(self.elevators[0].requests[fl]) # floor requests from inside the Elevator
+
+            img[0][fl].append(1 if self.elevators[1].curr_floor == fl else 0) # Elevator floor location
+            img[0][fl].append((len(self.elevators[1].passengers) * 62.0 / \
+                self.elevators[1].weight_capacity) if self.elevators[1].curr_floor == fl else 0)
+            img[0][fl].append(self.elevators[1].requests[fl]) # floor requests from inside the Elevator
+        return img
