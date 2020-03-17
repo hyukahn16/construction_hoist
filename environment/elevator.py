@@ -79,7 +79,7 @@ class Elevator():
         '''Idle.'''
         logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
         self.state = self.IDLE
-        yield self.env.simul_env.timeout(2)
+        yield self.env.simul_env.timeout(5)
         self.state = self.LOADING
 
         logging.debug("elevator.py: idle() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
@@ -94,7 +94,7 @@ class Elevator():
         self.state = self.LOADING
         self.env.load_passengers(self.id, self.MOVING_UP)
         self.state = self.MOVING_UP
-        yield self.env.simul_env.timeout(2)
+        yield self.env.simul_env.timeout(5)
 
         self.curr_floor += 1
 
@@ -114,7 +114,7 @@ class Elevator():
         self.state = self.LOADING
         self.env.load_passengers(self.id, self.MOVING_DOWN)
         self.state = self.MOVING_DOWN
-        yield self.env.simul_env.timeout(2)
+        yield self.env.simul_env.timeout(5)
 
         self.curr_floor -= 1
 

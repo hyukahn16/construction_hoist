@@ -71,7 +71,7 @@ if __name__=="__main__":
         
         cumul_rewards = [0 for _ in range(num_elevators)]
         cumul_actions = {0: [0,0,0]}
-        while env.now() <= 3000: # Force stop episode if time is over
+        while env.now() <= 1500: # Force stop episode if time is over
 
             # 1. Get actions for the decision agents
             actions = copy.deepcopy(neg_action)
