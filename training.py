@@ -28,7 +28,7 @@ if __name__=="__main__":
     weightLimit = 907.185 # Kilograms
     loadTime = 1
     beta = 0.01 # exponential decay factor for target computation
-    pass_gen_time = 150
+    pass_gen_time = 75
 
     # initialize environment
     env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time)
@@ -37,16 +37,16 @@ if __name__=="__main__":
     print("state space dimension", obs_space_size)
     print("action space size", action_space_size)
 
-    update_freq = 10
+    update_freq = 4
     lr = 0.00025
     epsilon = 1.0
     min_epsilon = 0.1
     eps_dec_rate = 0.99995
-    gamma = 0.99
+    gamma = 0.999
 
-    REPLAY_MEMORY_SIZE = 2000
-    MIN_REPLAY_MEMORY_SIZE = 500 # Start using replay memory once it reaches this number
-    MINIBATCH_SIZE = 500
+    REPLAY_MEMORY_SIZE = 500
+    MIN_REPLAY_MEMORY_SIZE = 70 # Start using replay memory once it reaches this number
+    MINIBATCH_SIZE = 70
 
     neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
     zero_actions = [0 for _ in range(action_space_size)] # Used for ReplayMemory
@@ -64,14 +64,15 @@ if __name__=="__main__":
     """
     Begin training
     """
-    for e in range(100): # number of episodes == 100
+    episode_rewards = []
+    for e in range(1000): # number of episodes == 100
         print("-----------{} Episode------------".format(e))
         output = {}
         organize_output(output, env.reset())
         
         cumul_rewards = [0 for _ in range(num_elevators)]
         cumul_actions = {0: [0,0,0]}
-        while env.now() <= 1500: # Force stop episode if time is over
+        while env.now() <= 1000: # Force stop episode if time is over
 
             # 1. Get actions for the decision agents
             actions = copy.deepcopy(neg_action)
@@ -90,8 +91,10 @@ if __name__=="__main__":
             # 3. Update Replay Memory and train agent
             for e_id, e_output in new_output.items():
                 cumul_rewards[e_id] += e_output["reward"]
-                replay_action = copy.deepcopy(zero_actions)
-                replay_action[actions[e_id]] = 1
+                #replay_action = copy.deepcopy(zero_actions)
+                #replay_action[actions[e_id]] = 1
+
+                replay_action = actions[e_id]
 
                 replays[e_id].push(output[e_id]["state"], e_output["state"], 
                                 replay_action, e_output["reward"], 1.0)
@@ -126,3 +129,7 @@ if __name__=="__main__":
         print("Elevator_1 Min floor visited ", env.elevators[0].min_visited)
         print("Actions: ", cumul_actions)
         print("Total passengers generated:", env.generated_passengers)
+        episode_rewards.append(cumul_rewards[0])
+        plt.plot([i for i in range(e + 1)], episode_rewards)
+        plt.pause(0.05)
+        plt.draw()

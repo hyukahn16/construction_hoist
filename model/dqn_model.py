@@ -21,7 +21,7 @@ class DQN():
             self.target_model = DQN_CNN()
 
         self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr = learning_rate)
-        self.criterion = torch.nn.MSELoss()
+        #self.criterion = torch.nn.MSELoss()
 
         self.current_floors = current_floors
         self.total_floors = total_floors
@@ -43,6 +43,8 @@ class DQN():
             # pick highest Q-value action
             stateTensor = torch.tensor(state, dtype=torch.float, device=self.device)
             actions = self.model.forward(stateTensor.unsqueeze(0)) # unsqueeze will create [ stateTensor ]
+            #mean = torch.mean(actions)
+            #print(mean)
             #action = (torch.argmax(actions[0])).item() # get the highest Q-value action
             highest_Q = float('-inf')
             highest_Q_action = -1
@@ -77,14 +79,17 @@ class DQN():
 
         self.optimizer.zero_grad()
         current_Q_values = self.model.forward(current_states)
-        current_Q_values = current_Q_values.gather(1, actions)
+        current_Q_values = current_Q_values.gather(1, actions.unsqueeze(1))
 
-        new_Q_Values = self.target_model.forward(new_states)
-        new_Q_max = new_Q_Values.detach().max(1)[0]
+        new_Q_values = self.target_model.forward(new_states)
+        new_Q_max = new_Q_values.max(1)[0].detach()
         new_Q = rewards + (self.gamma * new_Q_max)
-        loss = self.criterion(current_Q_values, new_Q.unsqueeze(1))
+        loss = torch.nn.functional.smooth_l1_loss(current_Q_values, new_Q.unsqueeze(1))
         loss.backward()
         
+        for param in self.model.parameters():
+            param.grad.data.clamp_(-1, 1)
+
         self.optimizer.step()
         self.target_update_counter += 1
 

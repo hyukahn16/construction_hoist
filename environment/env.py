@@ -127,8 +127,6 @@ class Environment():
         '''
 
         while True:
-            yield self.simul_env.timeout(self.pas_gen_time)
-
             curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
             # get new destination floor for this passenger
             # make sure that the destination floor is NOT the same as 
@@ -151,6 +149,8 @@ class Environment():
             logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
             self.generated_passengers += 1
             self.trigger_epoch_event("PassengerRequest")
+
+            yield self.simul_env.timeout(self.pas_gen_time)
 
     def _process_elevator_arrival(self, event_type):
         '''Process when an elevator stops at any floor.
@@ -205,7 +205,7 @@ class Environment():
         num_served = 0
         for p in to_delete:
             # Give reward proportional to the time Passenger waited to arrvie
-            self.elevators[e_id].update_reward(200 / (self.simul_env.now - p.begin_wait_time))
+            self.elevators[e_id].update_reward(10)
             num_served += 1
             # Remove the passenger from the Elevator
             carrying.remove(p)        
@@ -223,7 +223,7 @@ class Environment():
                 self.elevators[e_id].weight_capacity:
                 carrying.add(p)
                 self.floors[curr_floor].remove(p)
-                self.elevators[e_id].update_reward(30)
+                self.elevators[e_id].update_reward(5)
                 self.elevators[e_id].requests[p.dest_floor] = 1
             else:
                 break
@@ -250,9 +250,25 @@ class Environment():
             while f > 0 and f < self.total_floors:
                 if len(self.floors[f]) > 0:
                     self.elevators[e_id].update_reward(1)
-                    return
-
+                    break
                 f += move
+
+            f = curr_floor + move
+            while f > 0 and f < self.total_floors:
+                if self.elevators[e_id].requests[f] == 1:
+                    self.elevators[e_id].update_reward(5)
+                    break
+                f += move
+            
+            move = -1 * move
+            f = curr_floor + move
+            while f > 0 and f < self.total_floors:
+                if self.elevators[e_id].requests[f] == 1:
+                    self.elevators[e_id].update_reward(-5)
+                    break
+                f += move
+            
+            
 
 
 
