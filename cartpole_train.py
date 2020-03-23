@@ -6,6 +6,15 @@ import copy
 import os
 import matplotlib.pyplot as pyplot
 
+def organize_output(output, new_output):
+    for e_id, e_output in output.items():
+        e_output["last"] = False
+
+    for e_id, e_output in new_output.items():
+        output[e_id] = e_output
+        output[e_id]["last"] = True
+
+
 num_elevators = 1
 total_floors = 10
 pass_gen_time = 75
@@ -15,11 +24,12 @@ nA = 3
 lr = 0.001
 gamma = 0.95
 eps = 1
-min_eps = 0.001
-dr = 0.9995 # discount rate
+min_eps = 0.01
+eps_decay = 0.99995 # discount rate
 batch_size = 24
 
-agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, dr)]
+neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
+agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay)]
 env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time)
 
 episode_rewards = []
@@ -31,14 +41,13 @@ for e in range(1000): # number of episodes == 100
     cumul_rewards = [0 for _ in range(num_elevators)]
     cumul_actions = {0: [0,0,0]}
     while env.now() <= 1000: # Force stop episode if time is over
-
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
         for e_id, e_output in output.items(): # FIXME: need distinguish which elevator was decision elevator last time
             if e_output["last"] == False:
                 continue
             legal = env.elevators[e_id].legal_actions()
-            new_action = agents[e_id].get_action(e_output["state"], legal)
+            new_action = agents[e_id].action(np.reshape(e_output["state"], [1, 30]))
             actions[e_id] = new_action
 
             cumul_actions[e_id][new_action] += 1
@@ -49,13 +58,15 @@ for e in range(1000): # number of episodes == 100
         # 3. Update Replay Memory and train agent
         for e_id, e_output in new_output.items():
             cumul_rewards[e_id] += e_output["reward"]
-            #replay_action = copy.deepcopy(zero_actions)
-            #replay_action[actions[e_id]] = 1
-
             replay_action = actions[e_id]
 
-            agents[e_id].store(output[e_id]["state"], e_output["state"], 
-                            replay_action, e_output["reward"], 1.0)
+            state = copy.deepcopy(output[e_id]["state"])
+            new_state = copy.deepcopy(e_output["state"])
+            state = [state]
+            new_state = [new_state]
+
+            agents[e_id].store(state, replay_action, e_output["reward"], 
+                                new_state, 1.0)
             if len(agents[e_id].memory) > batch_size: 
                 agents[e_id].experience_replay(batch_size)
 

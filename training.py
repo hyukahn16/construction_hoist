@@ -7,7 +7,6 @@ import copy
 import os
 import torch
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 
 def organize_output(output, new_output):
     for e_id, e_output in output.items():
