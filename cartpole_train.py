@@ -4,8 +4,8 @@ import numpy as numpy
 from model import *
 import copy
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import matplotlib.pyplot as pyplot
-
 def organize_output(output, new_output):
     for e_id, e_output in output.items():
         e_output["last"] = False
@@ -19,21 +19,29 @@ num_elevators = 1
 total_floors = 10
 pass_gen_time = 75
 
-nS = 30
+nS = total_floors * 3
 nA = 3
 lr = 0.001
 gamma = 0.95
 eps = 1
 min_eps = 0.01
-eps_decay = 0.99995 # discount rate
+eps_decay = 0.99999
 batch_size = 24
+
+use_saved = True
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay)]
 env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time)
 
+if use_saved and os.path.exists('./checkpoints/cp.index'):
+    print("Loading saved model")
+    agents[0].model.load_weights('./checkpoints/cp')
+else:
+    print("Starting new model")
+
 episode_rewards = []
-for e in range(1000): # number of episodes == 100
+for e in range(10000): # number of episodes == 100
     print("-----------{} Episode------------".format(e))
     output = {}
     organize_output(output, env.reset())
@@ -47,7 +55,7 @@ for e in range(1000): # number of episodes == 100
             if e_output["last"] == False:
                 continue
             legal = env.elevators[e_id].legal_actions()
-            new_action = agents[e_id].action(np.reshape(e_output["state"], [1, 30]))
+            new_action = agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
             actions[e_id] = new_action
 
             cumul_actions[e_id][new_action] += 1
@@ -83,14 +91,6 @@ for e in range(1000): # number of episodes == 100
         '''
 
     # Outside of episode
-    '''
-    torch.save({
-        'epoch': e,
-        'model_state_dict': agents[0].model,
-        'optimizer_state_dict': agents[0].optimizer,
-        'loss': agents[0].loss,
-    }, "./checkpoint/")
-    '''
     print("Rewards: ", cumul_rewards)
     print("Epsilon value:", agents[0].epsilon)
     print("Elevator_1 Number of passengers served: ", env.elevators[0].num_served)
@@ -101,5 +101,10 @@ for e in range(1000): # number of episodes == 100
     print("Total passengers generated:", env.generated_passengers)
     episode_rewards.append(cumul_rewards[0])
     plt.plot([i for i in range(e + 1)], episode_rewards)
-    plt.pause(0.05)
+    plt.pause(0.01)
     plt.draw()
+
+    # Save model
+    for agent in agents:
+        agent.model.save_weights('./checkpoints/cp', overwrite=True)
+    print("Saved model")

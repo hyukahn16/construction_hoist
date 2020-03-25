@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow as tf
 from tensorflow import keras
 import random
@@ -19,6 +21,10 @@ class DeepQNetwork():
         self.model = self.build_model()
         self.loss = []
         
+        checkpoint_path = './checkpoint/cp.ckpt'
+        checkpoint_dir = os.path.dirname(checkpoint_path)
+        self.cp_callback = keras.callbacks.ModelCheckpoint(filepath=checkpoint_dir)
+
     def build_model(self):
         model = keras.Sequential() #linear stack of layers https://keras.io/models/sequential/
         model.add(keras.layers.Dense(24, input_dim=self.nS, activation='relu')) #[Input] -> Layer 1
@@ -80,7 +86,8 @@ class DeepQNetwork():
         x_reshape = np.array(x).reshape(batch_size,self.nS)
         y_reshape = np.array(y)
         epoch_count = 1 #Epochs is the number or iterations
-        hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, verbose=0)
+        hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, 
+                                verbose=0, callbacks=[self.cp_callbacki])
         #Graph Losses
         for i in range(epoch_count):
             self.loss.append( hist.history['loss'][i] )
