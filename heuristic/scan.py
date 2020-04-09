@@ -7,12 +7,19 @@ Source: https://www.quora.com/What-algorithm-is-used-in-modern-day-elevators
 
 class ScanAgent():
     def __init__(self, observation_space, action_space):
-        self.observation_space = observation_space
+        self.observation_space = observation_space # number of floors
         self.action_space = action_space
         self.curr_dir = 0 # -1: down, 0: idle, 1: up
 
     def get_action(self, state):
-        pass
+        curr_floor = None # Get the actual floor
+        up_calls = state[0 : self.observation_space]
+        down_calls = state[self.observation_space: 2 * self.observation_space]
+
+        # 1 proceed in the same direction until last request is fulfilled in that direction
+        # FIXME: need to know which direction the elevator is current moving in
+        
+
     
 
 
