@@ -6,6 +6,7 @@ import copy
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import matplotlib.pyplot as pyplot
+
 def organize_output(output, new_output):
     for e_id, e_output in output.items():
         e_output["last"] = False
@@ -31,12 +32,12 @@ batch_size = 24
 use_saved = True
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
-agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay)]
+agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size)]
 env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time)
 
-if use_saved and os.path.exists('./checkpoints/cp.index'):
+if use_saved and os.path.exists('training_1.index'):
     print("Loading saved model")
-    agents[0].model.load_weights('./checkpoints/cp')
+    agents[0].model.load_weights(agents[0].checkpoint_dir)
 else:
     print("Starting new model")
 
@@ -105,6 +106,8 @@ for e in range(10000): # number of episodes == 100
     plt.draw()
 
     # Save model
+    '''
     for agent in agents:
         agent.model.save_weights('./checkpoints/cp', overwrite=True)
     print("Saved model")
+    '''

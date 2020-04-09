@@ -8,7 +8,9 @@ from tensorflow import keras
 import random
 
 class DeepQNetwork():
-    def __init__(self, states, actions, alpha, gamma, epsilon,epsilon_min, epsilon_decay):
+    def __init__(self, states, actions, alpha, 
+                gamma, epsilon, epsilon_min, 
+                epsilon_decay, batch_size):
         self.nS = states
         self.nA = actions
         self.memory = deque([], maxlen=2500)
@@ -21,9 +23,13 @@ class DeepQNetwork():
         self.model = self.build_model()
         self.loss = []
         
-        checkpoint_path = './checkpoint/cp.ckpt'
-        checkpoint_dir = os.path.dirname(checkpoint_path)
-        self.cp_callback = keras.callbacks.ModelCheckpoint(filepath=checkpoint_dir)
+        # Used in model fit for model saving
+        checkpoint_path = 'training_1/cp.ckpt'
+        self.checkpoint_dir = os.path.dirname(checkpoint_path)
+        self.cp_callback = keras.callbacks.ModelCheckpoint(filepath=self.checkpoint_dir,
+                                                            save_freq=batch_size,
+                                                            save_weights_only=True,
+                                                            verbose=0)
 
     def build_model(self):
         model = keras.Sequential() #linear stack of layers https://keras.io/models/sequential/
@@ -87,7 +93,9 @@ class DeepQNetwork():
         y_reshape = np.array(y)
         epoch_count = 1 #Epochs is the number or iterations
         hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, 
-                                verbose=0, callbacks=[self.cp_callbacki])
+                                verbose=0, callbacks=[self.cp_callback])
+        #hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, verbose=0)
+
         #Graph Losses
         for i in range(epoch_count):
             self.loss.append( hist.history['loss'][i] )
