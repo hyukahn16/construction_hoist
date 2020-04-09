@@ -82,15 +82,6 @@ for e in range(10000): # number of episodes == 100
         # 4. overwrite old output with new output
         organize_output(output, new_output) # FIXME: need to distinguishi which elevator was the decision elevator last time
 
-        # Print the state of the Environment
-        '''
-        os.system('cls')
-        print("episode {}".format(e))
-        print("Rewards: ", cumul_rewards)
-        print("Actions: ", cumul_actions)
-        env.render()
-        '''
-
     # Outside of episode
     print("Rewards: ", cumul_rewards)
     print("Epsilon value:", agents[0].epsilon)
