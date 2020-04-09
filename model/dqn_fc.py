@@ -10,9 +10,9 @@ class DQN_FC(torch.nn.Module):
     def __init__(self, total_floor, action_space):
         super(DQN_FC, self).__init__()
 
-        self.fc1 = torch.nn.Linear(total_floor * 3, 64)
-        self.fc2 = torch.nn.Linear(64, 64)
-        self.fc3 = torch.nn.Linear(64, action_space) 
+        self.fc1 = torch.nn.Linear(total_floor * 3, 32)
+        self.fc2 = torch.nn.Linear(32, 16)
+        self.fc3 = torch.nn.Linear(16, action_space) 
 
     def forward(self, state):
         '''Return Q-Values.'''
