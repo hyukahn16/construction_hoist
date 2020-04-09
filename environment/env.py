@@ -267,17 +267,6 @@ class Environment():
                     self.elevators[e_id].update_reward(-5)
                     break
                 f += move
-            
-            
-
-
-
-    def get_state(self):
-        state = []
-        for e_id in self.decision_elevators:
-            state.append(self.get_elevator_state(e_id))
-
-        return state
 
     def get_elevator_state(self, e_id):
         e_state = []
@@ -300,21 +289,6 @@ class Environment():
         output = self.elevators[e_id].reward
         self.elevators[e_id].reward = 0
         return output
-
-    # FIXME: not used
-    def update_end_reward(self):
-        '''Update Elevator rewards on Passengers never picked up by the Elevators
-        in the episode.
-        '''
-        reward = 0
-        for floor in self.floors:
-            for p in self.floors[floor]:
-                reward += (p.begin_wait_time - self.now())
-        
-        for e in self.elevators:
-            e.update_reward(reward)
-
-        return reward
 
     def now(self):
         return self.simul_env.now
