@@ -6,9 +6,7 @@ Source: https://www.quora.com/What-algorithm-is-used-in-modern-day-elevators
 '''
 
 class ScanAgent():
-    def __init__(self, observation_space, action_space):
-        self.observation_space = observation_space # number of floors
-        self.action_space = action_space
+    def __init__(self):
         self.prev_floor = 0
 
     def get_action(self, state):
