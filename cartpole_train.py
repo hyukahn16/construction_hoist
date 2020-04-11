@@ -20,7 +20,7 @@ num_elevators = 1
 total_floors = 10
 pass_gen_time = 75
 
-nS = total_floors * 3
+nS = total_floors * 4
 nA = 3
 lr = 0.001
 gamma = 0.95

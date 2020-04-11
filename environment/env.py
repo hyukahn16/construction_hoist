@@ -283,6 +283,13 @@ class Environment():
         for request in self.elevators[e_id].requests:
             e_state.append(request)
 
+        # Location of the Elevator
+        for f_num in range(self.total_floors):
+            if self.elevators[e_id].curr_floor == f_num:
+                e_state.append(1)
+            else:
+                e_state.append(0)
+                
         return e_state
 
     def get_elevator_reward(self, e_id):
