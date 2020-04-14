@@ -1,6 +1,6 @@
 import environment as gym
 import time
-import numpy as numpy
+import numpy as np
 from model import *
 import copy
 import os
@@ -41,7 +41,7 @@ if use_saved and os.path.exists('training_1.index'):
 else:
     print("Starting new model")
 
-episode_rewards = []
+episode_rewards = [] # Stores rewards from all episodes
 for e in range(10000): # number of episodes == 100
     print("-----------{} Episode------------".format(e))
     output = {}
