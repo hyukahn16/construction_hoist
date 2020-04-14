@@ -269,7 +269,6 @@ class Environment():
                 f += move
 
     def get_elevator_state(self, e_id):
-        # FIXME: Agent doesn't know which floor it currently is in?
         e_state = []
         # Up calls from the building
         for call in self.call_requests:
