@@ -39,7 +39,6 @@ for e in range(10000): # number of episodes
         for e_id, e_output in output.items(): # FIXME: need distinguish which elevator was decision elevator last time
             if e_output["last"] == False:
                 continue
-            legal = env.elevators[e_id].legal_actions()
             new_action = agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
             actions[e_id] = new_action
 
