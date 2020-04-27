@@ -10,7 +10,7 @@ import random
 class DeepQNetwork():
     def __init__(self, states, actions, alpha, 
                 gamma, epsilon, epsilon_min, 
-                epsilon_decay, batch_size):
+                epsilon_decay, batch_size, test=False):
         self.nS = states
         self.nA = actions
         self.memory = deque([], maxlen=2500)
@@ -23,6 +23,7 @@ class DeepQNetwork():
         self.model = self.build_model()
         self.loss = []
         
+        self.test = test
         # Used in model fit for model saving
         checkpoint_path = 'training_1/cp.ckpt'
         self.checkpoint_dir = os.path.dirname(checkpoint_path)
@@ -92,9 +93,13 @@ class DeepQNetwork():
         x_reshape = np.array(x).reshape(batch_size,self.nS)
         y_reshape = np.array(y)
         epoch_count = 1 #Epochs is the number or iterations
-        hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, 
+        
+        hist = None
+        if not test:
+            hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, 
                                 verbose=0, callbacks=[self.cp_callback])
-        #hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, verbose=0)
+        else:
+            hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, verbose=0)
 
         #Graph Losses
         for i in range(epoch_count):
