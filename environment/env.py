@@ -5,14 +5,22 @@ import numpy as np
 import torch
 from .passenger import Passenger
 from .elevator import Elevator
+import environment
 
-def make(num_elevators, curr_floors, total_floors, pas_gen_time):
+def make(num_elevators, curr_floors, total_floors, pas_gen_time, test=False):
     '''Generate new simpy.Environment.'''
     assert curr_floors <= total_floors
 
     simpy_env = simpy.Environment()
-    env = Environment(simpy_env, num_elevators, curr_floors, total_floors, pas_gen_time)
+    env = None
+    if not test:
+        env = Environment(simpy_env, num_elevators, curr_floors, total_floors, pas_gen_time)
+    else:
+        env = environment.TestEnvironment(simpy_env, num_elevators, 
+                                        curr_floors, total_floors, pas_gen_time,
+                                        "schedule.txt")
     return env
+
 
 class Environment():
 

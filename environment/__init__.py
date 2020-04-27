@@ -1,3 +1,4 @@
 from .elevator import *
-from .env import *
 from .passenger import *
+from .env import *
+from .test_env import *
