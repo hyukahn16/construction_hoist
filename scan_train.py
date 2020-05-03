@@ -18,12 +18,13 @@ def organize_output(output, new_output):
 num_elevators = 1
 total_floors = 10
 pass_gen_time = 75
+episode_time = 1000
 
 nS = total_floors * 4
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [ScanAgent(total_floors) for _ in range(num_elevators)]
-env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time)
+env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, episode_time)
 
 episode_rewards = []
 for e in range(10000): # number of episodes
@@ -33,7 +34,7 @@ for e in range(10000): # number of episodes
 
     cumul_rewards = [0 for _ in range(num_elevators)]
     cumul_actions = {0: [0,0,0]}
-    while env.now() <= 1000: # Force-stop episode if time is over
+    while env.now() <= episode_time: # Force-stop episode if time is over
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
         for e_id, e_output in output.items(): # FIXME: need distinguish which elevator was decision elevator last time
