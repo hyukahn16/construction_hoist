@@ -1,7 +1,12 @@
+'''
+Different testing environments
+'''
+
 from environment import Environment
 from .passenger import Passenger
 import queue
 
+# Reads a schedule from a file and creates passengers based on the schedule
 class TestEnvironment(Environment):
     def __init__(self, simul_env, num_elevators, curr_floors, 
                 total_floors, pas_gen_time, schedule_file):
@@ -39,7 +44,6 @@ class TestEnvironment(Environment):
                 dest_fl = p_data[1]
                 self.passenger_schedule.put([int(curr_fl), int(dest_fl)])
 
-
     def generate_passengers(self):
         while True:
             # Create new instance of Passenger
@@ -62,4 +66,19 @@ class TestEnvironment(Environment):
 
             yield self.simul_env.timeout(self.pas_gen_time)
 
+# All passengers spawn from the lowest floor and 
+# have randomly assigned destination floor other than the lowest floor.
+class UpPeakEnvironment(Environment):
+    pass
 
+# All passengers spawn from floors except for the lowest floor and
+# have assigned destination floor of the lowest floor.
+class DownPeakEnvironment(Environment):
+    pass
+
+# Same as training environment
+class IntermediateEnvironment(Environment):
+    pass
+
+# Combination of UpPeakEnvironment and DownPeakEnvironment
+class LunchEnvironment(Environment):
