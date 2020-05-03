@@ -7,18 +7,27 @@ from .passenger import Passenger
 from .elevator import Elevator
 import environment
 
-def make(num_elevators, curr_floors, total_floors, pas_gen_time, test=False):
+def make(num_elevators, curr_floors, total_floors, pas_gen_time, episode_time, mode=None):
     '''Generate new simpy.Environment.'''
     assert curr_floors <= total_floors
 
     simpy_env = simpy.Environment()
     env = None
-    if not test:
+    if not mode or "intermediate":
         env = Environment(simpy_env, num_elevators, curr_floors, total_floors, pas_gen_time)
-    else:
+    elif mode == "schedule":
         env = environment.TestEnvironment(simpy_env, num_elevators, 
                                         curr_floors, total_floors, pas_gen_time,
                                         "schedule.txt")
+    elif mode == "uppeak":
+        env = environment.UpPeakEnvironment(simpy_env, num_elevators,
+                            curr_floors, total_floors, pas_gen_time)
+    elif mode == "downpeak":
+        env = environment.DownPeakEnvironment(simpy_env, num_elevators,
+                            curr_floors, total_floors, pas_gen_time)
+    elif mode == "lunch":
+        env = environment.LunchEnvironment(simpy_env, num_elevators,
+                            curr_floors, total_floors, pas_gen_time, episode_time)
     return env
 
 
