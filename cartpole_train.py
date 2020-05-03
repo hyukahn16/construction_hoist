@@ -28,12 +28,13 @@ eps = 1
 min_eps = 0.01
 eps_decay = 0.99999
 batch_size = 24
+episode_time = 1000
 
 use_saved = True
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size)]
-env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time)
+env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, episode_time)
 
 if use_saved and os.path.exists('training_1.index'):
     print("Loading saved model")
@@ -49,7 +50,7 @@ for e in range(10000): # number of episodes == 100
     
     cumul_rewards = [0 for _ in range(num_elevators)]
     cumul_actions = {0: [0,0,0]}
-    while env.now() <= 1000: # Force stop episode if time is over
+    while env.now() <= episode_time: # Force stop episode if time is over
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
         for e_id, e_output in output.items(): # FIXME: need distinguish which elevator was decision elevator last time - right now it doesn't matter because it's only 1 elevator but when it becomes multiple elevators we can't tell right now
@@ -96,7 +97,7 @@ for e in range(10000): # number of episodes == 100
     plt.pause(0.01)
     plt.draw()
 
-    # Save model
+    # Save model (outdated)
     '''
     for agent in agents:
         agent.model.save_weights('./checkpoints/cp', overwrite=True)
