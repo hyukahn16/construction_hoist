@@ -20,6 +20,13 @@ def organize_output(output, new_output):
         output[e_id] = e_output
         output[e_id]["last"] = True
 
+test_mode = "all"
+modes = ["all", "intermediate", "uppeak", "downpeak", "lunch"]
+if len(sys.argv) == 2:
+    if sys.argv[1] not in modes:
+        sys.exit("Mode name incorrect. Pick one of the following: {}".format(modes))
+    test_mode = sys.argv[1]
+
 num_elevators = 1
 total_floors = 10
 pass_gen_time = 75
@@ -33,12 +40,13 @@ eps = min_eps # Epsilon is already at MINIMUM value
 eps_decay = 0.99999 # Not used since this is testing
 batch_size = 24
 test = True
+episode_time = 1000
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 dqn_agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size, test)]
 scan_agents = [ScanAgent(total_floors) for _ in range(num_elevators)]
-dqn_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, True)
-scan_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, True)
+dqn_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, episode_time, test_mode)
+scan_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, episode_time, test_mode)
 
 if os.path.exists('training_1.index'):
     dqn_agents[0].model.load_weights(dqn_agents[0].checkpoint_dir)
@@ -58,7 +66,7 @@ scan_cumul_rewards = [0 for _ in range(num_elevators)]
 dqn_cumul_actions = {0: [0,0,0]}
 scan_cumul_actions = {0: [0,0,0]}
 
-while dqn_env.now() <= 1000:
+while dqn_env.now() <= episode_time:
     # 1. Get actions for the decision agents
     dqn_actions = copy.deepcopy(neg_action)
     for e_id, e_output in dqn_output.items(): # FIXME: need distinguish which elevator was decision elevator last time - right now it doesn't matter because it's only 1 elevator but when it becomes multiple elevators we can't tell right now
