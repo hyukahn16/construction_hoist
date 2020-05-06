@@ -4,4 +4,5 @@ class Passenger():
         self.curr_floor = current_floor
         self.dest_floor = dest_floor
         self.begin_wait_time = begin_wait_time
-        self.elevator = -1 # In elevator? Which elevator? FIXME: is this needed? 
+        self.begin_lift_time = None
+        # self.elevator = -1 # In elevator? Which elevator? FIXME: is this needed? 
