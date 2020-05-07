@@ -27,6 +27,8 @@ if len(sys.argv) == 2:
         sys.exit("Mode name incorrect. Pick one of the following: {}".format(modes))
     test_mode = sys.argv[1]
 
+#######################################
+# Hyperparameters
 num_elevators = 1
 total_floors = 10
 pass_gen_time = 75
@@ -36,11 +38,13 @@ nA = 3
 lr = 0.001
 gamma = 0.95
 min_eps = 0.01
-eps = min_eps # Epsilon is already at MINIMUM value
+eps = min_eps # DO NOT CHANGE! Epsilon is already at MINIMUM value.
 eps_decay = 0.99999 # Not used since this is testing
 batch_size = 24
 test = True
 episode_time = 1000
+# End of hyperparameters
+#######################################
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 dqn_agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size, test)]
@@ -51,9 +55,8 @@ scan_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, ep
 if os.path.exists('training_1.index'):
     dqn_agents[0].model.load_weights(dqn_agents[0].checkpoint_dir)
     print("Successfully loaded saved model")
+    print("Using model =", test_mode)
 else:
-    print("Couldn't find saved model")
-    print("Exiting test")
     sys.exit("Couldn't find saved model. Exiting.")
 
 dqn_output = {}
@@ -63,8 +66,12 @@ organize_output(scan_output, scan_env.reset())
 
 dqn_cumul_rewards = [0 for _ in range(num_elevators)]
 scan_cumul_rewards = [0 for _ in range(num_elevators)]
-dqn_cumul_actions = {0: [0,0,0]}
-scan_cumul_actions = {0: [0,0,0]}
+dqn_step_rewards = []
+scan_step_rewards = []
+dqn_lift_time = []
+scan_lift_time= []
+dqn_wait_time = []
+scan_wait_time = []
 
 while dqn_env.now() <= episode_time:
     # 1. Get actions for the decision agents
@@ -76,19 +83,20 @@ while dqn_env.now() <= episode_time:
         new_action = dqn_agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
         dqn_actions[e_id] = new_action
 
-        dqn_cumul_actions[e_id][new_action] += 1
-    
     # 2. Take action in the Environment
     dqn_new_output = dqn_env.step(dqn_actions)
 
-    # 3. DQN - Update Replay Memory and train agent
+    # 3. Update values
     for e_id, e_output in dqn_new_output.items():
         dqn_cumul_rewards[e_id] += e_output["reward"]
+        dqn_step_rewards.append(e_output["reward"])
+        dqn_lift_time.append(e_output["lift_time"])
+        dqn_wait_time.append(e_output["wait_time"])
 
     # 4. overwrite old output with new output
     organize_output(dqn_output, dqn_new_output) # FIXME: need to distinguishi which elevator was the decision elevator last time
 
-while scan_env.now() <= 1000:
+while scan_env.now() <= episode_time:
     # 1. Get actions for the decision agents
     scan_actions = copy.deepcopy(neg_action)
     for e_id, e_output in scan_output.items(): # FIXME: need distinguish which elevator was decision elevator last time - right now it doesn't matter because it's only 1 elevator but when it becomes multiple elevators we can't tell right now
@@ -98,14 +106,15 @@ while scan_env.now() <= 1000:
         new_action = scan_agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
         scan_actions[e_id] = new_action
 
-        scan_cumul_actions[e_id][new_action] += 1
-
     # 2. Take action in the Environment
     scan_new_output = scan_env.step(scan_actions)
 
-    # 3. SCAN
+    # 3. Update values
     for e_id, e_output in scan_new_output.items():
         scan_cumul_rewards[e_id] += e_output["reward"]
+        scan_step_rewards.append(e_output["reward"])
+        scan_lift_time.append(e_output["lift_time"])
+        scan_wait_time.append(e_output["wait_time"])
 
     # 4. overwrite old output with new output
     organize_output(scan_output, scan_new_output)
@@ -120,9 +129,18 @@ print("Rewards: ", scan_cumul_rewards)
 print("Number of passengers served: ", scan_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(scan_env.elevators[0].passengers))
 
-# FIXME: plot dqn and scan graphs together
-'''
-plt.plot([i for i in range(e + 1)], episode_rewards)
+# Wait Time Graph
+plt.figure(0)
+plt.plot([i for i in range(len(dqn_lift_time))], dqn_lift_time, label='DQN')
+plt.plot([i for i in range(len(scan_lift_time))], scan_lift_time, label='SCAN')
+plt.legend(loc='upper right')
+plt.title("Average Lift Time")
+
+# Lift Time Graph
+plt.figure(1)
+plt.plot([i for i in range(len(dqn_wait_time))], dqn_wait_time, label='DQN')
+plt.plot([i for i in range(len(scan_wait_time))], scan_wait_time, label='SCAN')
+plt.legend(loc='upper right')
+plt.title("Average Wait Time")
 plt.pause(0.01)
 plt.draw()
-'''
