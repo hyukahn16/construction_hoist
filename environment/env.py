@@ -43,6 +43,9 @@ class Environment():
         self.action_space_size = 3 # idle, up, down
         self.observation_space_size = total_floors
 
+        self.total_wait_time = 0
+        self.total_wait_passengers = 0
+
     def reset(self):
         '''Resets the environment to its initial state,
            Returning the initial observation vector.
@@ -98,20 +101,16 @@ class Environment():
            3. if event type is ElevatorArrival or LoadingFinished, then finish function 
            4. 
         '''
-        logging.debug("env.py: step() - Starting")
         # Create processes for each elevators' actions
         for idx, action in enumerate(actions):
             if action == -1:
                 continue
-            logging.debug("Creating proces for Elevator_{} with action {}".format(idx, action))
             self.simul_env.process(self.elevators[idx].act(action))
 
         while True: # run until a decision epoch is reached
             self.decision_elevators = []
-            logging.debug("env.py: step() - Running simulation")
             finished_events = self.simul_env.run( \
                 until=simpy.events.AnyOf(self.simul_env, self.epoch_events.values())).events
-            logging.debug("env.py: step() - Finished simulation")
 
             decision_reached = False
             for event in finished_events:
@@ -131,9 +130,14 @@ class Environment():
         for e_id in self.decision_elevators:
             output[e_id] = {"state": np.array(self.get_elevator_state(e_id)),
                             "reward": self.get_elevator_reward(e_id),
+                            # FIXME: create multiple inheritance for 
+                            # TestEnvironment for efficiency so that
+                            # training Environment doesn't have to 
+                            # calculate unused numbers
+                            "lift_time": self.get_elevator_lift_time(e_id),
+                            "wait_time": self.get_elevator_wait_time(),
                             }
         self.decision_elevators = []
-        logging.debug("env.py: step() - Finished")
         return output
 
     def generate_passengers(self):
@@ -206,7 +210,6 @@ class Environment():
 
     def load_passengers(self, e_id, move=0):
         '''Use by Elevator when idle and ready to load/unload.'''
-        logging.debug("env.py: load_passengers() - Elevator_{}".format(e_id))
         carrying = self.elevators[e_id].passengers
         curr_floor = self.elevators[e_id].curr_floor
 
@@ -215,7 +218,6 @@ class Environment():
         for p in carrying:
             # Determine if the passenger should get off on the current floor
             if p.dest_floor == curr_floor:
-                logging.debug("env.py: load_passengers() - passenger unloaded.")
                 to_delete.append(p)
 
         # Unload Passengers and Update reward for this elevator
@@ -224,6 +226,8 @@ class Environment():
             # Give reward proportional to the time Passenger waited to arrvie
             self.elevators[e_id].update_reward(10)
             num_served += 1
+            # Save passenger's lift time
+            self.elevators[e_id].update_lift_time(p)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
             
@@ -231,21 +235,23 @@ class Environment():
         
         # Load passengers
         for p in self.floors[curr_floor]:
-            logging.debug("env.py: load_passengers() "
-                "- passenger loaded in Elevator_{} at floor {} "
-                "going to floor {}.".format(e_id, curr_floor, p.dest_floor))
             # FIXME: need to consider which passengers will be getting on the elevator
             # take passenger only if Elevator is NOT full
             if (len(self.elevators[e_id].passengers) + 1) * 62 < \
                 self.elevators[e_id].weight_capacity:
                 carrying.add(p)
+                p.begin_lift_time = self.now()
                 self.floors[curr_floor].remove(p)
                 self.elevators[e_id].update_reward(5)
                 self.elevators[e_id].requests[p.dest_floor] = 1
+                
+                # Save passenger's wait time
+                self.total_wait_passengers += 1
+                self.total_wait_time += (self.now() - p.begin_wait_time)
             else:
                 break
         
-        # Handle request calls from Environment and Elevator
+        # Update request calls from Environment and Elevator
         # 1. Handle Environment's call requests
         self.call_requests[curr_floor] = [0, 0] # reset call request for this floor
         for p in self.floors[curr_floor]:
@@ -284,6 +290,7 @@ class Environment():
                     self.elevators[e_id].update_reward(-5)
                     break
                 f += move
+        
 
     def get_elevator_state(self, e_id):
         e_state = []
@@ -313,6 +320,28 @@ class Environment():
         output = self.elevators[e_id].reward
         self.elevators[e_id].reward = 0
         return output
+
+    def get_elevator_lift_time(self, e_id):
+        e = self.elevators[e_id]
+        return e.calculate_avg_lift_time()
+
+    def get_elevator_wait_time(self):
+        '''Calculate average wait time.'''
+        if self.total_wait_passengers == 0:
+            return 0
+
+        for floor_num, p_list in self.floors.items():
+            for p in p_list:
+                self.total_wait_time += (self.now() - p.begin_wait_time)
+                self.total_wait_passengers += 1
+
+        avg_wait_time = self.total_wait_time / self.total_wait_passengers
+
+        # Reset variables
+        self.total_wait_passengers = 0
+        self.total_wait_time = 0
+
+        return avg_wait_time
 
     def now(self):
         return self.simul_env.now
