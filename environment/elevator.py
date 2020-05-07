@@ -26,6 +26,10 @@ class Elevator():
         self.state = None
         self.reward = 0 # Cumulative reward
         self.num_served = 0
+
+        self.total_lift_time = 0
+        self.total_lift_passengers = 0
+
         # Testing variables
         self.min_visited = 39
         self.max_visited = 0
@@ -56,7 +60,7 @@ class Elevator():
         # If action is idle
         if action == 0:
             self.idling_event = \
-                self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
+                self.env.simul_env.process(self.idle())
             try:
                 yield self.idling_event
             except:
@@ -149,3 +153,22 @@ class Elevator():
         '''
         self.reward += reward
         
+    def calculate_avg_lift_time(self):
+        '''Calculate average lifting time.'''
+        if not self.passengers:
+            return 0
+
+        for p in self.passengers:
+                self.total_lift_time += (self.env.now() - p.begin_lift_time)
+                self.total_lift_passengers += 1
+
+        avg_lift_time = self.total_lift_time / self.total_lift_passengers
+
+        # Reset values
+        self.total_lift_passengers = 0
+        self.total_lift_time = 0
+        return avg_lift_time
+
+    def update_lift_time(self, p):
+        self.total_lift_passengers += 1
+        self.total_lift_time += (self.env.now() - p.begin_lift_time)
