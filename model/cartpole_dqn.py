@@ -28,8 +28,6 @@ class DeepQNetwork():
         checkpoint_path = 'training_1/cp.ckpt'
         self.checkpoint_dir = os.path.dirname(checkpoint_path)
         self.cp_callback = keras.callbacks.ModelCheckpoint(filepath=self.checkpoint_dir,
-                                                            save_freq=batch_size,
-                                                            save_weights_only=True,
                                                             verbose=0)
 
     def build_model(self):
@@ -95,7 +93,7 @@ class DeepQNetwork():
         epoch_count = 1 #Epochs is the number or iterations
         
         hist = None
-        if not test:
+        if not self.test:
             hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, 
                                 verbose=0, callbacks=[self.cp_callback])
         else:
