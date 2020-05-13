@@ -214,19 +214,18 @@ class Environment():
         curr_floor = self.elevators[e_id].curr_floor
 
         # Save the Passengers that should get off on this floor
-        to_delete = []
+        unload_p = []
         for p in carrying:
             # Determine if the passenger should get off on the current floor
             if p.dest_floor == curr_floor:
-                to_delete.append(p)
+                unload_p.append(p)
 
-        # Unload Passengers and Update reward for this elevator
+        # Unload Passengers
         num_served = 0
-        for p in to_delete:
-            # Give reward proportional to the time Passenger waited to arrvie
-            self.elevators[e_id].update_reward(10)
+        for p in unload_p:
+            self.elevators[e_id].update_reward(20) # Reward
             num_served += 1
-            # Save passenger's lift time
+            # Save passenger's lift time for testing
             self.elevators[e_id].update_lift_time(p)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
@@ -240,14 +239,11 @@ class Environment():
             if (len(self.elevators[e_id].passengers) + 1) * 62 < \
                 self.elevators[e_id].weight_capacity:
                 carrying.add(p)
-                p.begin_lift_time = self.now()
+                p.begin_lift_time = self.now() # Start lift time
                 self.floors[curr_floor].remove(p)
-                self.elevators[e_id].update_reward(5)
+                self.elevators[e_id].update_reward(10)
                 self.elevators[e_id].requests[p.dest_floor] = 1
-                
-                # Save passenger's wait time
-                self.total_wait_passengers += 1
-                self.total_wait_time += (self.now() - p.begin_wait_time)
+                self.update_wait_time(p)
             else:
                 break
         
@@ -268,9 +264,10 @@ class Environment():
         self.elevators[e_id].requests[curr_floor] = 0
 
         # Reward for moving in the right direction
-        if move != 0:
+        if move != 0: # if the move was UP or DOWN
             f = curr_floor + move
             while f > 0 and f < self.total_floors:
+                # if there are calls from the direction the elevator is moving
                 if len(self.floors[f]) > 0:
                     self.elevators[e_id].update_reward(1)
                     break
@@ -278,6 +275,7 @@ class Environment():
 
             f = curr_floor + move
             while f > 0 and f < self.total_floors:
+                # if there are requests from the direction the elevator is moving
                 if self.elevators[e_id].requests[f] == 1:
                     self.elevators[e_id].update_reward(5)
                     break
@@ -286,11 +284,12 @@ class Environment():
             move = -1 * move
             f = curr_floor + move
             while f > 0 and f < self.total_floors:
+                # if there are requests from the opposite direction that the
+                # elevator is moving
                 if self.elevators[e_id].requests[f] == 1:
                     self.elevators[e_id].update_reward(-5)
                     break
                 f += move
-        
 
     def get_elevator_state(self, e_id):
         e_state = []
@@ -321,6 +320,12 @@ class Environment():
         self.elevators[e_id].reward = 0
         return output
 
+    def get_reward_prop_time(self, flat_reward, p_time):
+        time = self.now() - p_time
+        if time == 0:
+            return flat_reward
+        return flat_reward / time
+
     def get_elevator_lift_time(self, e_id):
         e = self.elevators[e_id]
         return e.calculate_avg_lift_time()
@@ -342,6 +347,11 @@ class Environment():
         self.total_wait_time = 0
 
         return avg_wait_time
+
+    def update_wait_time(self, p):
+        # Save passenger's wait time
+        self.total_wait_passengers += 1
+        self.total_wait_time += (self.now() - p.begin_wait_time)
 
     def now(self):
         return self.simul_env.now
