@@ -17,8 +17,8 @@ def organize_output(output, new_output):
 
 
 num_elevators = 1
-total_floors = 10
-pass_gen_time = 75
+total_floors = 20
+pass_gen_time = 50
 
 nS = total_floors * 4
 nA = 3
@@ -26,9 +26,9 @@ lr = 0.001
 gamma = 0.95
 eps = 1
 min_eps = 0.01
-eps_decay = 0.99999
+eps_decay = 0.99995
 batch_size = 24
-episode_time = 1000
+episode_time = 10000
 
 use_saved = True
 

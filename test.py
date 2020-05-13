@@ -31,7 +31,7 @@ if len(sys.argv) == 2:
 # Hyperparameters
 num_elevators = 1
 total_floors = 20
-pass_gen_time = 75
+pass_gen_time = 50
 
 nS = total_floors * 4
 nA = 3
