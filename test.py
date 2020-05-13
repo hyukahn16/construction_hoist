@@ -142,5 +142,15 @@ plt.plot([i for i in range(len(dqn_wait_time))], dqn_wait_time, label='DQN')
 plt.plot([i for i in range(len(scan_wait_time))], scan_wait_time, label='SCAN')
 plt.legend(loc='upper right')
 plt.title("Average Wait Time")
-plt.pause(0.01)
+
+# Total Time Graph
+dqn_total_time = [dqn_lift_time[i] + dqn_wait_time[i] for i in range(len(dqn_wait_time))]
+scan_total_time = [scan_lift_time[i] + scan_wait_time[i] for i in range(len(scan_wait_time))]
+plt.figure(2)
+plt.plot([i for i in range(len(dqn_total_time))], dqn_total_time, label='DQN')
+plt.plot([i for i in range(len(scan_total_time))], scan_total_time, label='SCAN')
+plt.legend(loc='upper right')
+plt.title("Average Wait + Lift Time")
+
+#plt.pause(0.01)
 plt.draw()
