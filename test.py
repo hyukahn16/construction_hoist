@@ -30,7 +30,7 @@ if len(sys.argv) == 2:
 #######################################
 # Hyperparameters
 num_elevators = 1
-total_floors = 10
+total_floors = 20
 pass_gen_time = 75
 
 nS = total_floors * 4
@@ -42,7 +42,7 @@ eps = min_eps # DO NOT CHANGE! Epsilon is already at MINIMUM value.
 eps_decay = 0.99999 # Not used since this is testing
 batch_size = 24
 test = True
-episode_time = 1000
+episode_time = 10000
 # End of hyperparameters
 #######################################
 
