@@ -223,14 +223,17 @@ class Environment():
         # Unload Passengers
         num_served = 0
         for p in unload_p:
-            self.elevators[e_id].update_reward(20) # Reward
+            self.elevators[e_id].update_reward(self.get_reward_prop_time(100, p.begin_wait_time))
             num_served += 1
-            # Save passenger's lift time for testing
-            self.elevators[e_id].update_lift_time(p)
             # Remove the passenger from the Elevator
             carrying.remove(p)        
             
         self.elevators[e_id].num_served += num_served
+
+        # Calculate all waiting time
+        for _, floor in self.floors.items():
+            for p in floor: 
+                self.update_wait_time(p)
         
         # Load passengers
         for p in self.floors[curr_floor]:
@@ -241,9 +244,8 @@ class Environment():
                 carrying.add(p)
                 p.begin_lift_time = self.now() # Start lift time
                 self.floors[curr_floor].remove(p)
-                self.elevators[e_id].update_reward(10)
+                self.elevators[e_id].update_reward(5)
                 self.elevators[e_id].requests[p.dest_floor] = 1
-                self.update_wait_time(p)
             else:
                 break
         
@@ -277,7 +279,7 @@ class Environment():
             while f > 0 and f < self.total_floors:
                 # if there are requests from the direction the elevator is moving
                 if self.elevators[e_id].requests[f] == 1:
-                    self.elevators[e_id].update_reward(5)
+                    self.elevators[e_id].update_reward(2)
                     break
                 f += move
             
@@ -287,7 +289,7 @@ class Environment():
                 # if there are requests from the opposite direction that the
                 # elevator is moving
                 if self.elevators[e_id].requests[f] == 1:
-                    self.elevators[e_id].update_reward(-5)
+                    self.elevators[e_id].update_reward(-2)
                     break
                 f += move
 
@@ -334,11 +336,6 @@ class Environment():
         '''Calculate average wait time.'''
         if self.total_wait_passengers == 0:
             return 0
-
-        for floor_num, p_list in self.floors.items():
-            for p in p_list:
-                self.total_wait_time += (self.now() - p.begin_wait_time)
-                self.total_wait_passengers += 1
 
         avg_wait_time = self.total_wait_time / self.total_wait_passengers
 
