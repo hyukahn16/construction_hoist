@@ -158,5 +158,5 @@ plt.plot([i for i in range(len(scan_total_time))], scan_total_time, label='SCAN'
 plt.legend(loc='upper right')
 plt.title("Average Wait + Lift Time")
 
-#plt.pause(0.01)
+plt.pause(0.01)
 plt.draw()
