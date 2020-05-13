@@ -23,7 +23,7 @@ class ScanAgent():
                 curr_floor = i
                 break
         
-        assert(curr_floor != -1)
+        assert(curr_floor != -1 and curr_floor != self.observation_space)
 
         if self.prev_floor == curr_floor: # IDLE
             # If IDLE, then go whichever direction has more requests
@@ -36,23 +36,29 @@ class ScanAgent():
                     elif i > curr_floor:
                         above += 1
             
-            if above > below:
+            if above > below: # Move UP
+                self.prev_floor = curr_floor
                 return 1
-            else:
+            else: # Move DOWN
+                self.prev_floor = curr_floor
                 return 2
 
         elif self.prev_floor < curr_floor: # UP
             for i in range(curr_floor, len(up_calls)):
                 if up_calls[i] == 1 or down_calls[i] == 1:
+                    self.prev_floor = curr_floor
                     return 1 # Return move UP action
             # If there are no calls above, then now start moving DOWN
+            self.prev_floor = curr_floor
             return 2
 
         else: # DOWN
             for i in range(0, curr_floor):
                 if up_calls[i] == 1 or down_calls[i] == 1:
+                    self.prev_floor = curr_floor
                     return 2 # Return move DOWN action
             # If there are no calls below, then now start moving UP
+            self.prev_floor = curr_floor
             return 1
 
         return -1 # Should NEVER go in this case
