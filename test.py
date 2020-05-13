@@ -66,6 +66,8 @@ organize_output(scan_output, scan_env.reset())
 
 dqn_cumul_rewards = [0 for _ in range(num_elevators)]
 scan_cumul_rewards = [0 for _ in range(num_elevators)]
+dqn_cumul_actions = [0, 0, 0]
+scan_cumul_actions = [0, 0, 0]
 dqn_step_rewards = []
 scan_step_rewards = []
 dqn_lift_time = []
@@ -85,6 +87,7 @@ while dqn_env.now() <= episode_time:
 
     # 2. Take action in the Environment
     dqn_new_output = dqn_env.step(dqn_actions)
+    dqn_cumul_actions[dqn_actions] += 1
 
     # 3. Update values
     for e_id, e_output in dqn_new_output.items():
@@ -108,6 +111,7 @@ while scan_env.now() <= episode_time:
 
     # 2. Take action in the Environment
     scan_new_output = scan_env.step(scan_actions)
+    scan_cumul_actions[scan_actions] += 1
 
     # 3. Update values
     for e_id, e_output in scan_new_output.items():
@@ -123,11 +127,13 @@ print("DQN ------")
 print("Rewards: ", dqn_cumul_rewards)
 print("Number of passengers served: ", dqn_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(dqn_env.elevators[0].passengers))
+print("Cumulative actions:", dqn_cumul_actions)
 print()
 print("SCAN ------")
 print("Rewards: ", scan_cumul_rewards)
 print("Number of passengers served: ", scan_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(scan_env.elevators[0].passengers))
+print("Cumulative actions:", scan_cumul_actions)
 
 # Wait Time Graph
 plt.figure(0)
