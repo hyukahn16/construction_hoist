@@ -1,10 +1,10 @@
 import environment as gym
 import time
 import numpy as np
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from model import *
 import copy
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import matplotlib.pyplot as pyplot
 
 def organize_output(output, new_output):
