@@ -20,8 +20,8 @@ def organize_output(output, new_output):
         output[e_id] = e_output
         output[e_id]["last"] = True
 
-test_mode = "all"
-modes = ["all", "intermediate", "uppeak", "downpeak", "lunch"]
+test_mode = "intermediate"
+modes = ["intermediate", "uppeak", "downpeak", "lunch"]
 if len(sys.argv) == 2:
     if sys.argv[1] not in modes:
         sys.exit("Mode name incorrect. Pick one of the following: {}".format(modes))
