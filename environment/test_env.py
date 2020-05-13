@@ -74,8 +74,8 @@ class UpPeakEnvironment(Environment):
             curr_fl = 0
             dest_fl = random.randrange(1, self.num_floors, 1)
 
-            # Create new instance of Passenger at random floor
-            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            # Create new instance of Passenger
+            p = Passenger(curr_fl, dest_fl, self.now())
             
             # Add Passenger to appropriate floor group
             self.floors[p.curr_floor].append(p)
@@ -85,10 +85,8 @@ class UpPeakEnvironment(Environment):
             else: # UP call
                 self.call_requests[p.curr_floor][0] = 1
 
-            logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
             self.generated_passengers += 1
             self.trigger_epoch_event("PassengerRequest")
-
             yield self.simul_env.timeout(self.pas_gen_time)
 
 # All passengers spawn from floors except for the lowest floor and
@@ -110,7 +108,6 @@ class DownPeakEnvironment(Environment):
             else: # UP call
                 self.call_requests[p.curr_floor][0] = 1
 
-            logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
             self.generated_passengers += 1
             self.trigger_epoch_event("PassengerRequest")
 
