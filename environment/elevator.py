@@ -8,7 +8,6 @@ import numpy as np
 # will be requesting on each floor.
 
 class Elevator():
-    # num_states = 3 not sure if neeeded
     IDLE = 0
     MOVING_UP = 1
     MOVING_DOWN = -1
@@ -57,6 +56,10 @@ class Elevator():
             # idle if not a legal action
             action = 0
 
+        # Save passenger's lift time for testing
+        for p in self.passengers:
+            self.update_lift_time(p)
+
         # If action is idle
         if action == 0:
             self.idling_event = \
@@ -66,7 +69,6 @@ class Elevator():
             except:
                 # if idling is interrupted (by the env), then trigger event to 
                 # force a decision from the elevator
-                logging.debug("elevator.py: idling is interrupted.")
                 self.state = None
                 self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
                 self.idling_event = None
@@ -93,11 +95,11 @@ class Elevator():
 
     def move_up(self):
         assert(self.curr_floor < self.env.num_floors - 1)
-        logging.debug("elevator.py: move_up() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
 
         self.state = self.LOADING
         self.env.load_passengers(self.id, self.MOVING_UP)
         self.state = self.MOVING_UP
+
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor += 1
@@ -105,7 +107,6 @@ class Elevator():
         if self.curr_floor > self.max_visited:
             self.max_visited = self.curr_floor
 
-        logging.debug("elevator.py: move_up() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.state = self.LOADING
         self.env.load_passengers(self.id)
         self.state = None
