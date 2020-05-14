@@ -39,9 +39,11 @@ class ScanAgent():
             if above > below: # Move UP
                 self.prev_floor = curr_floor
                 return 1
-            else: # Move DOWN
+            elif below > above: # Move DOWN
                 self.prev_floor = curr_floor
                 return 2
+            else:
+                return 0
 
         elif self.prev_floor < curr_floor: # UP
             for i in range(curr_floor, len(up_calls)):
@@ -49,8 +51,12 @@ class ScanAgent():
                     self.prev_floor = curr_floor
                     return 1 # Return move UP action
             # If there are no calls above, then now start moving DOWN
+            for i in range(0, curr_floor):
+                if up_calls[i] == 1 or down_calls[i] == 1:
+                    self.prev_floor = curr_floor
+                    return 2 # Return move DOWN action
             self.prev_floor = curr_floor
-            return 2
+            return 0
 
         else: # DOWN
             for i in range(0, curr_floor):
@@ -58,10 +64,14 @@ class ScanAgent():
                     self.prev_floor = curr_floor
                     return 2 # Return move DOWN action
             # If there are no calls below, then now start moving UP
+            for i in range(curr_floor, len(up_calls)):
+                if up_calls[i] == 1 or down_calls[i] == 1:
+                    self.prev_floor = curr_floor
+                    return 1 # Return move UP action
             self.prev_floor = curr_floor
-            return 1
+            return 0
 
-        return -1 # Should NEVER go in this case
+        return 0 # Should NEVER go in this case
         # 1 proceed in the same direction until last request is fulfilled in that direction
         # FIXME: need to know which direction the elevator is current moving in
 
