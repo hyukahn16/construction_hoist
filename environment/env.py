@@ -227,11 +227,6 @@ class Environment():
             # Remove the passenger from the Elevator
             carrying.remove(p)        
             
-        # Calculate all waiting time
-        for _, floor in self.floors.items():
-            for p in floor: 
-                self.update_wait_time(p)
-        
         # Load passengers
         for p in self.floors[curr_floor]:
             # FIXME: need to consider which passengers will be getting on the elevator
@@ -331,9 +326,12 @@ class Environment():
 
     def get_elevator_wait_time(self):
         '''Calculate average wait time.'''
+        for _, floor in self.floors.items():
+            for p in floor: 
+                self.update_wait_time(p)
+        
         if self.total_wait_passengers == 0:
             return 0
-
         avg_wait_time = self.total_wait_time / self.total_wait_passengers
 
         # Reset variables
