@@ -221,15 +221,12 @@ class Environment():
                 unload_p.append(p)
 
         # Unload Passengers
-        num_served = 0
         for p in unload_p:
             self.elevators[e_id].update_reward(self.get_reward_prop_time(100, p.begin_wait_time))
-            num_served += 1
+            self.elevators[e_id].num_served += 1
             # Remove the passenger from the Elevator
             carrying.remove(p)        
             
-        self.elevators[e_id].num_served += num_served
-
         # Calculate all waiting time
         for _, floor in self.floors.items():
             for p in floor: 
