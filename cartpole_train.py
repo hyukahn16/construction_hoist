@@ -88,8 +88,6 @@ for e in range(10000): # number of episodes == 100
     print("Epsilon value:", agents[0].epsilon)
     print("Elevator_1 Number of passengers served: ", env.elevators[0].num_served)
     print("Elevator_1 Number of passengers carrying: ", len(env.elevators[0].passengers))
-    print("Elevator_1 Max floor visited: ", env.elevators[0].max_visited)
-    print("Elevator_1 Min floor visited ", env.elevators[0].min_visited)
     print("Actions: ", cumul_actions)
     print("Total passengers generated:", env.generated_passengers)
     episode_rewards.append(cumul_rewards[0])
