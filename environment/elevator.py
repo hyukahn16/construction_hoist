@@ -17,21 +17,17 @@ class Elevator():
         """Initialize Elevator class."""
         self.curr_floor = 0
         self.passengers = set()
-        self.requests = np.zeros(env.num_floors) # floor requests from Passengers inside the Elevator # FIXME implement
+        self.requests = np.zeros(env.num_floors) # floor requests from Passengers inside the Elevator
         self.weight_capacity = 907.185 # Unit: Kilograms, 1 ton == 907.185 kg
         self.env = env
         self.id = id
         self.idling_event = None
         self.state = None
-        self.reward = 0 # Cumulative reward
+        self.reward = 0 # Per step reward
         self.num_served = 0
 
         self.total_lift_time = 0
         self.total_lift_passengers = 0
-
-        # Testing variables
-        self.min_visited = 39
-        self.max_visited = 0
 
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
@@ -97,38 +93,31 @@ class Elevator():
         assert(self.curr_floor < self.env.num_floors - 1)
 
         self.state = self.LOADING
-        self.env.load_passengers(self.id, self.MOVING_UP)
+        self.env.load_passengers(self.id)
         self.state = self.MOVING_UP
 
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor += 1
 
-        if self.curr_floor > self.max_visited:
-            self.max_visited = self.curr_floor
-
         self.state = self.LOADING
-        self.env.load_passengers(self.id)
+        self.env.load_passengers(self.id, self.MOVING_UP)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_down(self):
         assert(self.curr_floor > 0)
-        logging.debug("elevator.py: move_down() - Elevator_{} from floor {}".format(self.id, self.curr_floor))
 
         self.state = self.LOADING
-        self.env.load_passengers(self.id, self.MOVING_DOWN)
+        self.env.load_passengers(self.id)
         self.state = self.MOVING_DOWN
+
         yield self.env.simul_env.timeout(15)
 
         self.curr_floor -= 1
 
-        if self.curr_floor < self.min_visited:
-            self.min_visited = self.curr_floor
-
-        logging.debug("elevator.py: move_down() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
         self.state = self.LOADING
-        self.env.load_passengers(self.id)
+        self.env.load_passengers(self.id, self.MOVING_DOWN)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
