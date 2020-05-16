@@ -127,8 +127,9 @@ class Environment():
 
         # return state, reward, and the decision agents
         output = {}
+        output["state"] = np.array(self.get_state())
         for e_id in self.decision_elevators:
-            output[e_id] = {"state": np.array(self.get_elevator_state(e_id)),
+            output[e_id] = {
                             "reward": self.get_elevator_reward(e_id),
                             # FIXME: create multiple inheritance for 
                             # TestEnvironment for efficiency so that
@@ -281,7 +282,38 @@ class Environment():
                 req_reward = req_reward * -1
             self.elevators[e_id].update_reward(req_reward)
 
+    def get_state(self):
+        state = []
+        # Up calls from the building
+        for call in self.call_requests:
+            state.append(call[0])
+        
+        # Down calls from the building
+        for call in self.call_requests:
+            state.append(call[1])
+
+        # Calls within all the Elevators
+        for e in self.elevators:
+            for request in e.requests:
+                state.append(request)
+        
+        # Location of all the Elevators
+        for e in self.elevators:
+            for fl in range(self.total_floors):
+                if e.curr_floor == fl:
+                    state.append(1)
+                else:
+                    state.append(0)
+        
+        return state
+
+    # Used when using single elevator
     def get_elevator_state(self, e_id):
+        '''
+        Requires: elevator id
+        Modifies: None
+        Effects: Returns a list of size 4 x self.total_floors
+        '''
         e_state = []
         # Up calls from the building
         for call in self.call_requests:
