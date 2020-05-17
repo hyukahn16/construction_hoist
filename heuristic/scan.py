@@ -72,8 +72,6 @@ class ScanAgent():
             return 0
 
         return 0 # Should NEVER go in this case
-        # 1 proceed in the same direction until last request is fulfilled in that direction
-        # FIXME: need to know which direction the elevator is current moving in
 
 
         
