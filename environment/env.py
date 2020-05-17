@@ -86,7 +86,7 @@ class Environment():
         # Create a process that will generate passengers on random floors
         self.simul_env.process(self.generate_passengers())
         logging.debug("env.py: Reset Complete!")
-        return self.step([-1])
+        return self.step([-1 for _ in range(self.num_elevators)])
 
     def step(self, actions):
         '''Receive an action from the agent
@@ -127,9 +127,9 @@ class Environment():
 
         # return state, reward, and the decision agents
         output = {}
-        output["state"] = np.array(self.get_state())
         for e_id in self.decision_elevators:
             output[e_id] = {
+                            "state": self.np.array(self.get_state())
                             "reward": self.get_elevator_reward(e_id),
                             # FIXME: create multiple inheritance for 
                             # TestEnvironment for efficiency so that
