@@ -8,7 +8,7 @@ import copy
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' # FIXME: is this needed for tensorflow model save?
 import matplotlib.pyplot as pyplot
-from heuristic import ScanAgent
+from heuristic import ScanAgent, HumanAgent
 import sys
 
 def organize_output(output, new_output):
@@ -47,10 +47,21 @@ episode_time = 10000
 #######################################
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
-dqn_agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size, test)]
+
+dqn_agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, 
+    batch_size, test)]
 scan_agents = [ScanAgent(total_floors) for _ in range(num_elevators)]
-dqn_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, episode_time, test_mode)
-scan_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, episode_time, test_mode)
+human_agents = [HumanAgent(total_floors) for _ in range(num_elevators)]
+
+dqn_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, 
+    episode_time, test_mode)
+scan_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time,
+    episode_time, test_mode)
+human_mode = True
+human_env = gym.make(num_elevators, total_floors, total_floors, pass_gen_time, 
+    episode_time, test_mode, human_mode, human_agents[0])
+
+
 
 if os.path.exists('training_1.index'):
     dqn_agents[0].model.load_weights(dqn_agents[0].checkpoint_dir)
@@ -61,17 +72,26 @@ else:
 
 dqn_output = {}
 scan_output = {}
+human_output = {}
 organize_output(dqn_output, dqn_env.reset())
 organize_output(scan_output, scan_env.reset())
+organize_output(human_output, human_env.reset())
 
 dqn_cumul_rewards = [0 for _ in range(num_elevators)]
 scan_cumul_rewards = [0 for _ in range(num_elevators)]
+human_cumul_rewards = [0 for _ in range(num_elevators)]
+dqn_cumul_actions = [0, 0, 0]
+scan_cumul_actions = [0, 0, 0]
+human_cumul_actions = [0, 0, 0]
 dqn_step_rewards = []
 scan_step_rewards = []
+human_step_rewards = []
 dqn_lift_time = []
 scan_lift_time= []
+human_lift_time= []
 dqn_wait_time = []
 scan_wait_time = []
+human_wait_time = []
 
 while dqn_env.now() <= episode_time:
     # 1. Get actions for the decision agents
@@ -82,6 +102,7 @@ while dqn_env.now() <= episode_time:
         legal = dqn_env.elevators[e_id].legal_actions()
         new_action = dqn_agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
         dqn_actions[e_id] = new_action
+        dqn_cumul_actions[new_action] += 1
 
     # 2. Take action in the Environment
     dqn_new_output = dqn_env.step(dqn_actions)
@@ -105,6 +126,7 @@ while scan_env.now() <= episode_time:
         legal = scan_env.elevators[e_id].legal_actions()
         new_action = scan_agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
         scan_actions[e_id] = new_action
+        scan_cumul_actions[new_action] += 1
 
     # 2. Take action in the Environment
     scan_new_output = scan_env.step(scan_actions)
@@ -119,20 +141,52 @@ while scan_env.now() <= episode_time:
     # 4. overwrite old output with new output
     organize_output(scan_output, scan_new_output)
 
+while human_env.now() <= episode_time:
+    # 1. Get actions for the decision agents
+    human_actions = copy.deepcopy(neg_action)
+    for e_id, e_output in human_output.items(): # FIXME: need distinguish which elevator was decision elevator last time - right now it doesn't matter because it's only 1 elevator but when it becomes multiple elevators we can't tell right now
+        if e_output["last"] == False:
+            continue
+        new_action = human_agents[e_id].action(np.reshape(e_output["state"], [1, nS]))
+        human_actions[e_id] = new_action
+        human_cumul_actions[new_action] += 1
+
+    # 2. Take action in the Environment
+    human_new_output = human_env.step(human_actions)
+
+    # 3. Update values
+    for e_id, e_output in human_new_output.items():
+        human_cumul_rewards[e_id] += e_output["reward"]
+        human_step_rewards.append(e_output["reward"])
+        human_lift_time.append(e_output["lift_time"])
+        human_wait_time.append(e_output["wait_time"])
+
+    # 4. overwrite old output with new output
+    organize_output(human_output, human_new_output) # FIXME: need to distinguishi which elevator was the decision elevator last time
+
 print("DQN ------")
 print("Rewards: ", dqn_cumul_rewards)
 print("Number of passengers served: ", dqn_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(dqn_env.elevators[0].passengers))
+print("Actions: ", dqn_cumul_actions)
 print()
 print("SCAN ------")
 print("Rewards: ", scan_cumul_rewards)
 print("Number of passengers served: ", scan_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(scan_env.elevators[0].passengers))
+print("Actions: ", scan_cumul_actions)
+print()
+print("HUMAN ------")
+print("Rewards: ", human_cumul_rewards)
+print("Number of passengers served: ", human_env.elevators[0].num_served)
+print("Number of passengers carrying: ", len(human_env.elevators[0].passengers))
+print("Actions: ", human_cumul_actions)
 
 # Wait Time Graph
 plt.figure(0)
 plt.plot([i for i in range(len(dqn_lift_time))], dqn_lift_time, label='DQN')
 plt.plot([i for i in range(len(scan_lift_time))], scan_lift_time, label='SCAN')
+plt.plot([i for i in range(len(human_lift_time))], human_lift_time, label='HUMAN')
 plt.legend(loc='upper right')
 plt.title("Average Lift Time")
 
@@ -140,15 +194,21 @@ plt.title("Average Lift Time")
 plt.figure(1)
 plt.plot([i for i in range(len(dqn_wait_time))], dqn_wait_time, label='DQN')
 plt.plot([i for i in range(len(scan_wait_time))], scan_wait_time, label='SCAN')
+plt.plot([i for i in range(len(human_wait_time))], human_wait_time, label='HUMAN')
 plt.legend(loc='upper right')
 plt.title("Average Wait Time")
 
 # Total Time Graph
-dqn_total_time = [dqn_lift_time[i] + dqn_wait_time[i] for i in range(len(dqn_wait_time))]
-scan_total_time = [scan_lift_time[i] + scan_wait_time[i] for i in range(len(scan_wait_time))]
+dqn_total_time = [dqn_lift_time[i] + dqn_wait_time[i]
+    for i in range(len(dqn_wait_time))]
+scan_total_time = [scan_lift_time[i] + scan_wait_time[i]
+    for i in range(len(scan_wait_time))]
+human_total_time = [human_lift_time[i] + human_wait_time[i]
+    for i in range(len(human_wait_time))]
 plt.figure(2)
 plt.plot([i for i in range(len(dqn_total_time))], dqn_total_time, label='DQN')
 plt.plot([i for i in range(len(scan_total_time))], scan_total_time, label='SCAN')
+plt.plot([i for i in range(len(human_total_time))], human_total_time, label='HUMAN')
 plt.legend(loc='upper right')
 plt.title("Average Wait + Lift Time")
 
