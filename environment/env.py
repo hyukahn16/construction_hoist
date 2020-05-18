@@ -7,18 +7,23 @@ from .passenger import Passenger
 from .elevator import Elevator
 import environment
 
-def make(num_elevators, curr_floors, total_floors, pas_gen_time, episode_time, mode=None):
+def make(num_elevators, curr_floors, total_floors, pas_gen_time, episode_time,
+    mode=None, human_mode=False, human_agent=None):
     '''Generate new simpy.Environment.'''
     assert curr_floors <= total_floors
 
     simpy_env = simpy.Environment()
     env = None
+    if human_mode:
+        return environment.HumanEnvironment(simpy_env, num_elevators, 
+            curr_floors, total_floors, pas_gen_time, human_agent)
+
     if not mode or "intermediate":
-        env = Environment(simpy_env, num_elevators, curr_floors, total_floors, pas_gen_time)
+        env = Environment(simpy_env, num_elevators, curr_floors, total_floors, 
+            pas_gen_time)
     elif mode == "schedule":
         env = environment.TestEnvironment(simpy_env, num_elevators, 
-                                        curr_floors, total_floors, pas_gen_time,
-                                        "schedule.txt")
+            curr_floors, total_floors, pas_gen_time, "schedule.txt")
     elif mode == "uppeak":
         env = environment.UpPeakEnvironment(simpy_env, num_elevators,
                             curr_floors, total_floors, pas_gen_time)
@@ -43,15 +48,15 @@ class Environment():
         self.action_space_size = 3 # idle, up, down
         self.observation_space_size = total_floors
 
-        self.total_wait_time = 0
-        self.total_wait_passengers = 0
-
     def reset(self):
         '''Resets the environment to its initial state,
            Returning the initial observation vector.
 
            - includes the simpy process for generate_passengers()
         '''
+        self.total_wait_time = 0
+        self.total_wait_passengers = 0
+
         self.simul_env = simpy.Environment()
         self.floors = {} # Key: floor number, value: list of Passenger objects
         self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
@@ -225,6 +230,7 @@ class Environment():
             self.elevators[e_id].update_reward(100)
             self.elevators[e_id].num_served += 1
             # Remove the passenger from the Elevator
+            p.elevator = None
             carrying.remove(p)        
             
         # Load passengers
@@ -236,6 +242,7 @@ class Environment():
                 carrying.add(p)
                 p.begin_lift_time = self.now() # Start lift time
                 self.floors[curr_floor].remove(p)
+                p.elevator = e_id
                 self.elevators[e_id].update_reward(50)
                 self.elevators[e_id].requests[p.dest_floor] = 1
             else:
