@@ -5,6 +5,7 @@ Different testing environments
 from environment import Environment
 from .passenger import Passenger
 import queue
+import random
 
 # Reads a schedule from a file and creates passengers based on the schedule
 class ScheduleEnvironment(Environment):
@@ -172,4 +173,41 @@ class LunchEnvironment(Environment):
             self.generated_passengers += 1
             self.trigger_epoch_event("PassengerRequest")
 
+            yield self.simul_env.timeout(self.pas_gen_time)
+
+# uppeak
+class HumanEnvironment(Environment):
+    # https://www.programiz.com/python-programming/methods/built-in/classmethod
+
+    def __init__(self, simul_env, num_elevators, curr_floors, 
+                total_floors, pas_gen_time, human_agent):
+        self.simul_env = simul_env
+        self.num_elevators = num_elevators
+        self.num_floors = curr_floors
+        self.total_floors = total_floors
+        self.pas_gen_time = pas_gen_time
+        
+        self.action_space_size = 3 # idle, up, down
+        self.observation_space_size = total_floors
+
+        self.human_agent = human_agent
+
+    def generate_passengers(self):
+        '''Creates passenger instances until environment finishes.'''
+        while True:
+            curr_fl = 0
+            dest_fl = random.randrange(1, self.num_floors, 1)
+
+            p = Passenger(curr_fl, dest_fl, self.now())
+            self.floors[p.curr_floor].append(p)
+            self.human_agent.passenger_queue.put(p)
+            
+            # Update the calls based on this passenger
+            if curr_fl > dest_fl: # DOWN call
+                self.call_requests[p.curr_floor][1] = 1
+            else: # UP call
+                self.call_requests[p.curr_floor][0] = 1
+
+            self.generated_passengers += 1
+            self.trigger_epoch_event("PassengerRequest")
             yield self.simul_env.timeout(self.pas_gen_time)
