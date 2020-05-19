@@ -211,3 +211,76 @@ class HumanEnvironment(Environment):
             self.generated_passengers += 1
             self.trigger_epoch_event("PassengerRequest")
             yield self.simul_env.timeout(self.pas_gen_time)
+
+    def load_passengers(self, e_id, move=0):
+        '''Use by Elevator when idle and ready to load/unload.'''
+        carrying = self.elevators[e_id].passengers
+        curr_floor = self.elevators[e_id].curr_floor
+
+        # Save the Passengers that should get off on this floor
+        unload_p = []
+        for p in carrying:
+            # Determine if the passenger should get off on the current floor
+            if p.dest_floor == curr_floor:
+                unload_p.append(p)
+
+        # Unload Passengers
+        for p in unload_p:
+            self.elevators[e_id].update_reward(100)
+            self.elevators[e_id].num_served += 1
+            # Remove the passenger from the Elevator
+            p.elevator = None
+            carrying.remove(p)        
+            
+        # Load passengers
+        for p in self.floors[curr_floor]:
+            if (len(self.elevators[e_id].passengers) + 1) * 62 < \
+                self.elevators[e_id].weight_capacity and \
+                p == self.human_agent.serving_passenger:
+                carrying.add(p)
+                p.begin_lift_time = self.now() # Start lift timer
+                self.floors[curr_floor].remove(p)
+                p.elevator = e_id
+                self.elevators[e_id].update_reward(50)
+                self.elevators[e_id].requests[p.dest_floor] = 1
+                break
+        
+        # Update request calls from Environment and Elevator
+        # 1. Handle Environment's call requests for the current floor
+        self.call_requests[curr_floor] = [0, 0] # reset call request for this floor
+        for p in self.floors[curr_floor]:
+            if p.dest_floor > curr_floor: # UP call
+                self.call_requests[curr_floor][0] = 1
+            elif p.dest_floor < curr_floor: # DOWN call
+                self.call_requests[curr_floor][1] = 1
+        # 2. Handle Elevator's call requests for the current floor
+        self.elevators[e_id].requests[curr_floor] = 0
+
+        # Reward for moving in the CALL direction
+        reward_calls_above = 0
+        reward_calls_below = 0
+        for f in range(self.total_floors):
+            if f < curr_floor:
+                reward_calls_below += len(self.floors[f])
+            else:
+                reward_calls_above += len(self.floors[f])
+        if move == 0:
+            reward_calls_above = reward_calls_above * -1
+            reward_calls_below = reward_calls_below * -1
+        elif move == 1:
+            reward_calls_below = reward_calls_below * -1
+        elif move == -1:
+            reward_calls_above = reward_calls_above * -1
+        self.elevators[e_id].update_reward(
+            reward_calls_above + reward_calls_below)
+        
+        # Reward for moving in the REQUEST direction
+        for p in self.elevators[e_id].passengers:
+            req_reward = 25 / abs(p.dest_floor - curr_floor)
+            if move == 0:
+                req_reward = req_reward * -1
+            elif move == 1 and p.dest_floor < curr_floor:
+                req_reward = req_reward * -1
+            elif move == -1 and p.dest_floor > curr_floor:
+                req_reward = req_reward * -1
+            self.elevators[e_id].update_reward(req_reward)
