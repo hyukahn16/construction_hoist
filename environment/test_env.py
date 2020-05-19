@@ -234,9 +234,9 @@ class HumanEnvironment(Environment):
             
         # Load passengers
         for p in self.floors[curr_floor]:
-            if (len(self.elevators[e_id].passengers) + 1) * 62 < \
-                self.elevators[e_id].weight_capacity and \
-                p == self.human_agent.serving_passenger:
+            if p == self.human_agent.serving_passenger or \
+                (len(self.elevators[e_id].passengers) + 2) * 62 < \
+                self.elevators[e_id].weight_capacity:
                 carrying.add(p)
                 p.begin_lift_time = self.now() # Start lift timer
                 self.floors[curr_floor].remove(p)
