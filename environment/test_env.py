@@ -175,42 +175,20 @@ class LunchEnvironment(Environment):
 
             yield self.simul_env.timeout(self.pas_gen_time)
 
-# uppeak
 class HumanEnvironment(Environment):
-    # https://www.programiz.com/python-programming/methods/built-in/classmethod
-
     def __init__(self, simul_env, num_elevators, curr_floors, 
-                total_floors, pas_gen_time, human_agent):
+                total_floors, pas_gen_time, human_agent, episode_time):
         self.simul_env = simul_env
         self.num_elevators = num_elevators
         self.num_floors = curr_floors
         self.total_floors = total_floors
         self.pas_gen_time = pas_gen_time
+        self.episode_time = episode_time
         
         self.action_space_size = 3 # idle, up, down
         self.observation_space_size = total_floors
 
         self.human_agent = human_agent
-
-    def generate_passengers(self):
-        '''Creates passenger instances until environment finishes.'''
-        while True:
-            curr_fl = 0
-            dest_fl = random.randrange(1, self.num_floors, 1)
-
-            p = Passenger(curr_fl, dest_fl, self.now())
-            self.floors[p.curr_floor].append(p)
-            self.human_agent.passenger_queue.put(p)
-            
-            # Update the calls based on this passenger
-            if curr_fl > dest_fl: # DOWN call
-                self.call_requests[p.curr_floor][1] = 1
-            else: # UP call
-                self.call_requests[p.curr_floor][0] = 1
-
-            self.generated_passengers += 1
-            self.trigger_epoch_event("PassengerRequest")
-            yield self.simul_env.timeout(self.pas_gen_time)
 
     def load_passengers(self, e_id, move=0):
         '''Use by Elevator when idle and ready to load/unload.'''
@@ -229,7 +207,7 @@ class HumanEnvironment(Environment):
             self.elevators[e_id].update_reward(100)
             self.elevators[e_id].num_served += 1
             # Remove the passenger from the Elevator
-            p.elevator = None
+            p.elevator = -1
             carrying.remove(p)        
             
         # Load passengers
@@ -284,3 +262,121 @@ class HumanEnvironment(Environment):
             elif move == -1 and p.dest_floor > curr_floor:
                 req_reward = req_reward * -1
             self.elevators[e_id].update_reward(req_reward)
+
+class HumanUpPeakEnvironment(HumanEnvironment):
+    # https://www.programiz.com/python-programming/methods/built-in/classmethod
+
+    def generate_passengers(self):
+        '''Creates passenger instances until environment finishes.'''
+        while True:
+            curr_fl = 0
+            dest_fl = random.randrange(1, self.num_floors, 1)
+
+            p = Passenger(curr_fl, dest_fl, self.now())
+            self.floors[p.curr_floor].append(p)
+            self.human_agent.passenger_queue.put(p)
+            
+            # Update the calls based on this passenger
+            if curr_fl > dest_fl: # DOWN call
+                self.call_requests[p.curr_floor][1] = 1
+            else: # UP call
+                self.call_requests[p.curr_floor][0] = 1
+
+            self.generated_passengers += 1
+            self.trigger_epoch_event("PassengerRequest")
+            yield self.simul_env.timeout(self.pas_gen_time)
+
+class HumanDownPeakEnvironment(HumanEnvironment):
+    def generate_passengers(self):
+        while True:
+            dest_fl = 0
+            curr_fl = random.randrange(1, self.num_floors, 1)
+
+            p = Passenger(curr_fl, dest_fl, self.now())
+            self.floors[p.curr_floor].append(p)
+            self.human_agent.passenger_queue.put(p)
+            
+            # Update the calls based on this passenger
+            if curr_fl > dest_fl: # DOWN call
+                self.call_requests[p.curr_floor][1] = 1
+            else: # UP call
+                self.call_requests[p.curr_floor][0] = 1
+
+            self.generated_passengers += 1
+            self.trigger_epoch_event("PassengerRequest")
+            yield self.simul_env.timeout(self.pas_gen_time)
+
+class HumanIntermediateEnvironment(HumanEnvironment):
+    def generate_passengers(self):
+        '''Creates passenger instances until environment finishes.'''
+        while True:
+            curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
+            # get new destination floor for this passenger
+            # make sure that the destination floor is NOT the same as 
+            # current floor
+            dest_fl = curr_fl
+            while dest_fl == curr_fl:
+                dest_fl = random.randrange(0, self.num_floors, 1)
+
+            # Create new instance of Passenger at random floor
+            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            
+            # Add Passenger to appropriate floor group
+            self.floors[p.curr_floor].append(p)
+            self.human_agent.passenger_queue.put(p)
+            
+            if curr_fl > dest_fl: # DOWN call
+                self.call_requests[p.curr_floor][1] = 1
+            else: # UP call
+                self.call_requests[p.curr_floor][0] = 1
+
+            self.generated_passengers += 1
+            self.trigger_epoch_event("PassengerRequest")
+
+            yield self.simul_env.timeout(self.pas_gen_time)
+
+class HumanLunchEnvironment(HumanEnvironment):
+    def generate_passengers(self):
+        # DownPeak
+        while self.now() < self.episode_time / 2:
+            curr_fl = random.randrange(1, self.num_floors, 1)
+            dest_fl = 0
+
+            # Create new instance of Passenger at random floor
+            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            
+            # Add Passenger to appropriate floor group
+            self.floors[p.curr_floor].append(p)
+            self.human_agent.passenger_queue.put(p)
+            
+            if curr_fl > dest_fl: # DOWN call
+                self.call_requests[p.curr_floor][1] = 1
+            else: # UP call
+                self.call_requests[p.curr_floor][0] = 1
+
+            self.generated_passengers += 1
+            self.trigger_epoch_event("PassengerRequest")
+
+            yield self.simul_env.timeout(self.pas_gen_time)
+        
+        # UpPeak
+        while self.now() >= self.episode_time / 2:
+            curr_fl = 0
+            dest_fl = random.randrange(1, self.num_floors, 1)
+
+            # Create new instance of Passenger at random floor
+            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            
+            # Add Passenger to appropriate floor group
+            self.floors[p.curr_floor].append(p)
+            self.human_agent.passenger_queue.put(p)
+            
+            if curr_fl > dest_fl: # DOWN call
+                self.call_requests[p.curr_floor][1] = 1
+            else: # UP call
+                self.call_requests[p.curr_floor][0] = 1
+
+            self.generated_passengers += 1
+            self.trigger_epoch_event("PassengerRequest")
+
+            yield self.simul_env.timeout(self.pas_gen_time)
