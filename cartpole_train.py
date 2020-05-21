@@ -16,6 +16,8 @@ def organize_output(output, new_output):
         output[e_id]["last"] = True
 
 
+#######################################
+# Hyperparameters
 num_elevators = 1
 total_floors = 20
 pass_gen_time = 50
@@ -25,12 +27,14 @@ nA = 3
 lr = 0.001
 gamma = 0.95
 eps = 1
-min_eps = 0.01
+min_eps = 0.1
 eps_decay = 0.99995
 batch_size = 24
 episode_time = 10000
 
 use_saved = True
+# END Hyperparameters
+#######################################
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size)]
@@ -94,10 +98,3 @@ for e in range(10000): # number of episodes == 100
     plt.plot([i for i in range(e + 1)], episode_rewards)
     plt.pause(0.01)
     plt.draw()
-
-    # Save model (outdated)
-    '''
-    for agent in agents:
-        agent.model.save_weights('./checkpoints/cp', overwrite=True)
-    print("Saved model")
-    '''
