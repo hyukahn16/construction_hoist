@@ -2,7 +2,6 @@ import simpy
 import random
 import logging
 import numpy as np
-import torch
 from .passenger import Passenger
 from .elevator import Elevator
 import environment
