@@ -15,8 +15,20 @@ def make(num_elevators, curr_floors, total_floors, pas_gen_time, episode_time,
     simpy_env = simpy.Environment()
     env = None
     if human_mode:
-        return environment.HumanEnvironment(simpy_env, num_elevators, 
-            curr_floors, total_floors, pas_gen_time, human_agent)
+        if mode == "uppeak":
+            return environment.HumanUpPeakEnvironment(simpy_env, num_elevators, 
+                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
+        elif mode == "downpeak":
+            return environment.HumanDownPeakEnvironment(simpy_env, num_elevators, 
+                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
+        elif mode == "intermediate":
+            return environment.HumanIntermediateEnvironment(simpy_env, num_elevators, 
+                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
+        elif mode == "lunch": 
+            return environment.HumanLunchEnvironment(simpy_env, num_elevators, 
+                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
+        else:
+            return None
 
     if not mode or "intermediate":
         env = Environment(simpy_env, num_elevators, curr_floors, total_floors, 
@@ -157,7 +169,7 @@ class Environment():
             # get new destination floor for this passenger
             # make sure that the destination floor is NOT the same as 
             # current floor
-            dest_fl = curr_fl;
+            dest_fl = curr_fl
             while dest_fl == curr_fl:
                 dest_fl = random.randrange(0, self.num_floors, 1)
 
@@ -230,7 +242,7 @@ class Environment():
             self.elevators[e_id].update_reward(100)
             self.elevators[e_id].num_served += 1
             # Remove the passenger from the Elevator
-            p.elevator = None
+            p.elevator = -1
             carrying.remove(p)        
             
         # Load passengers
