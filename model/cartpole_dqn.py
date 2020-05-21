@@ -28,7 +28,7 @@ class DeepQNetwork():
         checkpoint_path = 'training_1/cp.ckpt'
         self.checkpoint_dir = os.path.dirname(checkpoint_path)
         self.cp_callback = keras.callbacks.ModelCheckpoint(filepath=self.checkpoint_dir,
-                                                            save_freq=batch_size,
+                                                            save_freq=5,
                                                             save_weights_only=True,
                                                             verbose=0)
 
