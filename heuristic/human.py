@@ -30,15 +30,14 @@ class HumanAgent():
                 if x == 1:
                     curr_floor = i
                     break
-            
+
             # Determine which floor to move to
             destination = self.serving_passenger.curr_floor
             if self.is_passenger_loaded():
                 destination = self.serving_passenger.dest_floor
 
             # Check that current passenger is delivered 
-            if not self.is_passenger_loaded() \
-                and curr_floor == self.serving_passenger.dest_floor:
+            if self.serving_passenger.elevator == -1:
                 self.serving_passenger = None
                 continue
 
@@ -53,7 +52,8 @@ class HumanAgent():
             
     def is_passenger_loaded(self):
         '''Check if the passenger is loaded in an elevator'''
-        if self.serving_passenger.elevator != None:
+        if self.serving_passenger.elevator != None \
+            and self.serving_passenger.elevator > -1:
             return True
         return False
 
