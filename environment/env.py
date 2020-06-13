@@ -240,7 +240,7 @@ class Environment():
             self.elevators[e_id].update_reward(100)
             self.elevators[e_id].num_served += 1
             # Remove the passenger from the Elevator
-            p.elevator = None
+            p.elevator = -1
             carrying.remove(p)        
             
         # Load passengers
