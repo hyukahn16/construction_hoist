@@ -6,6 +6,7 @@ import copy
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import matplotlib.pyplot as pyplot
+import matplotlib.ticker as mticker
 
 def organize_output(output, new_output):
     for e_id, e_output in output.items():
@@ -16,6 +17,8 @@ def organize_output(output, new_output):
         output[e_id]["last"] = True
 
 
+#######################################
+# Hyperparameters
 num_elevators = 1
 total_floors = 20
 pass_gen_time = 50
@@ -25,12 +28,14 @@ nA = 3
 lr = 0.001
 gamma = 0.95
 eps = 1
-min_eps = 0.01
-eps_decay = 0.99995
+min_eps = 0.1
+eps_decay = 0.99999
 batch_size = 24
 episode_time = 10000
 
-use_saved = True
+use_saved = False
+# END Hyperparameters
+#######################################
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size)]
@@ -88,16 +93,15 @@ for e in range(10000): # number of episodes == 100
     print("Epsilon value:", agents[0].epsilon)
     print("Elevator_1 Number of passengers served: ", env.elevators[0].num_served)
     print("Elevator_1 Number of passengers carrying: ", len(env.elevators[0].passengers))
-    print("Actions: ", cumul_actions)
+    #print("Actions: ", cumul_actions)
     print("Total passengers generated:", env.generated_passengers)
     episode_rewards.append(cumul_rewards[0])
-    plt.plot([i for i in range(e + 1)], episode_rewards)
-    plt.pause(0.01)
-    plt.draw()
+    if e % 5 == 0:
+      fig = plt.figure(0, dpi=1200)
+      plt.plot([i for i in range(e + 1)], episode_rewards)
+      #plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(1))
+      plt.title("Reward per Episode")
+      fig.savefig("train_graph_{}".format(e), dpi=1200)
 
-    # Save model (outdated)
-    '''
-    for agent in agents:
-        agent.model.save_weights('./checkpoints/cp', overwrite=True)
-    print("Saved model")
-    '''
+    #plt.pause(0.01)
+    #plt.draw()
