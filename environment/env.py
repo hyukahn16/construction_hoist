@@ -46,7 +46,6 @@ def make(num_elevators, curr_floors, total_floors, pas_gen_time, episode_time,
 
 
 class Environment():
-
     def __init__(self, simul_env, num_elevators, curr_floors, total_floors, pas_gen_time):
         self.simul_env = simul_env
         self.num_elevators = num_elevators
@@ -91,12 +90,6 @@ class Environment():
         # 2. when passenger requests elevator
         self.epoch_events["PassengerRequest"] = self.simul_env.event()
 
-        # TODO: Initialize observation space
-        # Observation space (what the agent will see to make decisions):
-        # - Call requests at each floor
-        # - Hoists' current capacity
-        # - Hoists' positions
-
         # Create a process that will generate passengers on random floors
         self.simul_env.process(self.generate_passengers())
         logging.debug("env.py: Reset Complete!")
@@ -113,7 +106,7 @@ class Environment():
            1. Create processes for Elevators that have actions
            2. Run until decision epoch is reached
            3. if event type is ElevatorArrival or LoadingFinished, then finish function 
-           4. 
+           4. Return the above output
         '''
         # Create processes for each elevators' actions
         for idx, action in enumerate(actions):
