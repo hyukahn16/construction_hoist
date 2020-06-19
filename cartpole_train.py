@@ -5,7 +5,7 @@ from model import *
 import copy
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
 def organize_output(output, new_output):
