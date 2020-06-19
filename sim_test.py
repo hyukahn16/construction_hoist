@@ -1,3 +1,5 @@
+# File used for testing the environment and the simulation
+
 import environment as gym
 import time
 import numpy as np
@@ -44,11 +46,9 @@ for e in range(num_episodes): # number of episodes == 100
     cumul_rewards = [0 for _ in range(num_elevators)]
     cumul_actions = {i: [0,0,0] for i in range(num_elevators)}
     while env.now() <= episode_time: # Stop episode if time is over
-        #print("-----------------------------------")
-        #print(output)
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
-        for e_id, e_output in output.items(): # FIXME: need distinguish which elevator was decision elevator last time - right now it doesn't matter because it's only 1 elevator but when it becomes multiple elevators we can't tell right now
+        for e_id, e_output in output.items():
             if e_output["last"] == False:
                 continue
             #new_action = agents[e_id].action(
@@ -65,25 +65,26 @@ for e in range(num_episodes): # number of episodes == 100
         for e_id, e_output in new_output.items():
             cumul_rewards[e_id] += e_output["reward"]
         # 4. overwrite old output with new output
-        organize_output(output, new_output) # FIXME: need to distinguishi which elevator was the decision elevator last time
+        organize_output(output, new_output)
+        env.render()
+        time.sleep(0.1)
+        print("\n\n")
 
     # Outside of episode
-    print("Rewards: ", cumul_rewards)
-    print("Elevator_1 Number of passengers served: ", 
-        env.elevators[0].num_served
-    )
-    print("Elevator_1 Number of passengers carrying: ", 
-        len(env.elevators[0].passengers)
-    )
-    print("Elevator_1 Actions: ", cumul_actions[0])
-    print("Elevator_2 Number of passengers served: ", 
-        env.elevators[1].num_served
-    )
-    print("Elevator_2 Number of passengers carrying: ", 
-        len(env.elevators[1].passengers)
-    )
-    print("Elevator_1 Actions: ", cumul_actions[1])
-    print("Total passengers generated:", env.generated_passengers)
-    episode_rewards.append(cumul_rewards[0])
-    episode_rewards.append(cumul_rewards[0])
+    print("Rewards: {}\n".format(cumul_rewards))
+    for e_id in range(num_elevators):
+        print("Elevator_{} Number of passengers served: {}".format(
+                e_id,
+                env.elevators[e_id].num_served
+            )
+        )
+        print("Elevator_{} Number of passengers carrying: {}".format( 
+                e_id,
+                len(env.elevators[e_id].passengers)
+            )
+        )
+        print("Elevator_{} Actions: {}\n".format(e_id, cumul_actions[e_id]))
+        episode_rewards[e_id].append(cumul_rewards[e_id])
+    print("Total passengers generated: {}\n".format(env.generated_passengers))
+
 
