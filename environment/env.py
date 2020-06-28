@@ -53,7 +53,7 @@ class Environment():
         self.total_floors = total_floors
         self.pas_gen_time = pas_gen_time
         
-        self.action_space_size = 3 # idle, up, down
+        self.action_space_size = 4
         self.observation_space_size = total_floors
 
     def reset(self):
@@ -357,8 +357,14 @@ class Environment():
         '''
         Prints some stone age visualization in stdout...
         '''
-        DIR_MAP = {self.elevators[0].IDLE: '-', None: '-',
-                self.elevators[0].MOVING_UP: '^', self.elevators[0].MOVING_DOWN:'v'}
+        DIR_MAP = {
+            self.elevators[0].IDLE: '-',
+            None: '-',
+            self.elevators[0].MOVING_UP: '^',
+            self.elevators[0].MOVING_DOWN: 'v',
+            self.elevators[0].LOADING: 'x',
+        }
+
         for floor in range(self.total_floors):
             num_psngr_going_up = len([p for p in self.floors[floor] if p.dest_floor > floor])
             num_psngr_going_down = len([p for p in self.floors[floor] if p.dest_floor < floor])

@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 #######################################
 # Hyperparameters
 num_elevators = 2
-total_floors = 20
-pass_gen_time = 50
+total_floors = 40
+pass_gen_time = 30
 
 nS = total_floors * 4
-nA = 3
+nA = 4
 lr = 0.001
 gamma = 0.95
 eps = 1
@@ -44,7 +44,7 @@ for e in range(num_episodes): # number of episodes == 100
     organize_output(output, env.reset())
     
     cumul_rewards = [0 for _ in range(num_elevators)]
-    cumul_actions = {i: [0,0,0] for i in range(num_elevators)}
+    cumul_actions = {i: [j for j in range(nA)] for i in range(num_elevators)}
     while env.now() <= episode_time: # Stop episode if time is over
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
@@ -79,8 +79,10 @@ for e in range(num_episodes): # number of episodes == 100
         organize_output(output, new_output)
 
     # Outside of episode
-    print("Rewards: {}\n".format(cumul_rewards))
     for e_id in range(num_elevators):
+
+        print("Elevator_{} Reward: {}\n".format(e_id, cumul_rewards[e_id]))
+        print("Elevator_{} Epsilon: {}".format(e_id, agents[e_id].epsilon))
         print("Elevator_{} Number of passengers served: {}".format(
                 e_id,
                 env.elevators[e_id].num_served
@@ -97,9 +99,6 @@ for e in range(num_episodes): # number of episodes == 100
 
     if e % 1 == 0:
         plt.figure()
-        print(len(episode_rewards[0]))
-        print(len(episode_rewards[1]))
-        print(len([i for i in range(e + 1)]))
         plt.plot([i for i in range(e + 1)], episode_rewards[0], label="0")
         plt.plot([i for i in range(e + 1)], episode_rewards[1], label="1")
         plt.legend(loc="upper right")

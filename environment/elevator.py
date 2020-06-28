@@ -32,7 +32,8 @@ class Elevator():
         self.ACTION_FUNCTION_MAP = {
             0: self.idle,
             1: self.move_up,
-            2: self.move_down
+            2: self.move_down,
+            3: self.load
         }
 
         # When Elevator is first created, it runs in idle action
@@ -78,63 +79,49 @@ class Elevator():
         self.idling_event.interrupt()
 
     def idle(self):
-        '''Idle.'''
-        logging.debug("elevator.py: idle() - Elevator_{}".format(self.id))
         self.state = self.IDLE
         yield self.env.simul_env.timeout(15)
-        self.state = self.LOADING
-
-        logging.debug("elevator.py: idle() - Elevator_{} at floor {}".format(self.id, self.curr_floor))
-        self.env.load_passengers(self.id)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_up(self):
         assert(self.curr_floor < self.env.num_floors - 1)
-
-        self.state = self.LOADING
-        self.env.load_passengers(self.id)
         self.state = self.MOVING_UP
-
         yield self.env.simul_env.timeout(15)
-
         self.curr_floor += 1
-
-        self.state = self.LOADING
-        self.env.load_passengers(self.id, self.MOVING_UP)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def move_down(self):
         assert(self.curr_floor > 0)
+        self.state = self.MOVING_DOWN
+        yield self.env.simul_env.timeout(15)
+        self.curr_floor -= 1
+        self.state = None
+        self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
+    def load(self):
         self.state = self.LOADING
         self.env.load_passengers(self.id)
-        self.state = self.MOVING_DOWN
-
-        yield self.env.simul_env.timeout(15)
-
-        self.curr_floor -= 1
-
-        self.state = self.LOADING
-        self.env.load_passengers(self.id, self.MOVING_DOWN)
+        yield self.env.simul_env.timeout(20)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def legal_actions(self):
         '''Return list of actions that are legal in the current Elevator state.
-        
             0 IDLE
             1 MOVE UP
             2 MOVE DOWN
+            3 Load and Unload
         '''
-        legal = set([0, 1, 2])
+        legal = set([i for i in range(len(self.ACTION_FUNCTION_MAP))])
         
         if self.curr_floor == self.env.num_floors-1:
             legal.remove(1)
         if self.curr_floor == 0:
             legal.remove(2)
         
+        legal = list(legal)
         return legal
 
     def update_reward(self, reward):

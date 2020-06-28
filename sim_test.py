@@ -16,7 +16,7 @@ total_floors = 20
 pass_gen_time = 50
 
 nS = total_floors * 4
-nA = 3
+nA = 4
 lr = 0.001
 gamma = 0.95
 eps = 1
@@ -44,17 +44,15 @@ for e in range(num_episodes): # number of episodes == 100
     organize_output(output, env.reset())
     
     cumul_rewards = [0 for _ in range(num_elevators)]
-    cumul_actions = {i: [0,0,0] for i in range(num_elevators)}
+    cumul_actions = {i: [j for j in range(nA)] for i in range(num_elevators)}
     while env.now() <= episode_time: # Stop episode if time is over
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
         for e_id, e_output in output.items():
             if e_output["last"] == False:
                 continue
-            #new_action = agents[e_id].action(
-             #   np.reshape(e_output["state"], [1, nS])
-            #)
-            new_action = random.choice(range(0, 3, 1))
+            legal = env.elevators[e_id].legal_actions()
+            new_action = random.choice(legal)
             actions[e_id] = new_action
 
             cumul_actions[e_id][new_action] += 1
