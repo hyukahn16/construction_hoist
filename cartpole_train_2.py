@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 #######################################
 # Hyperparameters
 num_elevators = 2
-total_floors = 40
-pass_gen_time = 30
+total_floors = 20
+pass_gen_time = 50
 
 nS = total_floors * 4
-nA = 4
+nA = 3
 lr = 0.001
 gamma = 0.95
 eps = 1
@@ -34,18 +34,18 @@ agents = [DeepQNetwork(nS, nA, lr, gamma, eps, min_eps, eps_decay, batch_size)
     for _ in range(num_elevators)]
 env = gym.make(
     num_elevators, total_floors, total_floors, 
-    pass_gen_time, episode_time
+    pass_gen_time, episode_time, nA
 )
 episode_rewards = [[] for _ in range(num_elevators)] # Stores reward from each episode
 
-for e in range(num_episodes): # number of episodes == 100
+for e in range(num_episodes):
     print("-----------{} Episode------------".format(e))
     output = {}
     organize_output(output, env.reset())
     
     cumul_rewards = [0 for _ in range(num_elevators)]
     cumul_actions = {i: [j for j in range(nA)] for i in range(num_elevators)}
-    while env.now() <= episode_time: # Stop episode if time is over
+    while env.now() <= episode_time:
         # 1. Get actions for the decision agents
         actions = copy.deepcopy(neg_action)
         for e_id, e_output in output.items():
@@ -80,7 +80,6 @@ for e in range(num_episodes): # number of episodes == 100
 
     # Outside of episode
     for e_id in range(num_elevators):
-
         print("Elevator_{} Reward: {}\n".format(e_id, cumul_rewards[e_id]))
         print("Elevator_{} Epsilon: {}".format(e_id, agents[e_id].epsilon))
         print("Elevator_{} Number of passengers served: {}".format(
@@ -97,7 +96,7 @@ for e in range(num_episodes): # number of episodes == 100
         episode_rewards[e_id].append(cumul_rewards[e_id])
     print("Total passengers generated: {}\n".format(env.generated_passengers))
 
-    if e % 1 == 0:
+    if e % 5 == 0:
         plt.figure()
         plt.plot([i for i in range(e + 1)], episode_rewards[0], label="0")
         plt.plot([i for i in range(e + 1)], episode_rewards[1], label="1")

@@ -8,10 +8,10 @@ import numpy as np
 # will be requesting on each floor.
 
 class Elevator():
-    IDLE = 0
+    LOAD = 0
     MOVING_UP = 1
     MOVING_DOWN = -1
-    LOADING = 2
+    IDLE = 999
 
     def __init__(self, env, id):
         """Initialize Elevator class."""
@@ -30,13 +30,12 @@ class Elevator():
         self.total_lift_passengers = 0
 
         self.ACTION_FUNCTION_MAP = {
-            0: self.idle,
+            0: self.load,
             1: self.move_up,
             2: self.move_down,
-            3: self.load
         }
 
-        # When Elevator is first created, it runs in idle action
+        # When Elevator is first created, it runs the IDLE action
         self.env.simul_env.process(self.act(0))
 
     def act(self, action):
@@ -78,8 +77,9 @@ class Elevator():
         assert(self.state == self.IDLE)
         self.idling_event.interrupt()
 
+    # FIXME: Unused
     def idle(self):
-        self.state = self.IDLE
+        #self.state = self.IDLE
         yield self.env.simul_env.timeout(15)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
@@ -87,6 +87,7 @@ class Elevator():
     def move_up(self):
         assert(self.curr_floor < self.env.num_floors - 1)
         self.state = self.MOVING_UP
+        self.env.moving_reward(self.id, self.state)
         yield self.env.simul_env.timeout(15)
         self.curr_floor += 1
         self.state = None
@@ -95,15 +96,16 @@ class Elevator():
     def move_down(self):
         assert(self.curr_floor > 0)
         self.state = self.MOVING_DOWN
+        self.env.moving_reward(self.id, self.state)
         yield self.env.simul_env.timeout(15)
         self.curr_floor -= 1
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
     def load(self):
-        self.state = self.LOADING
+        self.state = self.LOAD
         self.env.load_passengers(self.id)
-        yield self.env.simul_env.timeout(20)
+        yield self.env.simul_env.timeout(50)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
@@ -112,7 +114,6 @@ class Elevator():
             0 IDLE
             1 MOVE UP
             2 MOVE DOWN
-            3 Load and Unload
         '''
         legal = set([i for i in range(len(self.ACTION_FUNCTION_MAP))])
         

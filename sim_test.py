@@ -16,7 +16,7 @@ total_floors = 20
 pass_gen_time = 50
 
 nS = total_floors * 4
-nA = 4
+nA = 3
 lr = 0.001
 gamma = 0.95
 eps = 1
@@ -34,8 +34,7 @@ neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [ScanAgent(total_floors) for _ in range(num_elevators)]
 env = gym.make(
     num_elevators, total_floors, total_floors, 
-    pass_gen_time, episode_time
-)
+    pass_gen_time, episode_time, nA)
 episode_rewards = [[] for _ in range(num_elevators)] # Stores reward from each episode
 
 for e in range(num_episodes): # number of episodes == 100
@@ -59,13 +58,13 @@ for e in range(num_episodes): # number of episodes == 100
         
         # 2. Take action in the Environment
         new_output = env.step(actions)
-        # 3. (Skipped)
+        # 3. Update reward
         for e_id, e_output in new_output.items():
             cumul_rewards[e_id] += e_output["reward"]
         # 4. overwrite old output with new output
         organize_output(output, new_output)
         env.render()
-        time.sleep(0.1)
+        time.sleep(0.3)
         print("\n\n")
 
     # Outside of episode
