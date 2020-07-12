@@ -59,7 +59,7 @@ class Elevator():
         # If action is idle
         if action == 0:
             self.idling_event = \
-                self.env.simul_env.process(self.idle())
+                self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
             try:
                 yield self.idling_event
             except:
@@ -74,7 +74,7 @@ class Elevator():
             yield self.env.simul_env.process(self.ACTION_FUNCTION_MAP[action]())
 
     def interrupt_idling(self):
-        assert(self.state == self.IDLE)
+        #assert(self.state == self.IDLE)
         self.idling_event.interrupt()
 
     # FIXME: Unused
