@@ -80,7 +80,7 @@ for e in range(num_episodes):
 
     # Outside of episode
     for e_id in range(num_elevators):
-        print("Elevator_{} Reward: {}\n".format(e_id, cumul_rewards[e_id]))
+        print("Elevator_{} Reward: {}".format(e_id, cumul_rewards[e_id]))
         print("Elevator_{} Epsilon: {}".format(e_id, agents[e_id].epsilon))
         print("Elevator_{} Number of passengers served: {}".format(
                 e_id,
