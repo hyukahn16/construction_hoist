@@ -22,11 +22,12 @@ with open(filename) as file:
         if counter == 0:
             if agent_type != "":
                 # Print stats
-                print("Agent type: " + agent_type)
-                print("Total reward: " + total_reward)
-                print("Number of passengers served: " + pass_served)
-                print("Number of passengers loaded: " + pass_loaded)
+                print("Agent type: " + agent_type, end="")
+                print("Total reward: " + total_reward, end="")
+                print("Number of passengers served: " + pass_served, end="")
+                print("Number of passengers loaded: " + pass_loaded, end="")
                 print("Average total time: ", np.average(total_time))
+                print()
             agent_type = line
         elif counter == 1:
             total_reward = line
@@ -41,6 +42,14 @@ with open(filename) as file:
         elif counter == 6:
             pass
         elif counter == 7:
-            total_time = [int(num) for num in line.split()]
+            total_time = [float(num) for num in line.split()]
         counter = (counter + 1) % 8
+        
+    if agent_type != "":
+        print("Agent type: " + agent_type, end="")
+        print("Total reward: " + total_reward, end="")
+        print("Number of passengers served: " + pass_served, end="")
+        print("Number of passengers loaded: " + pass_loaded, end="")
+        print("Average total time: ", np.average(total_time))
+        print()
                 
