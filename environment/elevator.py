@@ -80,7 +80,7 @@ class Elevator():
     # FIXME: Unused
     def idle(self):
         #self.state = self.IDLE
-        yield self.env.simul_env.timeout(15)
+        yield self.env.simul_env.timeout(7)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
 
@@ -88,7 +88,7 @@ class Elevator():
         assert(self.curr_floor < self.env.num_floors - 1)
         self.state = self.MOVING_UP
         self.env.moving_reward(self.id, self.state)
-        yield self.env.simul_env.timeout(15)
+        yield self.env.simul_env.timeout(20)
         self.curr_floor += 1
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
@@ -97,7 +97,7 @@ class Elevator():
         assert(self.curr_floor > 0)
         self.state = self.MOVING_DOWN
         self.env.moving_reward(self.id, self.state)
-        yield self.env.simul_env.timeout(15)
+        yield self.env.simul_env.timeout(20)
         self.curr_floor -= 1
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
