@@ -31,7 +31,7 @@ class DeepQNetwork():
             filepath=self.checkpoint_dir,
             save_weights_only=True,
             verbose=0,
-            save_freq=batch_size,
+            save_freq=batch_size*5,
         )
 
     def build_model(self):
@@ -65,7 +65,7 @@ class DeepQNetwork():
 
     def experience_replay(self, batch_size):
         #Execute the experience replay
-        minibatch = random.sample( self.memory, batch_size ) #Randomly sample from memory
+        minibatch = random.sample(self.memory, batch_size) #Randomly sample from memory
 
         #Convert to numpy for speed by vectorization
         x = []
