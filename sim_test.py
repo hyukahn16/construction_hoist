@@ -8,27 +8,7 @@ import os
 import random
 from utility import organize_output
 from heuristic import ScanAgent
-
-#######################################
-# Hyperparameters
-num_elevators = 2
-total_floors = 20
-pass_gen_time = 50
-
-nS = total_floors * 4
-nA = 3
-lr = 0.001
-gamma = 0.95
-eps = 1
-min_eps = 0.1
-eps_decay = 0.99999
-batch_size = 24
-episode_time = 10000
-num_episodes = 10000
-
-use_saved = False
-# END Hyperparameters
-#######################################
+from hyperparam import *
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [ScanAgent(total_floors) for _ in range(num_elevators)]
@@ -64,7 +44,7 @@ for e in range(num_episodes): # number of episodes == 100
         # 4. overwrite old output with new output
         organize_output(output, new_output)
         env.render()
-        time.sleep(0.3)
+        time.sleep(0.5)
         print("\n\n")
 
     # Outside of episode
