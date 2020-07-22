@@ -1,5 +1,6 @@
 import copy
 import numpy as np
+from hyperparam import *
 
 def organize_output(output, new_output):
     for e_id, e_output in output.items():
@@ -54,9 +55,27 @@ def run_episode(env, agents, episode_time, nA, nS, batch_size):
         # 4. overwrite old output with new output
         organize_output(output, new_output)
 
-        return { "rewards": cumul_rewards, "actions": cumul_actions}
+    return { "rewards": cumul_rewards, "actions": cumul_actions}
 
 def episode_wrapper(env, agents, episode_time, nA, nS, batch_size):
     def wrapped():
         return run_episode(env, agents, episode_time, nA, nS, batch_size)
     return wrapped
+
+def print_hyperparam():
+    print("Number of elevators: ", num_elevators)
+    print("Total floors: ", total_floors)
+    print("Passenger generation speed: ", pass_gen_time)
+    print("Episode time: ", episode_time)
+    print("Max number of episodes: ", num_episodes)
+    print()
+    print("Learning rate: ", lr)
+    print("Gamma: ", gamma)
+    print("Max starting epsilon: ", eps)
+    print("Min epsilon: ", min_eps)
+    print("Epsilon decay rate: ", eps_decay)
+    print("Batch size: ", batch_size)
+    print()
+    print("Use saved: ", use_saved)
+    print("Save model: ", test_mode)
+    print("\n")
