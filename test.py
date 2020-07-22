@@ -10,15 +10,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' # FIXME: is this needed for tensorflow 
 import matplotlib.pyplot as pyplot
 from heuristic import ScanAgent, HumanAgent
 import sys
-
-def organize_output(output, new_output):
-
-    for e_id, e_output in output.items():
-        e_output["last"] = False
-
-    for e_id, e_output in new_output.items():
-        output[e_id] = e_output
-        output[e_id]["last"] = True
+from utility import organize_output
 
 def sanitize(array):
     str_arr = str(array)
