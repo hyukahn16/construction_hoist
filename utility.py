@@ -76,6 +76,6 @@ def print_hyperparam():
     print("Epsilon decay rate: ", eps_decay)
     print("Batch size: ", batch_size)
     print()
-    print("Use saved: ", use_saved)
-    print("Save model: ", test_mode)
+    print("Use saved? ", use_saved)
+    print("Test mode? ", test_mode)
     print("\n")
