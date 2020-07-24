@@ -105,6 +105,7 @@ class Elevator():
     def load(self):
         self.state = self.LOAD
         self.env.load_passengers(self.id)
+        self.env.moving_reward(self.id, self.state)
         yield self.env.simul_env.timeout(50)
         self.state = None
         self.env.trigger_epoch_event("ElevatorArrival_{}".format(self.id))
