@@ -229,7 +229,7 @@ class Environment():
                 unload_p.append(p)
         # Unload Passengers from the elevator
         for p in unload_p:
-            self.elevators[e_id].update_reward(200)
+            self.elevators[e_id].update_reward(500)
             self.elevators[e_id].num_served += 1
             # Remove the passenger from the Elevator
             p.elevator = -1
@@ -245,7 +245,7 @@ class Environment():
                 p.begin_lift_time = self.now() # Start lift time
                 self.floors[curr_floor].remove(p)
                 p.elevator = e_id
-                self.elevators[e_id].update_reward(100)
+                self.elevators[e_id].update_reward(50)
                 self.elevators[e_id].requests[p.dest_floor] = 1
             else:
                 break
@@ -279,8 +279,10 @@ class Environment():
             else:
                 reward_calls_above += len(self.floors[f])
         if move == 0:
-            reward_calls_above = reward_calls_above * -1
-            reward_calls_below = reward_calls_below * -1
+            reward_calls_above = 0
+            reward_calls_below = 0
+            #reward_calls_above = reward_calls_above * -1
+            #reward_calls_below = reward_calls_below * -1
         elif move == 1:
             reward_calls_below *= -1
         elif move == -1:
@@ -291,7 +293,13 @@ class Environment():
         
         # Reward for moving in the REQUEST direction
         for p in self.elevators[e_id].passengers:
-            req_reward = 25 / abs(p.dest_floor - curr_floor)
+            dist = abs(p.dest_floor - curr_floor)
+            if dist == 0 and move == 0:
+                self.elevators[e_id].update_lift_time(50)
+                continue
+            if dist == 0:
+                dist = 1
+            req_reward = 50 / dist
             if move == 0:
                 req_reward = req_reward * -1
             elif move == 1 and p.dest_floor < curr_floor:
@@ -369,7 +377,7 @@ class Environment():
         '''
         DIR_MAP = {
             self.elevators[0].IDLE: '-',
-            None: '-',
+            None: '@',
             self.elevators[0].MOVING_UP: '^',
             self.elevators[0].MOVING_DOWN: 'v',
             self.elevators[0].LOAD: 'x',
