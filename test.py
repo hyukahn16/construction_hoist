@@ -20,6 +20,27 @@ def organize_output(output, new_output):
         output[e_id] = e_output
         output[e_id]["last"] = True
 
+def sanitize(array):
+    str_arr = str(array)
+    remove_char = "[],"
+    for char in remove_char:
+        str_arr = str_arr.replace(char, "")
+    return str_arr
+
+def read_stats(filename):
+    with open(filename, 'r') as f:
+        for line in f:
+            line = line.replace("\n", "")
+            if line in ["dqn", "scan", "human"]:
+                #print(line)
+                continue
+
+            time_list = [float(i) for i in line.split(' ')]
+            #print(time_list)
+            print(np.average(time_list))
+
+
+
 test_mode = "intermediate"
 modes = ["intermediate", "uppeak", "downpeak", "lunch"]
 if len(sys.argv) == 2:
@@ -142,6 +163,12 @@ while scan_env.now() <= episode_time:
     organize_output(scan_output, scan_new_output)
 
 while human_env.now() <= episode_time:
+    '''
+    if human_agents[0].serving_passenger:
+      print("Passenger current floor:", human_agents[0].serving_passenger.curr_floor)
+      print("Passenger destination floor:", human_agents[0].serving_passenger.dest_floor)
+      print("Elevator ID:", human_agents[0].serving_passenger.elevator)
+    '''
     # 1. Get actions for the decision agents
     human_actions = copy.deepcopy(neg_action)
     for e_id, e_output in human_output.items(): # FIXME: need distinguish which elevator was decision elevator last time - right now it doesn't matter because it's only 1 elevator but when it becomes multiple elevators we can't tell right now
@@ -169,34 +196,46 @@ print("Rewards: ", dqn_cumul_rewards)
 print("Number of passengers served: ", dqn_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(dqn_env.elevators[0].passengers))
 print("Actions: ", dqn_cumul_actions)
+print("Average Wait Time: ", np.average(dqn_wait_time))
+print("Average Lift Time: ", np.average(dqn_lift_time))
+print("Average Total Time: ", np.average(np.add(dqn_wait_time, dqn_lift_time)))
 print()
 print("SCAN ------")
 print("Rewards: ", scan_cumul_rewards)
 print("Number of passengers served: ", scan_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(scan_env.elevators[0].passengers))
 print("Actions: ", scan_cumul_actions)
+print("Average Wait Time: ", np.average(scan_wait_time))
+print("Average Lift Time: ", np.average(scan_lift_time))
+print("Average Total Time: ", np.average(np.add(scan_wait_time, scan_lift_time)))
 print()
 print("HUMAN ------")
 print("Rewards: ", human_cumul_rewards)
 print("Number of passengers served: ", human_env.elevators[0].num_served)
 print("Number of passengers carrying: ", len(human_env.elevators[0].passengers))
 print("Actions: ", human_cumul_actions)
+print("Average Wait Time: ", np.average(human_wait_time))
+print("Average Lift Time: ", np.average(human_lift_time))
+print("Average Total Time: ", np.average(np.add(human_wait_time, human_lift_time)))
+
 
 # Wait Time Graph
-plt.figure(0)
-plt.plot([i for i in range(len(dqn_lift_time))], dqn_lift_time, label='DQN')
-plt.plot([i for i in range(len(scan_lift_time))], scan_lift_time, label='SCAN')
-plt.plot([i for i in range(len(human_lift_time))], human_lift_time, label='HUMAN')
-plt.legend(loc='upper right')
-plt.title("Average Lift Time")
-
-# Lift Time Graph
-plt.figure(1)
+fig1 = plt.figure(0, dpi=1200)
 plt.plot([i for i in range(len(dqn_wait_time))], dqn_wait_time, label='DQN')
 plt.plot([i for i in range(len(scan_wait_time))], scan_wait_time, label='SCAN')
 plt.plot([i for i in range(len(human_wait_time))], human_wait_time, label='HUMAN')
 plt.legend(loc='upper right')
 plt.title("Average Wait Time")
+fig1.savefig("{}_wait.png".format(test_mode))
+
+# Lift Time Graph
+fig2 = plt.figure(3, dpi=1200)
+plt.plot([i for i in range(len(dqn_lift_time))], dqn_lift_time, label='DQN')
+plt.plot([i for i in range(len(scan_lift_time))], scan_lift_time, label='SCAN')
+plt.plot([i for i in range(len(human_lift_time))], human_lift_time, label='HUMAN')
+plt.legend(loc='upper right')
+plt.title("Average Lift Time")
+fig2.savefig("{}_lift.png".format(test_mode))
 
 # Total Time Graph
 dqn_total_time = [dqn_lift_time[i] + dqn_wait_time[i]
@@ -205,12 +244,40 @@ scan_total_time = [scan_lift_time[i] + scan_wait_time[i]
     for i in range(len(scan_wait_time))]
 human_total_time = [human_lift_time[i] + human_wait_time[i]
     for i in range(len(human_wait_time))]
-plt.figure(2)
+fig3 = plt.figure(2, dpi=1200)
 plt.plot([i for i in range(len(dqn_total_time))], dqn_total_time, label='DQN')
 plt.plot([i for i in range(len(scan_total_time))], scan_total_time, label='SCAN')
 plt.plot([i for i in range(len(human_total_time))], human_total_time, label='HUMAN')
 plt.legend(loc='upper right')
 plt.title("Average Wait + Lift Time")
+fig3.savefig("{}_total.png".format(test_mode))
 
 plt.pause(0.01)
 plt.draw()
+
+remove_char = "[],"
+with open('{}_data.txt'.format(test_mode), 'w') as f:
+    f.write("dqn\n")
+    f.write(str(dqn_cumul_rewards[0]) + "\n")
+    f.write(str(dqn_env.elevators[0].num_served) + "\n")
+    f.write(str(len(dqn_env.elevators[0].passengers)) + "\n")
+    f.write(sanitize(dqn_cumul_actions) + "\n")
+    f.write(sanitize(dqn_lift_time) + "\n")
+    f.write(sanitize(dqn_wait_time) + "\n")
+    f.write(sanitize(dqn_total_time) + "\n")
+    f.write("scan\n")
+    f.write(str(scan_cumul_rewards[0]) + "\n")
+    f.write(str(scan_env.elevators[0].num_served) + "\n")
+    f.write(str(len(scan_env.elevators[0].passengers)) + "\n")
+    f.write(sanitize(scan_cumul_actions) + "\n")
+    f.write(sanitize(scan_lift_time) + "\n")
+    f.write(sanitize(scan_wait_time) + "\n")
+    f.write(sanitize(scan_total_time) + "\n")
+    f.write("human\n")
+    f.write(str(human_cumul_rewards[0]) + "\n")
+    f.write(str(human_env.elevators[0].num_served) + "\n")
+    f.write(str(len(human_env.elevators[0].passengers)) + "\n")
+    f.write(sanitize(human_cumul_actions) + "\n")
+    f.write(sanitize(human_lift_time) + "\n")
+    f.write(sanitize(human_wait_time) + "\n")
+    f.write(sanitize(human_total_time) + "\n")
