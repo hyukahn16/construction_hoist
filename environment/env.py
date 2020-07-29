@@ -2,6 +2,7 @@ import simpy
 import random
 import logging
 import numpy as np
+import copy
 from .passenger import Passenger
 from .elevator import Elevator
 import environment
@@ -163,7 +164,7 @@ class Environment():
             curr_fl = random.sample(range(0, self.num_floors), num_pass)
             # get new destination floors for passengers
             # where curr_fl != dest_fl
-            dest_fl = curr_fl
+            dest_fl = copy.deepcopy(curr_fl)
             for i in range(len(dest_fl)):
                 while dest_fl[i] == curr_fl[i]:
                     dest_fl[i] = random.randrange(0, self.num_floors, 1)
@@ -177,7 +178,7 @@ class Environment():
             for p in passengers:
                 self.floors[p.curr_floor].append(p)
                 # Update the building calls 
-                if p.curr_fl > p.dest_fl: # DOWN call
+                if p.curr_floor > p.dest_floor: # DOWN call
                     self.call_requests[p.curr_floor][1] = 1
                 else: # UP call
                     self.call_requests[p.curr_floor][0] = 1
