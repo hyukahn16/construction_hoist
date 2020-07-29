@@ -154,31 +154,36 @@ class Environment():
         This function will run as a simpy process:
         Ex: self.simul_env.process(self.generate_passengers())
         '''
-
+        min_pass = 0
+        max_pass = 5
         while True:
-            curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
-            # get new destination floor for this passenger
-            # make sure that the destination floor is NOT the same as 
-            # current floor
+            # randomly select how many to be created in this instance
+            num_pass = random.randrange(min_pass, max_pass)
+            # create new origin floors
+            curr_fl = random.sample(range(0, self.num_floors), num_pass)
+            # get new destination floors for passengers
+            # where curr_fl != dest_fl
             dest_fl = curr_fl
-            while dest_fl == curr_fl:
-                dest_fl = random.randrange(0, self.num_floors, 1)
+            for i in range(len(dest_fl)):
+                while dest_fl[i] == curr_fl[i]:
+                    dest_fl[i] = random.randrange(0, self.num_floors, 1)
 
-            # Create new instance of Passenger at random floor
-            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            # Create new passengers
+            passengers = []
+            for i in range(len(dest_fl)):
+                passengers.append(Passenger(curr_fl[i], dest_fl[i], self.simul_env.now))
             
             # Add Passenger to appropriate floor group
-            self.floors[p.curr_floor].append(p)
-            
-            if curr_fl > dest_fl: # DOWN call
-                self.call_requests[p.curr_floor][1] = 1
-            else: # UP call
-                self.call_requests[p.curr_floor][0] = 1
+            for p in passengers:
+                self.floors[p.curr_floor].append(p)
+                # Update the building calls 
+                if p.curr_fl > p.dest_fl: # DOWN call
+                    self.call_requests[p.curr_floor][1] = 1
+                else: # UP call
+                    self.call_requests[p.curr_floor][0] = 1
 
-            logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
-            self.generated_passengers += 1
+            self.generated_passengers += len(passengers)
             self.trigger_epoch_event("PassengerRequest")
-
             yield self.simul_env.timeout(self.pas_gen_time)
 
     def _process_elevator_arrival(self, event_type):
@@ -403,6 +408,8 @@ class Environment():
             string+="^"*num_psngr_going_up
             string+="v"*num_psngr_going_down
             print(string)
+
+        print("\n")
 
     # CNN state version
     def get_cnn_state(self):
