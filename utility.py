@@ -15,7 +15,7 @@ def time_wrapper(func, args):
         return func(args)
     return time_wrapped
 
-def run_episode(env, agents, episode_time, nA, nS, batch_size):
+def run_episode(env, agents, episode_time, nA, nS, batch_size, render=False):
     output = {}
     organize_output(output, env.reset())
     neg_action = [-1 for i in range(len(agents))]
@@ -35,6 +35,8 @@ def run_episode(env, agents, episode_time, nA, nS, batch_size):
             cumul_actions[e_id][new_action] += 1
         
         # 2. Take action in the Environment
+        if render:
+            env.render()
         new_output = env.step(actions)
 
         # 3. Train agents
