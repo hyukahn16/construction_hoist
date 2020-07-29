@@ -6,9 +6,11 @@ import numpy as np
 import copy
 import os
 import random
-from utility import organize_output
+from utility import organize_output, print_hyperparam
 from heuristic import ScanAgent
 from hyperparam import *
+
+print_hyperparam()
 
 neg_action = [-1 for i in range(num_elevators)] # Used for state's next actions
 agents = [ScanAgent(total_floors) for _ in range(num_elevators)]
