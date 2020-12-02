@@ -27,10 +27,12 @@ class DeepQNetwork():
         # Used in model fit for model saving
         checkpoint_path = 'training_1/cp.ckpt'
         self.checkpoint_dir = os.path.dirname(checkpoint_path)
-        self.cp_callback = keras.callbacks.ModelCheckpoint(filepath=self.checkpoint_dir,
-                                                            save_freq=5,
-                                                            save_weights_only=True,
-                                                            verbose=0)
+        self.cp_callback = keras.callbacks.ModelCheckpoint(
+            filepath=self.checkpoint_dir,
+            save_weights_only=True,
+            verbose=0,
+            save_freq=batch_size,
+        )
 
     def build_model(self):
         model = keras.Sequential() #linear stack of layers https://keras.io/models/sequential/

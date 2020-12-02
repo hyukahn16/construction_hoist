@@ -5,7 +5,8 @@ from model import *
 import copy
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
 def organize_output(output, new_output):
     for e_id, e_output in output.items():
@@ -28,11 +29,11 @@ lr = 0.001
 gamma = 0.95
 eps = 1
 min_eps = 0.1
-eps_decay = 0.99995
+eps_decay = 0.99999
 batch_size = 24
 episode_time = 10000
 
-use_saved = True
+use_saved = False
 # END Hyperparameters
 #######################################
 
@@ -92,9 +93,15 @@ for e in range(10000): # number of episodes == 100
     print("Epsilon value:", agents[0].epsilon)
     print("Elevator_1 Number of passengers served: ", env.elevators[0].num_served)
     print("Elevator_1 Number of passengers carrying: ", len(env.elevators[0].passengers))
-    print("Actions: ", cumul_actions)
+    #print("Actions: ", cumul_actions)
     print("Total passengers generated:", env.generated_passengers)
     episode_rewards.append(cumul_rewards[0])
-    plt.plot([i for i in range(e + 1)], episode_rewards)
-    plt.pause(0.01)
-    plt.draw()
+    if e % 5 == 0:
+      fig = plt.figure(0, dpi=1200)
+      plt.plot([i for i in range(e + 1)], episode_rewards)
+      #plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(1))
+      plt.title("Reward per Episode")
+      fig.savefig("train_graph_{}".format(e), dpi=1200)
+
+    #plt.pause(0.01)
+    #plt.draw()
