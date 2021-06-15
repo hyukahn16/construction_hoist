@@ -2,59 +2,30 @@ import simpy
 import random
 import logging
 import numpy as np
+import copy
+from copy import deepcopy
+from gym import spaces
+import gym
+from collections import deque
 from .passenger import Passenger
 from .elevator import Elevator
-import environment
 
-def make(num_elevators, curr_floors, total_floors, pas_gen_time, episode_time,
-    mode=None, human_mode=False, human_agent=None):
-    '''Generate new simpy.Environment.'''
-    assert curr_floors <= total_floors
-
-    simpy_env = simpy.Environment()
-    env = None
-    if human_mode:
-        if mode == "uppeak":
-            return environment.HumanUpPeakEnvironment(simpy_env, num_elevators, 
-                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
-        elif mode == "downpeak":
-            return environment.HumanDownPeakEnvironment(simpy_env, num_elevators, 
-                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
-        elif mode == "intermediate":
-            return environment.HumanIntermediateEnvironment(simpy_env, num_elevators, 
-                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
-        elif mode == "lunch": 
-            return environment.HumanLunchEnvironment(simpy_env, num_elevators, 
-                curr_floors, total_floors, pas_gen_time, human_agent, episode_time)
-
-    if not mode or "intermediate":
-        env = Environment(simpy_env, num_elevators, curr_floors, total_floors, 
-            pas_gen_time)
-    elif mode == "schedule":
-        env = environment.TestEnvironment(simpy_env, num_elevators, 
-            curr_floors, total_floors, pas_gen_time, "schedule.txt")
-    elif mode == "uppeak":
-        env = environment.UpPeakEnvironment(simpy_env, num_elevators,
-                            curr_floors, total_floors, pas_gen_time)
-    elif mode == "downpeak":
-        env = environment.DownPeakEnvironment(simpy_env, num_elevators,
-                            curr_floors, total_floors, pas_gen_time)
-    elif mode == "lunch":
-        env = environment.LunchEnvironment(simpy_env, num_elevators,
-                            curr_floors, total_floors, pas_gen_time, episode_time)
-    return env
-
-
-class Environment():
-    def __init__(self, simul_env, num_elevators, curr_floors, total_floors, pas_gen_time):
+class Environment(gym.Env):
+    def __init__(self, simul_env, num_elevators, curr_floors, total_floors,
+        pas_gen_time, action_space, total_time):
         self.simul_env = simul_env
         self.num_elevators = num_elevators
         self.num_floors = curr_floors
         self.total_floors = total_floors
         self.pas_gen_time = pas_gen_time
+        self.total_time = total_time
         
-        self.action_space_size = 3 # idle, up, down
-        self.observation_space_size = total_floors
+        self.action_space = spaces.Discrete(action_space ** self.num_elevators)
+
+        obs_hall = 2 * total_floors
+        obs_elev = 2 * total_floors * self.num_elevators
+        self.observation_space = spaces.Box(low=0, high=1, 
+            shape=(obs_hall + obs_elev,), dtype=np.int8)
 
     def reset(self):
         '''Resets the environment to its initial state,
@@ -66,7 +37,8 @@ class Environment():
         self.total_wait_passengers = 0
 
         self.simul_env = simpy.Environment()
-        self.floors = {} # Key: floor number, value: list of Passenger objects
+        self.floors_up = {} # Key: floor number, value: list of Passenger objects
+        self.floors_down = {}
         self.epoch_events = {} # key: event name, value: simpy event, this is what gets triggered to stop the simulation
         self.elevators = [] # List of Elevator objects
         self.call_requests = [] # List of call requests for each floor | Ex: self.call_requests[0][0] == 1 or 0
@@ -75,8 +47,11 @@ class Environment():
 
         # initialize each floor that holds Passenger objects
         for i in range(self.num_floors):
-            self.floors[i] = []
-            self.call_requests.append([0, 0]) # first value is UP call, second value is DOWN call
+                self.floors_up[i] = deque()
+                self.floors_down[i] = deque()
+                # first value is UP call, second value is DOWN call
+                # 0 = no call, 1 = call requested
+                self.call_requests.append([0, 0])
 
         # Initialize Elevator objects
         for i in range(self.num_elevators):
@@ -92,8 +67,10 @@ class Environment():
 
         # Create a process that will generate passengers on random floors
         self.simul_env.process(self.generate_passengers())
-        logging.debug("env.py: Reset Complete!")
-        return self.step([-1])
+
+        # reset returns the initial observation
+        obs, _, _, _, _ = self.step(-1)
+        return obs
 
     def step(self, actions):
         '''Receive an action from the agent
@@ -109,10 +86,12 @@ class Environment():
            4. Return the above output
         '''
         # Create processes for each elevators' actions
-        for idx, action in enumerate(actions):
-            if action == -1:
-                continue
-            self.simul_env.process(self.elevators[idx].act(action))
+        # If input action is -1, then no action process is created
+        if isinstance(actions, list):
+            for idx, action in enumerate(actions):
+                if action == -1:
+                    continue
+                self.simul_env.process(self.elevators[idx].act(action))
 
         while True: # run until a decision epoch is reached
             self.decision_elevators = []
@@ -127,24 +106,34 @@ class Environment():
                 elif "PassengerRequest" in event.value:
                     self._process_passenger_request(event.value)
                 else:
-                    logging.debug("Unimplemented event type!")
+                    print("env.py-step(): Unimplemented event type!")
             
             if decision_reached:
                 break
 
         # return state, reward, and the decision agents
-        output = {}
-        for e_id in self.decision_elevators:
-            output[e_id] = {"state": np.array(self.get_elevator_state(e_id)),
-                            "reward": self.get_elevator_reward(e_id),
-                            # FIXME: create multiple inheritance for 
-                            # TestEnvironment for efficiency so that
-                            # training Environment doesn't have to 
-                            # calculate unused numbers
-                            "lift_time": self.get_elevator_lift_time(e_id),
-                            "wait_time": self.get_elevator_wait_time(),
-                            }
-        self.decision_elevators = []
+        num_served = 0    
+        for e_id in range(len(self.elevators)):
+            num_served += self.elevators[e_id].num_served
+        done = True if self.now() > self.total_time else False
+        output = (
+            np.array(self.get_elevator_state(), dtype=bool),
+            [self.get_elevator_reward(e_id) for e_id in range(self.num_elevators)],
+            done,
+            {
+                "lift_time": self.get_elevator_lift_time(0),
+                "wait_time": self.get_elevator_wait_time(),
+                "num_served": num_served,
+                "generated_passengers": deepcopy(self.generated_passengers),
+            },
+            self.decision_elevators
+        )
+
+        # Reset environment during learning
+        if done:
+            #FIXME: self.reset()
+            pass
+
         return output
 
     def generate_passengers(self):
@@ -153,31 +142,32 @@ class Environment():
         This function will run as a simpy process:
         Ex: self.simul_env.process(self.generate_passengers())
         '''
-
         while True:
-            curr_fl = random.randrange(0, self.num_floors, 1) # get new current floor for this passenger
-            # get new destination floor for this passenger
-            # make sure that the destination floor is NOT the same as 
-            # current floor
-            dest_fl = curr_fl
-            while dest_fl == curr_fl:
-                dest_fl = random.randrange(0, self.num_floors, 1)
+            # create new origin floors
+            curr_fl = random.sample(range(0, self.num_floors), 1)
+            # get new destination floors for passengers
+            # where curr_fl != dest_fl
+            dest_fl = copy.deepcopy(curr_fl)
+            for i in range(len(dest_fl)):
+                while dest_fl[i] == curr_fl[i]:
+                    dest_fl[i] = random.randrange(0, self.num_floors, 1)
 
-            # Create new instance of Passenger at random floor
-            p = Passenger(curr_fl, dest_fl, self.simul_env.now)
+            # Create new passengers
+            passengers = []
+            for i in range(len(dest_fl)):
+                passengers.append(Passenger(curr_fl[i], dest_fl[i], self.simul_env.now))
             
             # Add Passenger to appropriate floor group
-            self.floors[p.curr_floor].append(p)
-            
-            if curr_fl > dest_fl: # DOWN call
-                self.call_requests[p.curr_floor][1] = 1
-            else: # UP call
-                self.call_requests[p.curr_floor][0] = 1
+            # and update the hall calls
+            for p in passengers:
+                if p.curr_floor > p.dest_floor: # DOWN call
+                    self.floors_down[p.curr_floor].append(p)
+                    self.call_requests[p.curr_floor][1] = 1
+                else: # UP call
+                    self.floors_up[p.curr_floor].append(p)
+                    self.call_requests[p.curr_floor][0] = 1
 
-            logging.debug("Created new Passenger at {}, going to {}!".format(p.curr_floor, p.dest_floor))
-            self.generated_passengers += 1
-            self.trigger_epoch_event("PassengerRequest")
-
+            self.generated_passengers += len(passengers)
             yield self.simul_env.timeout(self.pas_gen_time)
 
     def _process_elevator_arrival(self, event_type):
@@ -192,12 +182,12 @@ class Environment():
     def _process_passenger_request(self, event_type):
         '''Process when a passenger requests for an elevator.
 
-        - Wake up potentially idling elevators
-        - Updates the state to reflect this request
+        1. Wake up potentially idling elevators
+        2. Updates the state to reflect this request
         '''
         for e in self.elevators:
             # if elevator is idle, then wake it up
-            if e.state == e.IDLE:
+            if e.state == e.LOAD:
                 e.interrupt_idling()
 
     def trigger_epoch_event(self, event_type):
@@ -215,8 +205,7 @@ class Environment():
         # Reset the event to be triggered again in the future
         self.epoch_events[event_type] = self.simul_env.event()
 
-    def load_passengers(self, e_id, move=0):
-        '''Use by Elevator when idle and ready to load/unload.'''
+    def unload_passengers(self, e_id):
         carrying = self.elevators[e_id].passengers
         curr_floor = self.elevators[e_id].curr_floor
 
@@ -226,71 +215,131 @@ class Environment():
             # Determine if the passenger should get off on the current floor
             if p.dest_floor == curr_floor:
                 unload_p.append(p)
-
-        # Unload Passengers
+        # Unload Passengers from the elevator
         for p in unload_p:
-            self.elevators[e_id].update_reward(100)
+            # Calculate time porportional reward
+            #delivery_time = self.now() - p.begin_wait_time
+            #rew = self.get_reward_prop_time(1e6, delivery_time)
+            #scaled_rew = self.scale(0, 1e4, 100, 200, rew)
+            #self.elevators[e_id].update_reward(scaled_rew)
+            self.elevators[e_id].update_reward(5)
             self.elevators[e_id].num_served += 1
-            # Remove the passenger from the Elevator
-            p.elevator = -1
-            carrying.remove(p)        
-            
-        # Load passengers
-        for p in self.floors[curr_floor]:
-            # FIXME: need to consider which passengers will be getting on the elevator
-            # take passenger only if Elevator is NOT full
-            if (len(self.elevators[e_id].passengers) + 1) * 62 < \
-                self.elevators[e_id].weight_capacity:
-                carrying.add(p)
-                p.begin_lift_time = self.now() # Start lift time
-                self.floors[curr_floor].remove(p)
-                p.elevator = e_id
-                self.elevators[e_id].update_reward(50)
-                self.elevators[e_id].requests[p.dest_floor] = 1
-            else:
-                break
-        
-        # Update request calls from Environment and Elevator
-        # 1. Handle Environment's call requests
-        self.call_requests[curr_floor] = [0, 0] # reset call request for this floor
-        for p in self.floors[curr_floor]:
-            if p.dest_floor > curr_floor: # UP call
-                self.call_requests[curr_floor][0] = 1
-            elif p.dest_floor < curr_floor: # DOWN call
-                self.call_requests[curr_floor][1] = 1
-        # 2. Handle Elevator's call requests for this floor
-        self.elevators[e_id].requests[curr_floor] = 0
 
-        # Reward for moving in the CALL direction
-        reward_calls_above = 0
-        reward_calls_below = 0
+            # Remove the passenger from the Elevator
+            p.elevator = -1 # extra caution check
+            carrying.remove(p)
+
+    def load_passengers(self, e_id):
+        carrying = self.elevators[e_id].passengers
+        curr_floor = self.elevators[e_id].curr_floor
+        move_dir = self.elevators[e_id].direction
+        hall_passengers = None
+        full = True
+
+        assert(move_dir == 1 or move_dir == -1)
+        if move_dir == 1:
+            hall_passengers = self.floors_up[curr_floor]
+        else:
+            hall_passengers = self.floors_down[curr_floor]
+
+        # Load passengers into the elevator
+        while not self.elevators[e_id].full() and hall_passengers:
+            p = hall_passengers.popleft()
+            carrying.add(p)
+            full = False
+            # Update information about this passenger
+            p.begin_lift_time = self.now() # Start lift time
+            p.elevator = e_id
+            # update reward for pickking up new passenger
+            #pickup_time = self.now() - p.begin_wait_time
+            #rew = self.get_reward_prop_time(3e5, pickup_time)
+            #self.elevators[e_id].update_reward(rew)
+            self.elevators[e_id].update_reward(2)
+            self.elevators[e_id].requests[p.dest_floor] = 1
+        
+        #if full:
+        #    self.elevators[e_id].update_reward(-100)
+    
+    def move_full_penalty(self, e_id):
+        cap = self.elevators[e_id].weight_capacity
+        if len(self.elevators[e_id].passengers) + 1 >= (cap / 62):
+            self.elevators[e_id].update_reward(-100)
+
+    def update_req_calls(self, e_id):
+        '''Called by Elevator after load and unload functions.
+            Update requests from inside Elevator.
+            Update calls from the Environment.
+        '''
+        curr_fl = self.elevators[e_id].curr_floor
+        move_dir = self.elevators[e_id].direction
+        # 1. Handle Environment's calls
+        self.call_requests[curr_fl] = [0, 0] # reset call request for this floor
+        if self.floors_up[curr_fl]:
+            self.call_requests[curr_fl][0] = 1
+        if self.floors_down[curr_fl]:
+            self.call_requests[curr_fl][1] = 1
+
+        # 2. Handle Elevator's requests for this floor
+        self.elevators[e_id].requests[curr_fl] = 0
+
+    def move_rew_request(self, e_id, move):
+        # Reward for moving in the REQUEST direction
+        # for passengers inside the Elevator
+        # This function is called BEFORE the move happens
+
+        curr_floor = self.elevators[e_id].curr_floor
+        total_req_rew = 0
+        # 
+        for p in self.elevators[e_id].passengers:
+            dist = abs(p.dest_floor - curr_floor)
+
+            # if elevator is moving past the destination
+            if dist == 0: 
+                dist = 1
+            req_reward = 20 / dist
+
+            # If moving up but the destination is below
+            if move == 1 and p.dest_floor <= curr_floor:
+                req_reward *= -1
+            # If moving down but the destination is above
+            elif move == -1 and p.dest_floor >= curr_floor:
+                req_reward *= -1
+
+            total_req_rew += req_reward
+        self.elevators[e_id].update_reward(total_req_rew)
+
+    def move_rew_call(self, e_id, move):
+        # Reward function for moving in the CALL direction
+        # for passengers waiting for the Elevator.
+        # This function is called BEFORE the move happens.
+
+        curr_floor = self.elevators[e_id].curr_floor
+        calls_above = 0
+        calls_below = 0
+        # Count the number of calls above and below
         for f in range(self.total_floors):
             if f < curr_floor:
-                reward_calls_below += len(self.floors[f])
+                calls_below += len(self.floors_down[f])
+                calls_below += len(self.floors_up[f])
             else:
-                reward_calls_above += len(self.floors[f])
+                calls_above += len(self.floors_up[f])
+                calls_above += len(self.floors_down[f])
+        # Give different rewards depending on the move
         if move == 0:
-            reward_calls_above = reward_calls_above * -1
-            reward_calls_below = reward_calls_below * -1
+            calls_above = 0
+            calls_below = 0
+            #reward_calls_above = reward_calls_above * -1
+            #reward_calls_below = reward_calls_below * -1
         elif move == 1:
-            reward_calls_below = reward_calls_below * -1
+            calls_below *= -1
         elif move == -1:
-            reward_calls_above = reward_calls_above * -1
+            calls_above *= -1
         self.elevators[e_id].update_reward(
-            reward_calls_above + reward_calls_below)
+            calls_above + calls_below
+        )
         
-        # Reward for moving in the REQUEST direction
-        for p in self.elevators[e_id].passengers:
-            req_reward = 25 / abs(p.dest_floor - curr_floor)
-            if move == 0:
-                req_reward = req_reward * -1
-            elif move == 1 and p.dest_floor < curr_floor:
-                req_reward = req_reward * -1
-            elif move == -1 and p.dest_floor > curr_floor:
-                req_reward = req_reward * -1
-            self.elevators[e_id].update_reward(req_reward)
-
-    def get_elevator_state(self, e_id):
+    def get_elevator_state(self):
+        '''Used in step function'''
         e_state = []
         # Up calls from the building
         for call in self.call_requests:
@@ -301,20 +350,22 @@ class Environment():
             e_state.append(call[1])
 
         # Calls from within the Elevator
-        for request in self.elevators[e_id].requests:
-            e_state.append(request)
+        for elev in range(len(self.elevators)):
+            for request in self.elevators[elev].requests:
+                e_state.append(request)
 
-        # Location of the Elevator
-        for f_num in range(self.total_floors):
-            if self.elevators[e_id].curr_floor == f_num:
-                e_state.append(1)
-            else:
-                e_state.append(0)
+            # Location of the Elevator
+            for f_num in range(self.total_floors):
+                if self.elevators[elev].curr_floor == f_num:
+                    e_state.append(1)
+                else:
+                    e_state.append(0)
                 
         return e_state
 
     def get_elevator_reward(self, e_id):
-        '''Return the rewad from decision Elevators'''
+        '''Used at the end of the step function
+        to return the reward for a specific elevator.'''
         output = self.elevators[e_id].reward
         self.elevators[e_id].reward = 0
         return output
@@ -325,13 +376,24 @@ class Environment():
             return flat_reward
         return flat_reward / time
 
+    def scale(self, old_min, old_max, new_min, new_max, val):
+        numer = (new_max - new_min) * (val - old_min)
+        denom = old_max - old_min
+        scaled_val = (numer / denom) + new_min
+        if scaled_val > new_max:
+            scaled_val = new_max
+        return scaled_val
+
     def get_elevator_lift_time(self, e_id):
         e = self.elevators[e_id]
         return e.calculate_avg_lift_time()
 
     def get_elevator_wait_time(self):
         '''Calculate average wait time.'''
-        for _, floor in self.floors.items():
+        for _, floor in self.floors_down.items():
+            for p in floor: 
+                self.update_wait_time(p)
+        for _, floor in self.floors_up.items():
             for p in floor: 
                 self.update_wait_time(p)
         
@@ -357,8 +419,14 @@ class Environment():
         '''
         Prints some stone age visualization in stdout...
         '''
-        DIR_MAP = {self.elevators[0].IDLE: '-', None: '-',
-                self.elevators[0].MOVING_UP: '^', self.elevators[0].MOVING_DOWN:'v'}
+        DIR_MAP = {
+            self.elevators[0].IDLE: '-',
+            None: '@',
+            self.elevators[0].MOVING_UP: '^',
+            self.elevators[0].MOVING_DOWN: 'v',
+            self.elevators[0].LOAD: 'x',
+        }
+
         for floor in range(self.total_floors):
             num_psngr_going_up = len([p for p in self.floors[floor] if p.dest_floor > floor])
             num_psngr_going_down = len([p for p in self.floors[floor] if p.dest_floor < floor])
@@ -380,24 +448,4 @@ class Environment():
             string+="v"*num_psngr_going_down
             print(string)
 
-    # CNN state version
-    def get_cnn_state(self):
-        '''Return the state as a (total_floors x 4 x 1) image'''
-        
-        img = []
-        img.append([])
-        for fl in range(self.num_floors):
-            img[0].append([])
-            img[0][fl].append(self.call_requests[fl][0])
-            img[0][fl].append(self.call_requests[fl][1]) 
-
-            img[0][fl].append(1 if self.elevators[0].curr_floor == fl else 0) # Elevator floor location
-            img[0][fl].append((len(self.elevators[0].passengers) * 62.0 / \
-                self.elevators[0].weight_capacity) if self.elevators[0].curr_floor == fl else 0) 
-            img[0][fl].append(self.elevators[0].requests[fl]) # floor requests from inside the Elevator
-
-            img[0][fl].append(1 if self.elevators[1].curr_floor == fl else 0) # Elevator floor location
-            img[0][fl].append((len(self.elevators[1].passengers) * 62.0 / \
-                self.elevators[1].weight_capacity) if self.elevators[1].curr_floor == fl else 0)
-            img[0][fl].append(self.elevators[1].requests[fl]) # floor requests from inside the Elevator
-        return img
+        print("\n")
